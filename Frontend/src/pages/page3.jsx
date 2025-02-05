@@ -33,13 +33,13 @@ function page3() {
       "BAC", "Other requests/inquiries", "Feedback/Complaint"
     ],
     "Admin (Cash, Personnel, Records, Supply, General Services, Procurement)": [
-      "Service 6", "Service 7"
+      "Cash", "Personnel", "Records", "Property and Supply", "General Services", "Procurement"
     ],
     "CID - Curriculum Implementation Division (LRMS, Instructional Management, PSDS)": [
       "ALS Enrollment", "Access to LR Portal", "Borrowing of books/learning materials", "Contextualized Learning Resources", "Quality Assurance of Supplementary Learning Resources", "Instructional Supervision", "Technical assistance", "Other requests/inquiries"
     ],
     "Finance (Accounting, Budget)": [
-      "Cash", "Personnel", "Records", "Property and Supply", "General Services", "Procurement"
+      "Accounting Related", "ORS - Obligation Request and Status", "Posting/Updating of Disbursement", "Other request/inquiries"
     ],
     "ICT": [
       "Create/delete/rename/reset user accounts", "Troubleshooting of ICT Equipmennt", "Uploading of publications", "Other requests/inquiries"
