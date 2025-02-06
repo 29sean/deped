@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import Header from './components/header'
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Page1 from './pages/page1';
-import Page2 from "./pages/page2";
-import Page3 from './pages/page3';
+import ClientInformation from './pages/clientInformation';
+import OfficeTransact from "./pages/officeTransact";
+import ServiceAvail from './pages/serviceAvail';
+import CitizenCharter from './pages/citizenCharter';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 
@@ -11,9 +12,10 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path='/' element={ <Page1/> }/>
-        <Route path='/page2' element={ <Page2/> }/>
-        <Route path='/page3' element={ <Page3/> }/>
+        <Route path='/' element={ <ClientInformation/> }/>
+        <Route path='/OfficeTransact' element={ <OfficeTransact/> }/>
+        <Route path='/serviceAvail' element={ <ServiceAvail/> }/>
+        <Route path='/citizenCharter' element={ <CitizenCharter/> }/>
       </Routes>
     </Router>
     // <>

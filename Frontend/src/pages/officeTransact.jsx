@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import Dropdown from 'react-bootstrap/Dropdown';
 import { useState, useEffect } from 'react';
 
-function page2() {
+function officeTransact() {
   const navigate = useNavigate();
 
   const [selectedOffice, setSelectedOption] = useState("Select your answer");
@@ -25,7 +25,7 @@ function page2() {
   //
 
   const nextPage = () => {
-    navigate('/page3', { state: { selectedOffice } });
+    navigate('/serviceAvail', { state: { selectedOffice } });
   };
 
   const backPage = () => {
@@ -66,7 +66,7 @@ function page2() {
                   Back
                 </Button>
 
-                <Button variant="primary" onClick={nextPage}>
+                <Button style={{ backgroundColor:"green" }} onClick={nextPage}>
                   Next
                 </Button>
               </div>
@@ -77,4 +77,4 @@ function page2() {
   );
 }
 
-export default page2;
+export default officeTransact;

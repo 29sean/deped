@@ -5,24 +5,50 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import Dropdown from 'react-bootstrap/Dropdown';
 import { useEffect, useState } from 'react';
 
-function page3() {
-  const location = useLocation();
+function serviceAvail() {
   const navigate = useNavigate();
-  const { selectedOffice } = location.state || {};
 
   const [selectedServiceAvailed, setSelectedOption] = useState("Select your answer");
   const [selectedOfficeTransacted, setSelectedOfficeTransacted] = useState("Select the office");
+  const [selectedOfficeTransacted1, setSelectedOfficeTransacted1] = useState("Select the office");
+
+  useEffect(() => {
+    const savedService = sessionStorage.getItem('serviceAvailed')
+    if (savedService) {
+      setSelectedOption(savedService);
+    }
+    const office = sessionStorage.getItem('selectedOffice')
+    if (office) {
+      setSelectedOfficeTransacted1(office);
+    }
+    const office2 = sessionStorage.getItem('2ndOffice')
+    if (office2) {
+      setSelectedOfficeTransacted(office2);
+    }
+    
+  }, [])
 
   const handleSelect = (eventKey) => {
     setSelectedOption(eventKey);
+    sessionStorage.setItem('serviceAvailed', eventKey)
   };
 
   const handleSelectOfficeTransacted = (eventKey) => {
     setSelectedOfficeTransacted(eventKey);
+    sessionStorage.setItem('2ndOffice', eventKey)
   }
 
   const backPage = () => {
-    navigate('/page2');
+    navigate('/officeTransact');
+  }
+  const nextPage = () => {
+    const service = sessionStorage.getItem('serviceAvailed')
+    if (service == 'Travel authority') {
+      navigate('/citizenCharter')
+    }
+    else {    
+      navigate('/')
+    }
   }
 
   const services = {
@@ -64,7 +90,7 @@ function page3() {
     "Education Facilities", "HRD - Human Resource Development", "Planning & Research", "School Health", "SMME - School Management Monitoring and Evaluation Section", "SocMob - Social Mobilization and Networking"
   ]
 
-  const availableServices = services[selectedOffice] || [];
+  const availableServices = services[selectedOfficeTransacted1] || [];
 
   return (
     <div className='pt-5 pb-5' style={{ backgroundColor: "#edf3fc", height: '100%' }}>
@@ -73,12 +99,12 @@ function page3() {
         <div className='m-auto mt-3 mb-3' style={{ width: "85%" }}>
           <div className='m-auto'>
             <div className='rounded' style={{ backgroundColor: "#dfe7f5" }}>
-              <p className='fs-4 p-3'>{selectedOffice}</p>
+              <p className='fs-4 p-3'>{selectedOfficeTransacted1}</p>
             </div>
-            {selectedOffice === "CID - Curriculum Implementation Division (LRMS, Instructional Management, PSDS)" && (
+            {selectedOfficeTransacted1 === "CID - Curriculum Implementation Division (LRMS, Instructional Management, PSDS)" && (
               <div className="mb-3 rounded p-3" style={{ backgroundColor: "#dfe7f5" }}>
                 <div>
-                  <p>Office transacted with</p>
+                  <p>office2 transacted with</p>
                   <Dropdown onSelect={handleSelectOfficeTransacted}>
                     <Dropdown.Toggle variant="light" className='text-truncate' style={{ width: '100%', textAlign: 'left' }} id="dropdown-basic">
                       {selectedOfficeTransacted}
@@ -124,7 +150,7 @@ function page3() {
                 Back
               </Button>
 
-              <Button style={{ backgroundColor:"green" }}>
+              <Button style={{ backgroundColor:"green" }} onClick={nextPage}>
                 Next
               </Button>
             </div>
@@ -135,4 +161,4 @@ function page3() {
   );
 }
 
-export default page3;
+export default serviceAvail;
