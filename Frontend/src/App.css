@@ -1,42 +1,63 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+* {
+  font-family: "Liter", serif;
+  font-weight: 400;
+  font-style: normal;
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+/* .login-bg {
+  background-image: url(assets/Images/bg.jpg);
+  background-repeat: repeat;
+} */
+
+/* ADMIN BG */
+.admin-bg {
+  background-image: url(assets/Images/bg.png);
+  background-repeat: repeat;
+  height: 100vh;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.login-bg {
+  background-image: url(assets/Images/bg1.jpg);
+  background-size: cover; /* Ensures the image covers the entire area */
+  background-position: center; /* Centers the image */
+  background-repeat: no-repeat; /* Prevents repetition */
+  background-attachment: fixed; /* Keeps the image fixed while scrolling */
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.login-bg::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* 50% opacity black overlay */
+  z-index: 1;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.login-bg > * {
+  position: relative;
+  z-index: 2; /* Ensures content stays above the overlay */
 }
 
-.card {
-  padding: 2em;
+/* card color */
+.card-color {
+  background-color: rgba(251, 245, 229, 0.7); /* Fully transparent */
 }
 
-.read-the-docs {
-  color: #888;
+/* CARD DIVISION */
+
+.custom-card {
+  background: linear-gradient(to bottom, #3498db, #2980b9); /* Blue Gradient */
+  color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3); /* Darker Shadow */
+  transition: transform 0.2s ease-in-out;
+}
+
+.custom-card:hover {
+  transform: scale(1.05); /* Slight pop effect */
 }
