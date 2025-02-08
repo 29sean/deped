@@ -13,9 +13,9 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<ClientInformation />} />
-        <Route path="/OfficeTransact" element={<OfficeTransact />} />
-        <Route path="/serviceAvail" element={<ServiceAvail />} />
-        <Route path="/citizenCharter" element={<CitizenCharter />} />
+        <Route path="/office-transact" element={<OfficeTransact />} />
+        <Route path="/service-avail" element={<ServiceAvail />} />
+        <Route path="/citizen-charter" element={<CitizenCharter />} />
         <Route path="/login" element={<Login />} />
         <Route path="/admin" element={<AdminDashboard />} />
       </Routes>
