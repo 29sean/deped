@@ -61,3 +61,9 @@
 .custom-card:hover {
   transform: scale(1.05); /* Slight pop effect */
 }
+/* table header SQD */
+th {
+  white-space: nowrap;
+  font-size: 15px;
+  text-align: center;
+}
