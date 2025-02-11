@@ -15,6 +15,8 @@ function serviceAvail() {
   const [selectedOfficeTransacted1, setSelectedOfficeTransacted1] =
     useState("Select the office");
 
+  const [otw, setOtw] = useState();
+
   useEffect(() => {
     const savedService = sessionStorage.getItem("serviceAvailed");
     if (savedService) {
@@ -23,6 +25,9 @@ function serviceAvail() {
     const office = sessionStorage.getItem("selectedOffice");
     if (office) {
       setSelectedOfficeTransacted1(office);
+      if (office == "Admin (Cash, Personnel, Records, Supply, General Services, Procurement)") {
+        setOtw(otwAdmin)
+      }
     }
     const office2 = sessionStorage.getItem("2ndOffice");
     if (office2) {
@@ -47,8 +52,9 @@ function serviceAvail() {
     const service = sessionStorage.getItem("serviceAvailed");
     if (service == "Travel authority") {
       navigate("/citizen-charter");
-    } else {
-      navigate("/");
+    }
+    else {
+      navigate("/client-satisfaction");
     }
   };
 
@@ -116,6 +122,15 @@ function serviceAvail() {
     "PSDS - Public School District Supervisor",
   ];
 
+  const otwAdmin = [
+    "Cash",
+    "Personnel",
+    "Records",
+    "Property and Supply",
+    "General Services",
+    "Procurement",
+  ];
+
   const otwFinance = ["Accounting", "Budget"];
 
   const otwSGOD = [
@@ -145,26 +160,61 @@ function serviceAvail() {
               <p className="fs-4 p-3">{selectedOfficeTransacted1}</p>
             </div>
             {selectedOfficeTransacted1 ===
-              "CID - Curriculum Implementation Division (LRMS, Instructional Management, PSDS)" && (
-              <div
-                className="mb-3 rounded p-3"
-                style={{ backgroundColor: "#dfe7f5" }}
-              >
-                <div>
-                  <p>office2 transacted with</p>
-                  <Dropdown onSelect={handleSelectOfficeTransacted}>
+              "CID - Curriculum Implementation Division (LRMS, Instructional Management, PSDS)" || selectedOfficeTransacted1 ===
+              "Admin (Cash, Personnel, Records, Supply, General Services, Procurement)" && (
+                <div
+                  className="mb-3 rounded p-3"
+                  style={{ backgroundColor: "#dfe7f5" }}
+                >
+                  <div>
+                    <p>Office transacted with</p>
+                    <Dropdown onSelect={handleSelectOfficeTransacted}>
+                      <Dropdown.Toggle
+                        variant="light"
+                        className="text-truncate"
+                        style={{ width: "100%", textAlign: "left" }}
+                        id="dropdown-basic"
+                      >
+                        {selectedOfficeTransacted}
+                      </Dropdown.Toggle>
+
+                      <Dropdown.Menu>
+                        {otw.length > 0 ? (
+                          otw.map((service, index) => (
+                            <Dropdown.Item key={index} eventKey={service}>
+                              {service}
+                            </Dropdown.Item>
+                          ))
+                        ) : (
+                          <Dropdown.Item disabled>
+                            No services available
+                          </Dropdown.Item>
+                        )}
+                      </Dropdown.Menu>
+                    </Dropdown>
+                  </div>
+                </div>
+              )}
+            {selectedOfficeTransacted1 !==
+              "Admin (Cash, Personnel, Records, Supply, General Services, Procurement)" && (
+                <div
+                  className="mb-3 rounded p-3"
+                  style={{ backgroundColor: "#dfe7f5" }}
+                >
+                  <p>Service availed</p>
+                  <Dropdown onSelect={handleSelect}>
                     <Dropdown.Toggle
                       variant="light"
                       className="text-truncate"
                       style={{ width: "100%", textAlign: "left" }}
                       id="dropdown-basic"
                     >
-                      {selectedOfficeTransacted}
+                      {selectedServiceAvailed}
                     </Dropdown.Toggle>
 
                     <Dropdown.Menu>
-                      {otwCID.length > 0 ? (
-                        otwCID.map((service, index) => (
+                      {availableServices.length > 0 ? (
+                        availableServices.map((service, index) => (
                           <Dropdown.Item key={index} eventKey={service}>
                             {service}
                           </Dropdown.Item>
@@ -177,38 +227,8 @@ function serviceAvail() {
                     </Dropdown.Menu>
                   </Dropdown>
                 </div>
-              </div>
-            )}
-            <div
-              className="mb-3 rounded p-3"
-              style={{ backgroundColor: "#dfe7f5" }}
-            >
-              <p>Service availed</p>
-              <Dropdown onSelect={handleSelect}>
-                <Dropdown.Toggle
-                  variant="light"
-                  className="text-truncate"
-                  style={{ width: "100%", textAlign: "left" }}
-                  id="dropdown-basic"
-                >
-                  {selectedServiceAvailed}
-                </Dropdown.Toggle>
+              )}
 
-                <Dropdown.Menu>
-                  {availableServices.length > 0 ? (
-                    availableServices.map((service, index) => (
-                      <Dropdown.Item key={index} eventKey={service}>
-                        {service}
-                      </Dropdown.Item>
-                    ))
-                  ) : (
-                    <Dropdown.Item disabled>
-                      No services available
-                    </Dropdown.Item>
-                  )}
-                </Dropdown.Menu>
-              </Dropdown>
-            </div>
             <div className="d-flex" style={{ width: "150px" }}>
               <Button
                 variant="light"

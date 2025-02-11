@@ -5,13 +5,13 @@ import { useNavigate } from "react-router-dom";
 import Dropdown from "react-bootstrap/Dropdown";
 import { useState, useEffect } from "react";
 
-function citizenCharter() {
+function citizenCharter3() {
   const navigate = useNavigate();
 
   const [selectedOption, setSelectedOption] = useState();
 
   useEffect(() => {
-    const savedOption = sessionStorage.getItem("selectedYesNo");
+    const savedOption = sessionStorage.getItem("selectedYesNo2");
     if (savedOption) {
       setSelectedOption(savedOption);
     }
@@ -20,22 +20,16 @@ function citizenCharter() {
   const handleSelect = (event) => {
     const value = event.target.value;
     setSelectedOption(value);
-    sessionStorage.setItem("selectedYesNo", value);
+    sessionStorage.setItem("selectedYesNo2", value);
   };
   //
 
   const nextPage = () => {
-    const yesno = sessionStorage.getItem("selectedYesNo");
-    if (yesno == "yes") {
-      navigate("/citizen-charter2");
-    }
-    else{
-      navigate("/client-satisfaction");
-    }
+    navigate("/client-satisfaction");
   };
 
   const backPage = () => {
-    navigate("/service-avail");
+    navigate("/citizen-charter2");
   };
 
   return (
@@ -57,11 +51,9 @@ function citizenCharter() {
             <div
               className="mb-3 rounded p-3"
               style={{ backgroundColor: "#dfe7f5" }}
-              controlId="yesno"
             >
               <p>
-                Are you aware of the Citizen's Charter - document of the SDO
-                services and requirements?
+                Did you use the SDO Citizen's Charter as a guide for the service you availed
               </p>
               <div>
                 <Form.Check
@@ -104,4 +96,4 @@ function citizenCharter() {
   );
 }
 
-export default citizenCharter;
+export default citizenCharter3;
