@@ -5,13 +5,13 @@ import { useNavigate } from "react-router-dom";
 import Dropdown from "react-bootstrap/Dropdown";
 import { useState, useEffect } from "react";
 
-function citizenCharter() {
+function citizenCharter2() {
   const navigate = useNavigate();
 
   const [selectedOption, setSelectedOption] = useState();
 
   useEffect(() => {
-    const savedOption = sessionStorage.getItem("selectedYesNo");
+    const savedOption = sessionStorage.getItem("selectedYesNo3");
     if (savedOption) {
       setSelectedOption(savedOption);
     }
@@ -20,22 +20,21 @@ function citizenCharter() {
   const handleSelect = (event) => {
     const value = event.target.value;
     setSelectedOption(value);
-    sessionStorage.setItem("selectedYesNo", value);
+    sessionStorage.setItem("selectedYesNo3", value);
   };
   //
 
   const nextPage = () => {
-    const yesno = sessionStorage.getItem("selectedYesNo");
-    if (yesno == "yes") {
-      navigate("/citizen-charter2");
-    }
-    else{
-      navigate("/client-satisfaction");
+    const yesno = sessionStorage.getItem("selectedYesNo3")
+    if (yesno == "yes" || yesno == "yesbut") {
+        navigate("/citizen-charter3");
+    } else {
+        navigate("/client-satisfaction");
     }
   };
 
   const backPage = () => {
-    navigate("/service-avail");
+    navigate("/citizen-charter");
   };
 
   return (
@@ -57,20 +56,27 @@ function citizenCharter() {
             <div
               className="mb-3 rounded p-3"
               style={{ backgroundColor: "#dfe7f5" }}
-              controlId="yesno"
             >
               <p>
-                Are you aware of the Citizen's Charter - document of the SDO
-                services and requirements?
+                Did you see the SDO Citizen's Charter (online or posted in the office)?
               </p>
               <div>
                 <Form.Check
                   type="radio"
-                  label="Yes"
+                  label="Yes - it was easy to find"
                   name="yesno"
                   id="yes"
                   value="yes"
                   checked={selectedOption == "yes"}
+                  onChange={handleSelect}
+                />
+                <Form.Check
+                  type="radio"
+                  label="Yes - but it was hard to find"
+                  name="yesno"
+                  id="yesbut"
+                  value="yesbut"
+                  checked={selectedOption == "yesbut"}
                   onChange={handleSelect}
                 />
                 <Form.Check
@@ -104,4 +110,4 @@ function citizenCharter() {
   );
 }
 
-export default citizenCharter;
+export default citizenCharter2;

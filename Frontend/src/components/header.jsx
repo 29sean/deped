@@ -16,7 +16,7 @@ const header = () => {
             <div className='container p-5'>
                 <div className='row'>
                     <div className='col-5 w-25'>
-                        <img src={DepedLogo} alt="depedCabuyaoHeader" className='' style={{width: "200px"}}/>
+                        <img src={DepedLogo} alt="depedCabuyaoHeader" style={{width: "200px"}}/>
                     </div>
                     <div className='col-7' style={{ fontSize: '35px' }}>
                         <p className='mt-3'><b>SDO Cabuyao</b> Client Satisfaction Measurement (CSM) 2025</p>
