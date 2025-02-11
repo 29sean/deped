@@ -28,8 +28,7 @@ function citizenCharter() {
     const yesno = sessionStorage.getItem("selectedYesNo");
     if (yesno == "yes") {
       navigate("/citizen-charter2");
-    }
-    else{
+    } else {
       navigate("/client-satisfaction");
     }
   };

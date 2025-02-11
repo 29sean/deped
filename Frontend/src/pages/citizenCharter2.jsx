@@ -25,11 +25,11 @@ function citizenCharter2() {
   //
 
   const nextPage = () => {
-    const yesno = sessionStorage.getItem("selectedYesNo3")
+    const yesno = sessionStorage.getItem("selectedYesNo3");
     if (yesno == "yes" || yesno == "yesbut") {
-        navigate("/citizen-charter3");
+      navigate("/citizen-charter3");
     } else {
-        navigate("/client-satisfaction");
+      navigate("/client-satisfaction");
     }
   };
 
@@ -58,7 +58,8 @@ function citizenCharter2() {
               style={{ backgroundColor: "#dfe7f5" }}
             >
               <p>
-                Did you see the SDO Citizen's Charter (online or posted in the office)?
+                Did you see the SDO Citizen's Charter (online or posted in the
+                office)?
               </p>
               <div>
                 <Form.Check

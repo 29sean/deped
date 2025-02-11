@@ -1,10 +1,10 @@
 import Button from "react-bootstrap/Button";
-import Form from 'react-bootstrap/Form';
+import Form from "react-bootstrap/Form";
 import Header from "../components/header2";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Happy from "../assets/Images/happy.jpg";
-import Table from 'react-bootstrap/Table';
+import Table from "react-bootstrap/Table";
 
 function clientSatisfaction() {
   const navigate = useNavigate();
@@ -65,20 +65,22 @@ function clientSatisfaction() {
         <Header />
         <div className="m-auto mt-3 mb-3" style={{ width: "85%" }}>
           <div className="m-auto">
-            <div className="rounded mb-3" style={{ backgroundColor: "#dfe7f5" }}>
-              <div className="p-3" >
-                <p className="fs-4"> Client Satisfaction</p>
+            <div
+              className="rounded mb-3"
+              style={{ backgroundColor: "#dfe7f5" }}
+            >
+              <div className="p-3">
+                <p className="fs-4 fw-bold">Client Satisfaction</p>
                 <div style={{ textAlign: "center" }}>
                   <img src={Happy} />
                 </div>
-                
               </div>
             </div>
             <div
-              className="mb-3 rounded p-3"
+              className="mb-3 rounded"
               style={{ backgroundColor: "#dfe7f5" }}
             >
-              <p>Service Quality Dimension (SQD)</p>
+              <p className="fw-bold p-3">Service Quality Dimension (SQD)</p>
             </div>
 
             <div
@@ -86,23 +88,34 @@ function clientSatisfaction() {
               style={{ backgroundColor: "#dfe7f5" }}
             >
               <Form>
-                {['radio'].map((type) => (
-                  <div key={`inline-${type}`} className="mb-3">
+                {["radio"].map((type, index) => (
+                  <div key={index} style={{ overflowX: "auto" }}>
                     <Table striped="columns">
-                      <thead style={{ fontSize: "13px", textAlign: "center" }}>
+                      <thead
+                        style={{
+                          fontSize: "13px",
+                          textAlign: "center",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
                         <tr>
                           <th></th>
-                          <th>Strongly Agree (5)</th>
-                          <th>Agree (4)</th>
-                          <th>Neither Agree nor Disagree (3)</th>
-                          <th>Disagree (2)</th>
-                          <th>Strongly Disagree (1)</th>
-                          <th>Not applicable</th>
+                          <th className="p-3">Strongly Agree (5)</th>
+                          <th className="p-3">Agree (4)</th>
+                          <th className="p-3">
+                            Neither Agree nor Disagree (3)
+                          </th>
+                          <th className="p-3">Disagree (2)</th>
+                          <th className="p-3">Strongly Disagree (1)</th>
+                          <th className="p-3">Not applicable</th>
                         </tr>
                       </thead>
                       <tbody>
                         <tr>
-                          <td>SQD1 - I spent an acceptable amount of time to complete my transaction (Responsiveness)</td>
+                          <td>
+                            SQD1 - I spent an acceptable amount of time to
+                            complete my transaction (Responsiveness)
+                          </td>
                           <td>
                             <Form.Check
                               inline
@@ -165,7 +178,11 @@ function clientSatisfaction() {
                           </td>
                         </tr>
                         <tr>
-                          <td>SQD2 - The office accurately informed and followed the transaction's requirements and steps (Reliability)</td>
+                          <td>
+                            SQD2 - The office accurately informed and followed
+                            the transaction's requirements and steps
+                            (Reliability)
+                          </td>
                           <td>
                             <Form.Check
                               inline
@@ -228,7 +245,10 @@ function clientSatisfaction() {
                           </td>
                         </tr>
                         <tr>
-                          <td>SQD2 - The office accurately informed and followed the transaction's requirements and steps (Reliability)</td>
+                          <td>
+                            SQD3 - My transaction (including steps and payment)
+                            was simple and convenient (Access and Facilities)
+                          </td>
                           <td>
                             <Form.Check
                               inline
@@ -284,6 +304,337 @@ function clientSatisfaction() {
                               inline
                               label=""
                               name="group3"
+                              type={type}
+                              id={`inline-${type}-6`}
+                              className="custom-radio"
+                            />
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            SDQ4 - I easily found information about my
+                            transaction from the office or its website
+                            (Communication)
+                          </td>
+                          <td>
+                            <Form.Check
+                              inline
+                              label=""
+                              name="group4"
+                              type={type}
+                              id={`inline-${type}-1`}
+                              className="custom-radio"
+                            />
+                          </td>
+                          <td>
+                            <Form.Check
+                              inline
+                              label=""
+                              name="group4"
+                              type={type}
+                              id={`inline-${type}-2`}
+                              className="custom-radio"
+                            />
+                          </td>
+                          <td>
+                            <Form.Check
+                              inline
+                              label=""
+                              name="group4"
+                              type={type}
+                              id={`inline-${type}-3`}
+                              className="custom-radio"
+                            />
+                          </td>
+                          <td>
+                            <Form.Check
+                              inline
+                              label=""
+                              name="group4"
+                              type={type}
+                              id={`inline-${type}-4`}
+                              className="custom-radio"
+                            />
+                          </td>
+                          <td>
+                            <Form.Check
+                              inline
+                              label=""
+                              name="group4"
+                              type={type}
+                              id={`inline-${type}-5`}
+                              className="custom-radio"
+                            />
+                          </td>
+                          <td>
+                            <Form.Check
+                              inline
+                              label=""
+                              name="group4"
+                              type={type}
+                              id={`inline-${type}-6`}
+                              className="custom-radio"
+                            />
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            SQD5 - I paid an acceptable amount of fees for my
+                            transaction (Costs)
+                          </td>
+                          <td>
+                            <Form.Check
+                              inline
+                              label=""
+                              name="group5"
+                              type={type}
+                              id={`inline-${type}-1`}
+                              className="custom-radio"
+                            />
+                          </td>
+                          <td>
+                            <Form.Check
+                              inline
+                              label=""
+                              name="group5"
+                              type={type}
+                              id={`inline-${type}-2`}
+                              className="custom-radio"
+                            />
+                          </td>
+                          <td>
+                            <Form.Check
+                              inline
+                              label=""
+                              name="group5"
+                              type={type}
+                              id={`inline-${type}-3`}
+                              className="custom-radio"
+                            />
+                          </td>
+                          <td>
+                            <Form.Check
+                              inline
+                              label=""
+                              name="group5"
+                              type={type}
+                              id={`inline-${type}-4`}
+                              className="custom-radio"
+                            />
+                          </td>
+                          <td>
+                            <Form.Check
+                              inline
+                              label=""
+                              name="group5"
+                              type={type}
+                              id={`inline-${type}-5`}
+                              className="custom-radio"
+                            />
+                          </td>
+                          <td>
+                            <Form.Check
+                              inline
+                              label=""
+                              name="group5"
+                              type={type}
+                              id={`inline-${type}-6`}
+                              className="custom-radio"
+                            />
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            SQD6 - I am confident my transaction was secure
+                            (Integrity)
+                          </td>
+                          <td>
+                            <Form.Check
+                              inline
+                              label=""
+                              name="group6"
+                              type={type}
+                              id={`inline-${type}-1`}
+                              className="custom-radio"
+                            />
+                          </td>
+                          <td>
+                            <Form.Check
+                              inline
+                              label=""
+                              name="group6"
+                              type={type}
+                              id={`inline-${type}-2`}
+                              className="custom-radio"
+                            />
+                          </td>
+                          <td>
+                            <Form.Check
+                              inline
+                              label=""
+                              name="group6"
+                              type={type}
+                              id={`inline-${type}-3`}
+                              className="custom-radio"
+                            />
+                          </td>
+                          <td>
+                            <Form.Check
+                              inline
+                              label=""
+                              name="group6"
+                              type={type}
+                              id={`inline-${type}-4`}
+                              className="custom-radio"
+                            />
+                          </td>
+                          <td>
+                            <Form.Check
+                              inline
+                              label=""
+                              name="group6"
+                              type={type}
+                              id={`inline-${type}-5`}
+                              className="custom-radio"
+                            />
+                          </td>
+                          <td>
+                            <Form.Check
+                              inline
+                              label=""
+                              name="group6"
+                              type={type}
+                              id={`inline-${type}-6`}
+                              className="custom-radio"
+                            />
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            SQD7 - The office's support was quick to respond
+                            (Assurance)
+                          </td>
+                          <td>
+                            <Form.Check
+                              inline
+                              label=""
+                              name="group7"
+                              type={type}
+                              id={`inline-${type}-1`}
+                              className="custom-radio"
+                            />
+                          </td>
+                          <td>
+                            <Form.Check
+                              inline
+                              label=""
+                              name="group7"
+                              type={type}
+                              id={`inline-${type}-2`}
+                              className="custom-radio"
+                            />
+                          </td>
+                          <td>
+                            <Form.Check
+                              inline
+                              label=""
+                              name="group7"
+                              type={type}
+                              id={`inline-${type}-3`}
+                              className="custom-radio"
+                            />
+                          </td>
+                          <td>
+                            <Form.Check
+                              inline
+                              label=""
+                              name="group7"
+                              type={type}
+                              id={`inline-${type}-4`}
+                              className="custom-radio"
+                            />
+                          </td>
+                          <td>
+                            <Form.Check
+                              inline
+                              label=""
+                              name="group7"
+                              type={type}
+                              id={`inline-${type}-5`}
+                              className="custom-radio"
+                            />
+                          </td>
+                          <td>
+                            <Form.Check
+                              inline
+                              label=""
+                              name="group7"
+                              type={type}
+                              id={`inline-${type}-6`}
+                              className="custom-radio"
+                            />
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            SQD8 - I got what I needed from the government
+                            office (Outcome)
+                          </td>
+                          <td>
+                            <Form.Check
+                              inline
+                              label=""
+                              name="group8"
+                              type={type}
+                              id={`inline-${type}-1`}
+                              className="custom-radio"
+                            />
+                          </td>
+                          <td>
+                            <Form.Check
+                              inline
+                              label=""
+                              name="group8"
+                              type={type}
+                              id={`inline-${type}-2`}
+                              className="custom-radio"
+                            />
+                          </td>
+                          <td>
+                            <Form.Check
+                              inline
+                              label=""
+                              name="group8"
+                              type={type}
+                              id={`inline-${type}-3`}
+                              className="custom-radio"
+                            />
+                          </td>
+                          <td>
+                            <Form.Check
+                              inline
+                              label=""
+                              name="group8"
+                              type={type}
+                              id={`inline-${type}-4`}
+                              className="custom-radio"
+                            />
+                          </td>
+                          <td>
+                            <Form.Check
+                              inline
+                              label=""
+                              name="group8"
+                              type={type}
+                              id={`inline-${type}-5`}
+                              className="custom-radio"
+                            />
+                          </td>
+                          <td>
+                            <Form.Check
+                              inline
+                              label=""
+                              name="group8"
                               type={type}
                               id={`inline-${type}-6`}
                               className="custom-radio"
@@ -296,7 +647,20 @@ function clientSatisfaction() {
                 ))}
               </Form>
             </div>
-
+            <div
+              className="mb-3 rounded"
+              style={{ backgroundColor: "#dfe7f5" }}
+            >
+              <p className="fw-bold p-3">Remarks</p>
+            </div>
+            <div className="form-floating mb-5">
+              <textarea
+                className="form-control"
+                id="floatingTextarea2"
+                style={{ height: "100px" }}
+              ></textarea>
+              <label htmlFor="floatingTextarea2">Enter your answer</label>
+            </div>
             <div className="d-flex" style={{ width: "150px" }}>
               <Button
                 variant="light"
@@ -307,7 +671,7 @@ function clientSatisfaction() {
               </Button>
 
               <Button style={{ backgroundColor: "green" }} onClick={nextPage}>
-                Next
+                Submit
               </Button>
             </div>
           </div>
