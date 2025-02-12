@@ -13,7 +13,7 @@ function clientInformation() {
   const [customerType, setCustomerType] = useState();
 
   const nextPage = () => {
-    if (!age || !sex || !customerType) {
+    if (!age || !sex || !customerType || age <= 0) {
       Swal.fire({
         icon: "error",
         title: "Oops...",
@@ -21,7 +21,9 @@ function clientInformation() {
       });
       return;
     }
-
+    sessionStorage.setItem("age", age);
+    sessionStorage.setItem("sex", sex);
+    sessionStorage.setItem("customerType", customerType);
     navigate("/office-transact");
   };
 
@@ -45,19 +47,19 @@ function clientInformation() {
   const handleAgeChange = (event) => {
     const value = event.target.value;
     setAge(value);
-    sessionStorage.setItem("age", value);
+    // sessionStorage.setItem("age", value);
   };
 
   const handleSexChange = (event) => {
     const value = event.target.value;
     setSex(value);
-    sessionStorage.setItem("sex", value);
+    // sessionStorage.setItem("sex", value);
   };
 
   const handleCustomerTypeChange = (event) => {
     const value = event.target.value;
     setCustomerType(value);
-    sessionStorage.setItem("customerType", value);
+    // sessionStorage.setItem("customerType", value);
   };
 
   return (

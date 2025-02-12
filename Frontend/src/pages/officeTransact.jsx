@@ -1,5 +1,4 @@
 import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
 import Header from "../components/header2";
 import { useNavigate } from "react-router-dom";
 import Dropdown from "react-bootstrap/Dropdown";
@@ -10,22 +9,28 @@ function officeTransact() {
 
   const [selectedOffice, setSelectedOption] = useState("Select your answer");
 
-  //
+  const handleSelect = (eventKey) => {
+    setSelectedOption(eventKey);
+  };
+  
   useEffect(() => {
     const savedOffice = sessionStorage.getItem("selectedOffice");
     if (savedOffice) {
       setSelectedOption(savedOffice);
     }
   }, []);
-
-  const handleSelect = (eventKey) => {
-    setSelectedOption(eventKey);
-    sessionStorage.setItem("selectedOffice", eventKey);
-  };
-  //
-
+  
   const nextPage = () => {
-    navigate("/service-avail", { state: { selectedOffice } });
+    const office = sessionStorage.getItem("selectedOffice");
+    if (office == selectedOffice) {
+      sessionStorage.setItem("selectedOffice", selectedOffice);
+      navigate("/service-avail");
+    }
+    else {
+      sessionStorage.setItem("selectedOffice", selectedOffice);
+      sessionStorage.removeItem("serviceAvailed");
+      navigate("/service-avail");
+    }
   };
 
   const backPage = () => {
