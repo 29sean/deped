@@ -4,7 +4,6 @@ import Header from "../components/header2";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Happy from "../assets/Images/happy.jpg";
-import Table from "react-bootstrap/Table";
 
 function clientSatisfaction() {
   const navigate = useNavigate();
@@ -84,35 +83,38 @@ function clientSatisfaction() {
             </div>
 
             <div
-              className="mb-3 rounded p-3"
+              className="mb-3 rounded"
               style={{ backgroundColor: "#dfe7f5" }}
             >
               <Form>
                 {["radio"].map((type, index) => (
-                  <div key={index} style={{ overflowX: "auto" }}>
-                    <Table striped="columns">
-                      <thead
-                        style={{
-                          fontSize: "13px",
-                          textAlign: "center",
-                          whiteSpace: "nowrap",
-                        }}
-                      >
+                  <div key={index}>
+                    <table className="table table-striped table-responsive">
+                    <colgroup>
+                        <col style={{ width: "25%" }} />
+                        <col style={{ width: "10%" }} />
+                        <col style={{ width: "10%" }} />
+                        <col style={{ width: "10%" }} />
+                        <col style={{ width: "10%" }} />
+                        <col style={{ width: "10%" }} />
+                        <col style={{ width: "10%" }} />
+                      </colgroup>
+                      <thead>
                         <tr>
                           <th></th>
-                          <th className="p-3">Strongly Agree (5)</th>
-                          <th className="p-3">Agree (4)</th>
-                          <th className="p-3">
+                          <th className="text-wrap" style={{ fontSize: "13.5px"}}>Strongly Agree (5)</th>
+                          <th className="text-wrap" style={{ fontSize: "13.5px"}}>Agree (4)</th>
+                          <th className="text-wrap" style={{ fontSize: "13.5px"}}>
                             Neither Agree nor Disagree (3)
                           </th>
-                          <th className="p-3">Disagree (2)</th>
-                          <th className="p-3">Strongly Disagree (1)</th>
-                          <th className="p-3">Not applicable</th>
+                          <th className="text-wrap" style={{ fontSize: "13.5px"}}>Disagree (2)</th>
+                          <th className="text-wrap" style={{ fontSize: "13.5px"}}>Strongly Disagree (1)</th>
+                          <th className="text-wrap" style={{ fontSize: "13.5px"}}>Not applicable</th>
                         </tr>
                       </thead>
                       <tbody>
                         <tr>
-                          <td>
+                          <td style={{ fontSize: "13.5px", textAlign: "left", paddingBlock: "20px"}}>
                             SQD1 - I spent an acceptable amount of time to
                             complete my transaction (Responsiveness)
                           </td>
@@ -178,7 +180,7 @@ function clientSatisfaction() {
                           </td>
                         </tr>
                         <tr>
-                          <td>
+                          <td style={{ fontSize: "13.5px", textAlign: "left", paddingBlock: "20px"}}>
                             SQD2 - The office accurately informed and followed
                             the transaction's requirements and steps
                             (Reliability)
@@ -245,7 +247,7 @@ function clientSatisfaction() {
                           </td>
                         </tr>
                         <tr>
-                          <td>
+                          <td style={{ fontSize: "13.5px", textAlign: "left", paddingBlock: "20px"}}>
                             SQD3 - My transaction (including steps and payment)
                             was simple and convenient (Access and Facilities)
                           </td>
@@ -311,7 +313,7 @@ function clientSatisfaction() {
                           </td>
                         </tr>
                         <tr>
-                          <td>
+                          <td style={{ fontSize: "13.5px", textAlign: "left", paddingBlock: "20px"}}>
                             SDQ4 - I easily found information about my
                             transaction from the office or its website
                             (Communication)
@@ -378,7 +380,7 @@ function clientSatisfaction() {
                           </td>
                         </tr>
                         <tr>
-                          <td>
+                          <td style={{ fontSize: "13.5px", textAlign: "left", paddingBlock: "20px"}}>
                             SQD5 - I paid an acceptable amount of fees for my
                             transaction (Costs)
                           </td>
@@ -444,7 +446,7 @@ function clientSatisfaction() {
                           </td>
                         </tr>
                         <tr>
-                          <td>
+                          <td style={{ fontSize: "13.5px", textAlign: "left", paddingBlock: "20px"}}>
                             SQD6 - I am confident my transaction was secure
                             (Integrity)
                           </td>
@@ -510,7 +512,7 @@ function clientSatisfaction() {
                           </td>
                         </tr>
                         <tr>
-                          <td>
+                          <td style={{ fontSize: "13.5px", textAlign: "left", paddingBlock: "20px"}}>
                             SQD7 - The office's support was quick to respond
                             (Assurance)
                           </td>
@@ -576,7 +578,7 @@ function clientSatisfaction() {
                           </td>
                         </tr>
                         <tr>
-                          <td>
+                          <td style={{ fontSize: "13.5px", textAlign: "left", paddingBlock: "20px"}}>
                             SQD8 - I got what I needed from the government
                             office (Outcome)
                           </td>
@@ -642,24 +644,23 @@ function clientSatisfaction() {
                           </td>
                         </tr>
                       </tbody>
-                    </Table>
+                    </table>
                   </div>
                 ))}
               </Form>
             </div>
             <div
-              className="mb-3 rounded"
+              className="rounded mt-5"
               style={{ backgroundColor: "#dfe7f5" }}
             >
               <p className="fw-bold p-3">Remarks</p>
             </div>
-            <div className="form-floating mb-5">
+            <div className="mb-5">
               <textarea
                 className="form-control"
-                id="floatingTextarea2"
                 style={{ height: "100px" }}
+                placeholder="Enter your answer..."
               ></textarea>
-              <label htmlFor="floatingTextarea2">Enter your answer</label>
             </div>
             <div className="d-flex" style={{ width: "150px" }}>
               <Button
@@ -678,18 +679,34 @@ function clientSatisfaction() {
         </div>
       </div>
 
-      {/* Inline CSS in JS */}
       <style>{`
         .custom-radio input[type="radio"] {
-          transform: scale(1.5); /* Adjust the scale as needed */
-          margin: 0 10px;
+          transform: scale(1.3); /* Adjust size */
+          border: 1px solid black; /* Border color */
+          border-radius: 50%; /* Make it circular */
+          outline: none;
+          margin: 0;
         }
 
+        .custom-radio input[type="radio"]:checked {
+          background-color: white;
+          border: 5px solid blue; /* Change border when selected */
+        }
+        
         .custom-radio {
           display: flex;
           justify-content: center;
           align-items: center;
-          padding-top: 25px;
+        }
+        table {
+          width: 100%;
+          text-align: center;
+        }
+
+        th, td {
+          vertical-align: middle;
+          text-align: center;
+          padding: 10px;
         }
       `}</style>
     </div>
