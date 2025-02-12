@@ -1,16 +1,16 @@
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Header from "../components/header";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 
 function clientInformation() {
   const navigate = useNavigate();
 
-  const [age, setAge] = useState();
-  const [sex, setSex] = useState();
-  const [customerType, setCustomerType] = useState();
+  const [age, setAge] = useState("");
+  const [sex, setSex] = useState("");
+  const [customerType, setCustomerType] = useState("");
 
   const nextPage = () => {
     if (!age || !sex || !customerType) {
@@ -75,7 +75,7 @@ function clientInformation() {
             <div
               className="mb-3 rounded p-3"
               style={{ backgroundColor: "#dfe7f5" }}
-              controlId="age"
+              // controlId="age"
             >
               <p>Age</p>
               <Form.Control
@@ -89,7 +89,7 @@ function clientInformation() {
             <div
               className="mb-3 rounded p-3"
               style={{ backgroundColor: "#dfe7f5" }}
-              controlId="sex"
+              // controlId="sex"
             >
               <p>Sex</p>
               <div>
@@ -117,7 +117,7 @@ function clientInformation() {
             <div
               className="mb-3 rounded p-3"
               style={{ backgroundColor: "#dfe7f5" }}
-              controlId="customerType"
+              // controlId="customerType"
             >
               <p>Customer Type</p>
               <div>

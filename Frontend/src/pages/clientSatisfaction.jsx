@@ -90,7 +90,7 @@ function clientSatisfaction() {
                 {["radio"].map((type, index) => (
                   <div key={index}>
                     <table className="table table-striped table-responsive">
-                    <colgroup>
+                      <colgroup>
                         <col style={{ width: "25%" }} />
                         <col style={{ width: "10%" }} />
                         <col style={{ width: "10%" }} />
@@ -102,19 +102,53 @@ function clientSatisfaction() {
                       <thead>
                         <tr>
                           <th></th>
-                          <th className="text-wrap" style={{ fontSize: "13.5px"}}>Strongly Agree (5)</th>
-                          <th className="text-wrap" style={{ fontSize: "13.5px"}}>Agree (4)</th>
-                          <th className="text-wrap" style={{ fontSize: "13.5px"}}>
+                          <th
+                            className="text-wrap"
+                            style={{ fontSize: "13.5px" }}
+                          >
+                            Strongly Agree (5)
+                          </th>
+                          <th
+                            className="text-wrap"
+                            style={{ fontSize: "13.5px" }}
+                          >
+                            Agree (4)
+                          </th>
+                          <th
+                            className="text-wrap"
+                            style={{ fontSize: "13.5px" }}
+                          >
                             Neither Agree nor Disagree (3)
                           </th>
-                          <th className="text-wrap" style={{ fontSize: "13.5px"}}>Disagree (2)</th>
-                          <th className="text-wrap" style={{ fontSize: "13.5px"}}>Strongly Disagree (1)</th>
-                          <th className="text-wrap" style={{ fontSize: "13.5px"}}>Not applicable</th>
+                          <th
+                            className="text-wrap"
+                            style={{ fontSize: "13.5px" }}
+                          >
+                            Disagree (2)
+                          </th>
+                          <th
+                            className="text-wrap"
+                            style={{ fontSize: "13.5px" }}
+                          >
+                            Strongly Disagree (1)
+                          </th>
+                          <th
+                            className="text-wrap"
+                            style={{ fontSize: "13.5px" }}
+                          >
+                            Not applicable
+                          </th>
                         </tr>
                       </thead>
                       <tbody>
                         <tr>
-                          <td style={{ fontSize: "13.5px", textAlign: "left", paddingBlock: "20px"}}>
+                          <td
+                            style={{
+                              fontSize: "13.5px",
+                              textAlign: "left",
+                              paddingBlock: "20px",
+                            }}
+                          >
                             SQD1 - I spent an acceptable amount of time to
                             complete my transaction (Responsiveness)
                           </td>
@@ -180,7 +214,13 @@ function clientSatisfaction() {
                           </td>
                         </tr>
                         <tr>
-                          <td style={{ fontSize: "13.5px", textAlign: "left", paddingBlock: "20px"}}>
+                          <td
+                            style={{
+                              fontSize: "13.5px",
+                              textAlign: "left",
+                              paddingBlock: "20px",
+                            }}
+                          >
                             SQD2 - The office accurately informed and followed
                             the transaction's requirements and steps
                             (Reliability)
@@ -247,7 +287,13 @@ function clientSatisfaction() {
                           </td>
                         </tr>
                         <tr>
-                          <td style={{ fontSize: "13.5px", textAlign: "left", paddingBlock: "20px"}}>
+                          <td
+                            style={{
+                              fontSize: "13.5px",
+                              textAlign: "left",
+                              paddingBlock: "20px",
+                            }}
+                          >
                             SQD3 - My transaction (including steps and payment)
                             was simple and convenient (Access and Facilities)
                           </td>
@@ -313,7 +359,13 @@ function clientSatisfaction() {
                           </td>
                         </tr>
                         <tr>
-                          <td style={{ fontSize: "13.5px", textAlign: "left", paddingBlock: "20px"}}>
+                          <td
+                            style={{
+                              fontSize: "13.5px",
+                              textAlign: "left",
+                              paddingBlock: "20px",
+                            }}
+                          >
                             SDQ4 - I easily found information about my
                             transaction from the office or its website
                             (Communication)
@@ -380,7 +432,13 @@ function clientSatisfaction() {
                           </td>
                         </tr>
                         <tr>
-                          <td style={{ fontSize: "13.5px", textAlign: "left", paddingBlock: "20px"}}>
+                          <td
+                            style={{
+                              fontSize: "13.5px",
+                              textAlign: "left",
+                              paddingBlock: "20px",
+                            }}
+                          >
                             SQD5 - I paid an acceptable amount of fees for my
                             transaction (Costs)
                           </td>
@@ -446,7 +504,13 @@ function clientSatisfaction() {
                           </td>
                         </tr>
                         <tr>
-                          <td style={{ fontSize: "13.5px", textAlign: "left", paddingBlock: "20px"}}>
+                          <td
+                            style={{
+                              fontSize: "13.5px",
+                              textAlign: "left",
+                              paddingBlock: "20px",
+                            }}
+                          >
                             SQD6 - I am confident my transaction was secure
                             (Integrity)
                           </td>
@@ -512,7 +576,13 @@ function clientSatisfaction() {
                           </td>
                         </tr>
                         <tr>
-                          <td style={{ fontSize: "13.5px", textAlign: "left", paddingBlock: "20px"}}>
+                          <td
+                            style={{
+                              fontSize: "13.5px",
+                              textAlign: "left",
+                              paddingBlock: "20px",
+                            }}
+                          >
                             SQD7 - The office's support was quick to respond
                             (Assurance)
                           </td>
@@ -578,7 +648,13 @@ function clientSatisfaction() {
                           </td>
                         </tr>
                         <tr>
-                          <td style={{ fontSize: "13.5px", textAlign: "left", paddingBlock: "20px"}}>
+                          <td
+                            style={{
+                              fontSize: "13.5px",
+                              textAlign: "left",
+                              paddingBlock: "20px",
+                            }}
+                          >
                             SQD8 - I got what I needed from the government
                             office (Outcome)
                           </td>

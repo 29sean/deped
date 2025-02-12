@@ -1,4 +1,3 @@
-import { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import ClientInformation from "./pages/clientInformation";
 import OfficeTransact from "./pages/officeTransact";
@@ -10,6 +9,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./pages/Login";
 import AdminDashboard from "./pages/AdminDashboard";
 import ClientSatisfaction from "./pages/ClientSatisfaction";
+import Protected from "./pages/Protected";
 
 // {
 // "username": "admin1",
@@ -20,15 +20,18 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<ClientInformation />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/client-satisfaction" element={<ClientSatisfaction />} />
         <Route path="/office-transact" element={<OfficeTransact />} />
         <Route path="/service-avail" element={<ServiceAvail />} />
         <Route path="/citizen-charter" element={<CitizenCharter />} />
         <Route path="/citizen-charter2" element={<CitizenCharter2 />} />
         <Route path="/citizen-charter3" element={<CitizenCharter3 />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/client-satisfaction" element={<ClientSatisfaction />} />
+
+        <Route element={<Protected />}>
+          <Route path="/admin" element={<AdminDashboard />} />
+        </Route>
       </Routes>
     </Router>
   );
