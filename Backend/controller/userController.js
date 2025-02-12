@@ -41,32 +41,39 @@ export const login = async (req, res) => {
   if (!username || !password) {
     return res
       .status(400)
-      .json({ message: "Username and password are required" });
+      .json({ success: false, message: "Username and password are required" });
   }
 
   try {
-    const [user] = await pool.execute("SELECT * FROM user WHERE username = ?", [
-      username,
-    ]);
-    if (user.length === 0) {
-      return res.status(400).json({ message: "Invalid username or password" });
+    const [users] = await pool.execute(
+      "SELECT * FROM user WHERE username = ?",
+      [username]
+    );
+
+    if (users.length === 0) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid username or password" });
     }
 
-    const validPassword = await bcrypt.compare(password, user[0].password);
+    const user = users[0];
+    const validPassword = await bcrypt.compare(password, user.password);
+
     if (!validPassword) {
-      return res.status(400).json({ message: "Invalid username or password" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid username or password" });
     }
 
-    // Generate JWT token
     const token = jwt.sign(
-      { userId: user[0].id, username: user[0].username },
+      { userId: user.id, username: user.username },
       process.env.JWT_SECRET,
       { expiresIn: "1h" }
     );
 
-    res.status(200).json({ message: "Login successful", token });
+    res.status(200).json({ success: true, message: "Login successful", token });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ success: false, message: "Server error" });
   }
 };
