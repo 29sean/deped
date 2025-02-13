@@ -10,6 +10,7 @@ import Login from "./pages/Login";
 import AdminDashboard from "./pages/AdminDashboard";
 import ClientSatisfaction from "./pages/ClientSatisfaction";
 import Protected from "./pages/Protected";
+import SDS from "./pages/SDS";
 
 // {
 // "username": "admin1",
@@ -31,6 +32,7 @@ function App() {
 
         <Route element={<Protected />}>
           <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/sds" element={<SDS />} />
         </Route>
       </Routes>
     </Router>

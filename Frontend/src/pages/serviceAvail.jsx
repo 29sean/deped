@@ -25,8 +25,11 @@ function serviceAvail() {
     const office = sessionStorage.getItem("selectedOffice");
     if (office) {
       setSelectedOfficeTransacted1(office);
-      if (office == "Admin (Cash, Personnel, Records, Supply, General Services, Procurement)") {
-        setOtw(otwAdmin)
+      if (
+        office ==
+        "Admin (Cash, Personnel, Records, Supply, General Services, Procurement)"
+      ) {
+        setOtw(otwAdmin);
       }
     }
     const office2 = sessionStorage.getItem("2ndOffice");
@@ -52,8 +55,7 @@ function serviceAvail() {
     const service = sessionStorage.getItem("serviceAvailed");
     if (service == "Travel authority") {
       navigate("/citizen-charter");
-    }
-    else {
+    } else {
       navigate("/client-satisfaction");
     }
   };
@@ -160,8 +162,9 @@ function serviceAvail() {
               <p className="fs-4 p-3">{selectedOfficeTransacted1}</p>
             </div>
             {selectedOfficeTransacted1 ===
-              "CID - Curriculum Implementation Division (LRMS, Instructional Management, PSDS)" || selectedOfficeTransacted1 ===
-              "Admin (Cash, Personnel, Records, Supply, General Services, Procurement)" && (
+              "CID - Curriculum Implementation Division (LRMS, Instructional Management, PSDS)" ||
+              (selectedOfficeTransacted1 ===
+                "Admin (Cash, Personnel, Records, Supply, General Services, Procurement)" && (
                 <div
                   className="mb-3 rounded p-3"
                   style={{ backgroundColor: "#dfe7f5" }}
@@ -194,40 +197,40 @@ function serviceAvail() {
                     </Dropdown>
                   </div>
                 </div>
-              )}
+              ))}
             {selectedOfficeTransacted1 !==
               "Admin (Cash, Personnel, Records, Supply, General Services, Procurement)" && (
-                <div
-                  className="mb-3 rounded p-3"
-                  style={{ backgroundColor: "#dfe7f5" }}
-                >
-                  <p>Service availed</p>
-                  <Dropdown onSelect={handleSelect}>
-                    <Dropdown.Toggle
-                      variant="light"
-                      className="text-truncate"
-                      style={{ width: "100%", textAlign: "left" }}
-                      id="dropdown-basic"
-                    >
-                      {selectedServiceAvailed}
-                    </Dropdown.Toggle>
+              <div
+                className="mb-3 rounded p-3"
+                style={{ backgroundColor: "#dfe7f5" }}
+              >
+                <p>Service availed</p>
+                <Dropdown onSelect={handleSelect}>
+                  <Dropdown.Toggle
+                    variant="light"
+                    className="text-truncate"
+                    style={{ width: "100%", textAlign: "left" }}
+                    id="dropdown-basic"
+                  >
+                    {selectedServiceAvailed}
+                  </Dropdown.Toggle>
 
-                    <Dropdown.Menu>
-                      {availableServices.length > 0 ? (
-                        availableServices.map((service, index) => (
-                          <Dropdown.Item key={index} eventKey={service}>
-                            {service}
-                          </Dropdown.Item>
-                        ))
-                      ) : (
-                        <Dropdown.Item disabled>
-                          No services available
+                  <Dropdown.Menu>
+                    {availableServices.length > 0 ? (
+                      availableServices.map((service, index) => (
+                        <Dropdown.Item key={index} eventKey={service}>
+                          {service}
                         </Dropdown.Item>
-                      )}
-                    </Dropdown.Menu>
-                  </Dropdown>
-                </div>
-              )}
+                      ))
+                    ) : (
+                      <Dropdown.Item disabled>
+                        No services available
+                      </Dropdown.Item>
+                    )}
+                  </Dropdown.Menu>
+                </Dropdown>
+              </div>
+            )}
 
             <div className="d-flex" style={{ width: "150px" }}>
               <Button

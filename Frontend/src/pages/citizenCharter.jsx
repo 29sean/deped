@@ -56,7 +56,6 @@ function citizenCharter() {
             <div
               className="mb-3 rounded p-3"
               style={{ backgroundColor: "#dfe7f5" }}
-              controlId="yesno"
             >
               <p>
                 Are you aware of the Citizen's Charter - document of the SDO
