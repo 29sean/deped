@@ -29,6 +29,10 @@ function officeTransact() {
     else {
       sessionStorage.setItem("selectedOffice", selectedOffice);
       sessionStorage.removeItem("serviceAvailed");
+      sessionStorage.removeItem("selectedYesNo");
+      sessionStorage.removeItem("selectedYesNo2");
+      sessionStorage.removeItem("selectedYesNo3");
+      sessionStorage.removeItem("2ndOffice");
       navigate("/service-avail");
     }
   };
@@ -36,6 +40,17 @@ function officeTransact() {
   const backPage = () => {
     navigate("/");
   };
+
+  const offices = [
+    "SDS - Schools Division Superintendent",
+    "ASDS - Assistant Schools Division Superintendent",
+    "Admin (Cash, Personnel, Records, Supply, General Services, Procurement)",
+    "CID - Curriculum Implementation Division (LRMS, Instructional Management, PSDS)",
+    "Finance (Accounting, Budget)",
+    "ICT",
+    "Legal",
+    "SGOD - School Governance and Operations Division (M&E, SocMob, Planning & Research, HRD, Facilities, School Health)",
+  ];
 
   return (
     <div
@@ -69,29 +84,17 @@ function officeTransact() {
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu>
-                  <Dropdown.Item eventKey="SDS - Schools Division Superintendent">
-                    SDS - Schools Division Superintendent
-                  </Dropdown.Item>
-                  <Dropdown.Item eventKey="ASDS - Assistant Schools Division Superintendent">
-                    ASDS - Assistant Schools Division Superintendent
-                  </Dropdown.Item>
-                  <Dropdown.Item eventKey="Admin (Cash, Personnel, Records, Supply, General Services, Procurement)">
-                    Admin (Cash, Personnel, Records, Supply, General Services,
-                    Procurement)
-                  </Dropdown.Item>
-                  <Dropdown.Item eventKey="CID - Curriculum Implementation Division (LRMS, Instructional Management, PSDS)">
-                    CID - Curriculum Implementation Division (LRMS,
-                    Instructional Management, PSDS)
-                  </Dropdown.Item>
-                  <Dropdown.Item eventKey="Finance (Accounting, Budget)">
-                    Finance (Accounting, Budget)
-                  </Dropdown.Item>
-                  <Dropdown.Item eventKey="ICT">ICT</Dropdown.Item>
-                  <Dropdown.Item eventKey="Legal">Legal</Dropdown.Item>
-                  <Dropdown.Item eventKey="SGOD - School Governance and Operations Division (M&E, SocMob, Planning & Research, HRD, Facilities, School Health)">
-                    SGOD - School Governance and Operations Division (M&E,
-                    SocMob, Planning & Research, HRD, Facilities, School Health)
-                  </Dropdown.Item>
+                  {offices.length > 0 ? (
+                    offices.map((office, index) => (
+                      <Dropdown.Item key={index} eventKey={office}>
+                        {office}
+                      </Dropdown.Item>
+                    ))
+                  ) : (
+                    <Dropdown.Item disabled>
+                      No services available
+                    </Dropdown.Item>
+                  )}
                 </Dropdown.Menu>
               </Dropdown>
             </div>

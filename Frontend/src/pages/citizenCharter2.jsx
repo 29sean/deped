@@ -11,7 +11,7 @@ function citizenCharter2() {
   const [selectedOption, setSelectedOption] = useState();
 
   useEffect(() => {
-    const savedOption = sessionStorage.getItem("selectedYesNo3");
+    const savedOption = sessionStorage.getItem("selectedYesNo2");
     if (savedOption) {
       setSelectedOption(savedOption);
     }
@@ -20,15 +20,16 @@ function citizenCharter2() {
   const handleSelect = (event) => {
     const value = event.target.value;
     setSelectedOption(value);
-    sessionStorage.setItem("selectedYesNo3", value);
+    sessionStorage.setItem("selectedYesNo2", value);
   };
   //
 
   const nextPage = () => {
-    const yesno = sessionStorage.getItem("selectedYesNo3");
+    const yesno = sessionStorage.getItem("selectedYesNo2");
     if (yesno == "yes" || yesno == "yesbut") {
       navigate("/citizen-charter3");
     } else {
+      sessionStorage.removeItem('selectedYesNo3')
       navigate("/client-satisfaction");
     }
   };

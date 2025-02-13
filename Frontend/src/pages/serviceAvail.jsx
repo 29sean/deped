@@ -15,7 +15,8 @@ function serviceAvail() {
   const [selectedOfficeTransacted1, setSelectedOfficeTransacted1] =
     useState("Select the office");
 
-  const [otw, setOtw] = useState();
+  const [otw, setOtw] = useState([]);
+  const [selectService, setSelectService] = useState([]);
 
   useEffect(() => {
     const savedService = sessionStorage.getItem("serviceAvailed");
@@ -38,6 +39,22 @@ function serviceAvail() {
     }
   }, []);
 
+  const updateServiceOptions = (office) => {
+    if (office === "Cash") {
+      setSelectService(cash);
+    } else if (office === "Personnel") {
+      setSelectService(personnel);
+    } else if (office === "Records") {
+      setSelectService(records);
+    } else if (office === "Property and Supply") {
+      setSelectService(propertyandSupply);
+    } else if (office === "General Services") {
+      setSelectService(generalServices);
+    } else if (office === "Procurement") {
+      setSelectService(procurement);
+    }
+  };
+
   const handleSelect = (eventKey) => {
     setSelectedOption(eventKey);
     sessionStorage.setItem("serviceAvailed", eventKey);
@@ -46,6 +63,7 @@ function serviceAvail() {
   const handleSelectOfficeTransacted = (eventKey) => {
     setSelectedOfficeTransacted(eventKey);
     sessionStorage.setItem("2ndOffice", eventKey);
+    updateServiceOptions(eventKey);
   };
 
   const backPage = () => {
@@ -60,63 +78,83 @@ function serviceAvail() {
     }
   };
 
-  const services = {
-    "SDS - Schools Division Superintendent": [
-      "Travel authority",
-      "Other requests/inquiries",
-      "Feedback/Complaint",
-    ],
-    "ASDS - Assistant Schools Division Superintendent": [
-      "BAC",
-      "Other requests/inquiries",
-      "Feedback/Complaint",
-    ],
-    "Admin (Cash, Personnel, Records, Supply, General Services, Procurement)": [
-      "Cash",
-      "Personnel",
-      "Records",
-      "Property and Supply",
-      "General Services",
-      "Procurement",
-    ],
-    "CID - Curriculum Implementation Division (LRMS, Instructional Management, PSDS)":
-      [
-        "ALS Enrollment",
-        "Access to LR Portal",
-        "Borrowing of books/learning materials",
-        "Contextualized Learning Resources",
-        "Quality Assurance of Supplementary Learning Resources",
-        "Instructional Supervision",
-        "Technical assistance",
-        "Other requests/inquiries",
-      ],
-    "Finance (Accounting, Budget)": [
-      "Accounting Related",
-      "ORS - Obligation Request and Status",
-      "Posting/Updating of Disbursement",
-      "Other request/inquiries",
-    ],
-    ICT: [
-      "Create/delete/rename/reset user accounts",
-      "Troubleshooting of ICT Equipmennt",
-      "Uploading of publications",
-      "Other requests/inquiries",
-    ],
-    Legal: [
-      "Certificate of No Pending Case",
-      "Correction of Entries in School Record",
-      "Feedback/Complaints",
-      "Legal advice/opinion",
-      "Sites titling",
-    ],
-    "SGOD - School Governance and Operations Division (M&E, SocMob, Planning & Research, HRD, Facilities, School Health)":
-      [
-        "Private school-related",
-        "Basic Education Data",
-        "EBEIS/LIS/NAT Data and Performance Indicators",
-        "Other requests/inquiries",
-      ],
-  };
+  const records = [
+    "CAV - Certification, Authentication, Verification",
+    "Certified True Copy (CTC)/Photocopy of documents",
+    "Non-certified True Copy Documents",
+    "Receiving and Releasing of Documents",
+    "Other requests/inquiries",
+    "Feedback/Complaint",
+  ];
+
+  const propertyandSupply = [
+    "Inspection/Acceptance/Distribution of LRs, Supplies, Equipment",
+    "Property and Equipment Clearance",
+    "Request/issuance of Supplies",
+    "Other requests/inquiries",
+  ];
+
+  const generalServices = [
+    "Cash Advance",
+    "General Services-related",
+    "Procurement-related",
+    "Other requests/inquiries",
+  ];
+
+  const procurement = [
+    "Cash Advance",
+    "General Services-related",
+    "Procurement-related",
+    "Other requests/inquiries",
+  ];
+
+  const SDS = [
+    "Travel authority",
+    "Other requests/inquiries",
+    "Feedback/Complaint",
+  ];
+
+  const ASDS = ["BAC", "Other requests/inquiries", "Feedback/Complaint"];
+
+  const CID = [
+    "ALS Enrollment",
+    "Access to LR Portal",
+    "Borrowing of books/learning materials",
+    "Contextualized Learning Resources",
+    "Quality Assurance of Supplementary Learning Resources",
+    "Instructional Supervision",
+    "Technical assistance",
+    "Other requests/inquiries",
+  ];
+
+  const Finance = [
+    "Accounting Related",
+    "ORS - Obligation Request and Status",
+    "Posting/Updating of Disbursement",
+    "Other request/inquiries",
+  ];
+
+  const ICT = [
+    "Create/delete/rename/reset user accounts",
+    "Troubleshooting of ICT Equipment",
+    "Uploading of publications",
+    "Other requests/inquiries",
+  ];
+
+  const Legal = [
+    "Certificate of No Pending Case",
+    "Correction of Entries in School Record",
+    "Feedback/Complaints",
+    "Legal advice/opinion",
+    "Sites titling",
+  ];
+
+  const SGOD = [
+    "Private school-related",
+    "Basic Education Data",
+    "EBEIS/LIS/NAT Data and Performance Indicators",
+    "Other requests/inquiries",
+  ];
 
   const otwCID = [
     "LRMS - Learning Resource Management Section",
@@ -144,7 +182,7 @@ function serviceAvail() {
     "SocMob - Social Mobilization and Networking",
   ];
 
-  const availableServices = services[selectedOfficeTransacted1] || [];
+  // const availableServices = services[selectedOfficeTransacted1] || [];
 
   return (
     <div
@@ -183,14 +221,14 @@ function serviceAvail() {
 
                       <Dropdown.Menu>
                         {otw.length > 0 ? (
-                          otw.map((service, index) => (
-                            <Dropdown.Item key={index} eventKey={service}>
-                              {service}
+                          otw.map((office, index) => (
+                            <Dropdown.Item key={index} eventKey={office}>
+                              {office}
                             </Dropdown.Item>
                           ))
                         ) : (
                           <Dropdown.Item disabled>
-                            No services available
+                            No office available
                           </Dropdown.Item>
                         )}
                       </Dropdown.Menu>
