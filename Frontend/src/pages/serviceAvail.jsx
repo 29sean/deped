@@ -15,7 +15,8 @@ function serviceAvail() {
   const [selectedOfficeTransacted1, setSelectedOfficeTransacted1] =
     useState("Select the office");
 
-  const [otw, setOtw] = useState();
+  const [otw, setOtw] = useState([]);
+  const [selectService, setSelectService] = useState([]);
 
   useEffect(() => {
     const savedService = sessionStorage.getItem("serviceAvailed");
@@ -25,15 +26,64 @@ function serviceAvail() {
     const office = sessionStorage.getItem("selectedOffice");
     if (office) {
       setSelectedOfficeTransacted1(office);
-      if (office == "Admin (Cash, Personnel, Records, Supply, General Services, Procurement)") {
-        setOtw(otwAdmin)
+      updateServiceOptions(office);
+      
+      if (office === "SDS - Schools Division Superintendent") {
+        setSelectService(SDS);
       }
+      if (office === "ASDS - Assistant Schools Division Superintendent") {
+        setSelectService(ASDS);
+      }
+      if (office === "CID - Curriculum Implementation Division (LRMS, Instructional Management, PSDS)") {
+        setSelectService(CID);
+      }
+      if(office === "Finance (Accounting, Budget)"){
+        setSelectService(Finance);
+      }
+      if(office === "ICT"){
+        setSelectService(ICT);
+      }
+      if(office === "Legal"){
+        setSelectService(Legal);
+      }
+      if(office === "SGOD - School Governance and Operations Division (M&E, SocMob, Planning & Research, HRD, Facilities, School Health)"){
+        setSelectService(SGOD);
+      }
+
+
+      if (office === "Admin (Cash, Personnel, Records, Supply, General Services, Procurement)") {
+        setOtw(otwAdmin);
+      }
+      else if (office === "CID - Curriculum Implementation Division (LRMS, Instructional Management, PSDS)") {
+        setOtw(otwCID);
+      } else if (office === "Finance (Accounting, Budget)") {
+        setOtw(otwFinance);
+      } else if (office === "SGOD - School Governance and Operations Division (M&E, SocMob, Planning & Research, HRD, Facilities, School Health)") {
+        setOtw(otwSGOD);
+      }  
     }
     const office2 = sessionStorage.getItem("2ndOffice");
     if (office2) {
       setSelectedOfficeTransacted(office2);
     }
+    
   }, []);
+
+  const updateServiceOptions = (office) => {
+    if (office === "Cash") {
+      setSelectService(cash);
+    } else if (office === "Personnel") {
+      setSelectService(personnel);
+    } else if (office === "Records") {
+      setSelectService(records);
+    } else if (office === "Property and Supply") {
+      setSelectService(propertyandSupply);
+    } else if (office === "General Services") {
+      setSelectService(generalServices);
+    } else if (office === "Procurement") {
+      setSelectService(procurement);
+    } 
+  };
 
   const handleSelect = (eventKey) => {
     setSelectedOption(eventKey);
@@ -43,6 +93,7 @@ function serviceAvail() {
   const handleSelectOfficeTransacted = (eventKey) => {
     setSelectedOfficeTransacted(eventKey);
     sessionStorage.setItem("2ndOffice", eventKey);
+    updateServiceOptions(eventKey);
   };
 
   const backPage = () => {
@@ -50,71 +101,120 @@ function serviceAvail() {
   };
   const nextPage = () => {
     const service = sessionStorage.getItem("serviceAvailed");
-    if (service == "Travel authority") {
-      navigate("/citizen-charter");
+    if ((service == "Other requests/inquiries" || service == "Feedback/Complaint")) {
+      sessionStorage.removeItem('selectedYesNo');
+      sessionStorage.removeItem('selectedYesNo2');
+      sessionStorage.removeItem('selectedYesNo3');
+      navigate("/client-satisfaction");
     }
     else {
-      navigate("/client-satisfaction");
+      navigate("/citizen-charter");
     }
   };
 
-  const services = {
-    "SDS - Schools Division Superintendent": [
-      "Travel authority",
-      "Other requests/inquiries",
-      "Feedback/Complaint",
-    ],
-    "ASDS - Assistant Schools Division Superintendent": [
-      "BAC",
-      "Other requests/inquiries",
-      "Feedback/Complaint",
-    ],
-    "Admin (Cash, Personnel, Records, Supply, General Services, Procurement)": [
-      "Cash",
-      "Personnel",
-      "Records",
-      "Property and Supply",
-      "General Services",
-      "Procurement",
-    ],
-    "CID - Curriculum Implementation Division (LRMS, Instructional Management, PSDS)":
-      [
-        "ALS Enrollment",
-        "Access to LR Portal",
-        "Borrowing of books/learning materials",
-        "Contextualized Learning Resources",
-        "Quality Assurance of Supplementary Learning Resources",
-        "Instructional Supervision",
-        "Technical assistance",
-        "Other requests/inquiries",
-      ],
-    "Finance (Accounting, Budget)": [
-      "Accounting Related",
-      "ORS - Obligation Request and Status",
-      "Posting/Updating of Disbursement",
-      "Other request/inquiries",
-    ],
-    ICT: [
-      "Create/delete/rename/reset user accounts",
-      "Troubleshooting of ICT Equipmennt",
-      "Uploading of publications",
-      "Other requests/inquiries",
-    ],
-    Legal: [
-      "Certificate of No Pending Case",
-      "Correction of Entries in School Record",
-      "Feedback/Complaints",
-      "Legal advice/opinion",
-      "Sites titling",
-    ],
-    "SGOD - School Governance and Operations Division (M&E, SocMob, Planning & Research, HRD, Facilities, School Health)":
-      [
-        "Private school-related",
-        "Basic Education Data",
-        "EBEIS/LIS/NAT Data and Performance Indicators",
-        "Other requests/inquiries",
-      ],
-  };
+  const cash = [
+    "Cash Advance",
+    "General Services-related",
+    "Procurement-related",
+    "Other requests/inquiries"
+  ];
+
+  const personnel = [
+    "Application - Teaching Position",
+    "Application - Non-teaching/Teaching-related",
+    "Appointment (new, promotion, transfer, etc.)",
+    "COE- Certificate of Employment",
+    "Correction of Name/Change of Status",
+    "ERF - Equivalent Record Form",
+    "Leave Application",
+    "Loan Approval and Verification",
+    "Retirement",
+    "Service Record",
+    "Terminal Leave",
+    "Other requests/inquiries"
+  ];
+
+  const records = [
+    "CAV - Certification, Authentication, Verification",
+    "Certified True Copy (CTC)/Photocopy of documents",
+    "Non-certified True Copy Documents",
+    "Receiving and Releasing of Documents",
+    "Other requests/inquiries",
+    "Feedback/Complaint"
+  ];
+
+  const propertyandSupply = [
+    "Inspection/Acceptance/Distribution of LRs, Supplies, Equipment",
+    "Property and Equipment Clearance",
+    "Request/issuance of Supplies",
+    "Other requests/inquiries"
+  ];
+
+  const generalServices = [
+    "Cash Advance",
+    "General Services-related",
+    "Procurement-related",
+    "Other requests/inquiries"
+  ];
+
+  const procurement = [
+    "Cash Advance",
+    "General Services-related",
+    "Procurement-related",
+    "Other requests/inquiries"
+  ];
+
+  const SDS = [
+    "Travel authority",
+    "Other requests/inquiries",
+    "Feedback/Complaint",
+  ];
+  
+  const ASDS = [
+    "BAC",
+    "Other requests/inquiries",
+    "Feedback/Complaint",
+  ];
+  
+  const CID = [
+    "ALS Enrollment",
+    "Access to LR Portal",
+    "Borrowing of books/learning materials",
+    "Contextualized Learning Resources",
+    "Quality Assurance of Supplementary Learning Resources",
+    "Instructional Supervision",
+    "Technical assistance",
+    "Other requests/inquiries",
+  ];
+  
+  const Finance = [
+    "Accounting Related",
+    "ORS - Obligation Request and Status",
+    "Posting/Updating of Disbursement",
+    "Other request/inquiries",
+  ];
+  
+  const ICT = [
+    "Create/delete/rename/reset user accounts",
+    "Troubleshooting of ICT Equipment",
+    "Uploading of publications",
+    "Other requests/inquiries",
+  ];
+  
+  const Legal = [
+    "Certificate of No Pending Case",
+    "Correction of Entries in School Record",
+    "Feedback/Complaints",
+    "Legal advice/opinion",
+    "Sites titling",
+  ];
+  
+  const SGOD = [
+    "Private school-related",
+    "Basic Education Data",
+    "EBEIS/LIS/NAT Data and Performance Indicators",
+    "Other requests/inquiries",
+  ];
 
   const otwCID = [
     "LRMS - Learning Resource Management Section",
@@ -142,7 +242,7 @@ function serviceAvail() {
     "SocMob - Social Mobilization and Networking",
   ];
 
-  const availableServices = services[selectedOfficeTransacted1] || [];
+  // const availableServices = services[selectedOfficeTransacted1] || [];
 
   return (
     <div
@@ -159,9 +259,8 @@ function serviceAvail() {
             <div className="rounded" style={{ backgroundColor: "#dfe7f5" }}>
               <p className="fs-4 p-3">{selectedOfficeTransacted1}</p>
             </div>
-            {selectedOfficeTransacted1 ===
-              "CID - Curriculum Implementation Division (LRMS, Instructional Management, PSDS)" || selectedOfficeTransacted1 ===
-              "Admin (Cash, Personnel, Records, Supply, General Services, Procurement)" && (
+            {(selectedOfficeTransacted1 === "CID - Curriculum Implementation Division (LRMS, Instructional Management, PSDS)" || 
+                selectedOfficeTransacted1 === "Admin (Cash, Personnel, Records, Supply, General Services, Procurement)" || selectedOfficeTransacted1 === "SGOD - School Governance and Operations Division (M&E, SocMob, Planning & Research, HRD, Facilities, School Health)" || selectedOfficeTransacted1 === "Finance (Accounting, Budget)") && (
                 <div
                   className="mb-3 rounded p-3"
                   style={{ backgroundColor: "#dfe7f5" }}
@@ -180,14 +279,14 @@ function serviceAvail() {
 
                       <Dropdown.Menu>
                         {otw.length > 0 ? (
-                          otw.map((service, index) => (
-                            <Dropdown.Item key={index} eventKey={service}>
-                              {service}
+                          otw.map((office, index) => (
+                            <Dropdown.Item key={index} eventKey={office}>
+                              {office}
                             </Dropdown.Item>
                           ))
                         ) : (
                           <Dropdown.Item disabled>
-                            No services available
+                            No office available
                           </Dropdown.Item>
                         )}
                       </Dropdown.Menu>
@@ -195,8 +294,6 @@ function serviceAvail() {
                   </div>
                 </div>
               )}
-            {selectedOfficeTransacted1 !==
-              "Admin (Cash, Personnel, Records, Supply, General Services, Procurement)" && (
                 <div
                   className="mb-3 rounded p-3"
                   style={{ backgroundColor: "#dfe7f5" }}
@@ -213,21 +310,20 @@ function serviceAvail() {
                     </Dropdown.Toggle>
 
                     <Dropdown.Menu>
-                      {availableServices.length > 0 ? (
-                        availableServices.map((service, index) => (
-                          <Dropdown.Item key={index} eventKey={service}>
-                            {service}
+                        {selectService.length > 0 ? (
+                          selectService.map((service, index) => (
+                            <Dropdown.Item key={index} eventKey={service}>
+                              {service}
+                            </Dropdown.Item>
+                          ))
+                        ) : (
+                          <Dropdown.Item disabled>
+                            No office available
                           </Dropdown.Item>
-                        ))
-                      ) : (
-                        <Dropdown.Item disabled>
-                          No services available
-                        </Dropdown.Item>
-                      )}
+                        )}
                     </Dropdown.Menu>
                   </Dropdown>
                 </div>
-              )}
 
             <div className="d-flex" style={{ width: "150px" }}>
               <Button

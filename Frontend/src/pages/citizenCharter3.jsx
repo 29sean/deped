@@ -11,7 +11,7 @@ function citizenCharter3() {
   const [selectedOption, setSelectedOption] = useState();
 
   useEffect(() => {
-    const savedOption = sessionStorage.getItem("selectedYesNo2");
+    const savedOption = sessionStorage.getItem("selectedYesNo3");
     if (savedOption) {
       setSelectedOption(savedOption);
     }
@@ -20,7 +20,7 @@ function citizenCharter3() {
   const handleSelect = (event) => {
     const value = event.target.value;
     setSelectedOption(value);
-    sessionStorage.setItem("selectedYesNo2", value);
+    sessionStorage.setItem("selectedYesNo3", value);
   };
   //
 
