@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
+import axios from "axios";
+import Swal from "sweetalert2";
+import { API_BASE_URL } from "../../config";
 
 const AddDivisionModal = ({ show, handleClose, handleSave }) => {
   const [divisionData, setDivisionData] = useState({
@@ -8,12 +11,46 @@ const AddDivisionModal = ({ show, handleClose, handleSave }) => {
   });
 
   const handleChange = (e) => {
-    setDivisionData({ ...divisionData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setDivisionData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
   };
 
-  const handleSubmit = () => {
-    handleSave(divisionData);
-    setDivisionData({ division_name: "", description: "" }); // Reset form fields
+  const handleSubmit = async () => {
+    if (!divisionData.division_name.trim()) {
+      Swal.fire({
+        icon: "warning",
+        title: "Warning",
+        text: "Division name is required!",
+      });
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        `${API_BASE_URL}/divisions/add-division`,
+        divisionData
+      );
+      Swal.fire({
+        icon: "success",
+        title: "Success",
+        text: response.data.message,
+      });
+
+      console.log("New Division Response:", response.data);
+
+      handleSave();
+      setDivisionData({ division_name: "", description: "" });
+      handleClose();
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: error.response?.data?.message || "Something went wrong",
+      });
+    }
   };
 
   return (
@@ -27,7 +64,7 @@ const AddDivisionModal = ({ show, handleClose, handleSave }) => {
             <Form.Label>Division Name</Form.Label>
             <Form.Control
               type="text"
-              name="name"
+              name="division_name"
               value={divisionData.division_name}
               onChange={handleChange}
               placeholder="Enter division name"

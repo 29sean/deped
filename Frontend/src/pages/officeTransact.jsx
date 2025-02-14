@@ -12,21 +12,20 @@ function officeTransact() {
   const handleSelect = (eventKey) => {
     setSelectedOption(eventKey);
   };
-  
+
   useEffect(() => {
     const savedOffice = sessionStorage.getItem("selectedOffice");
     if (savedOffice) {
       setSelectedOption(savedOffice);
     }
   }, []);
-  
+
   const nextPage = () => {
     const office = sessionStorage.getItem("selectedOffice");
     if (office == selectedOffice) {
       sessionStorage.setItem("selectedOffice", selectedOffice);
       navigate("/service-avail");
-    }
-    else {
+    } else {
       sessionStorage.setItem("selectedOffice", selectedOffice);
       sessionStorage.removeItem("serviceAvailed");
       sessionStorage.removeItem("selectedYesNo");

@@ -29,7 +29,7 @@ function citizenCharter2() {
     if (yesno == "yes" || yesno == "yesbut") {
       navigate("/citizen-charter3");
     } else {
-      sessionStorage.removeItem('selectedYesNo3')
+      sessionStorage.removeItem("selectedYesNo3");
       navigate("/client-satisfaction");
     }
   };

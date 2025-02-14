@@ -29,8 +29,8 @@ function citizenCharter() {
     if (yesno == "yes") {
       navigate("/citizen-charter2");
     } else {
-      sessionStorage.removeItem('selectedYesNo2');
-      sessionStorage.removeItem('selectedYesNo3');
+      sessionStorage.removeItem("selectedYesNo2");
+      sessionStorage.removeItem("selectedYesNo3");
       navigate("/client-satisfaction");
     }
   };
