@@ -62,7 +62,8 @@ function citizenCharter3() {
               style={{ backgroundColor: "#dfe7f5" }}
             >
               <p>
-                Did you use the SDO Citizen's Charter as a guide for the service you availed
+                Did you use the SDO Citizen's Charter as a guide for the service
+                you availed
               </p>
               <div>
                 <Form.Check

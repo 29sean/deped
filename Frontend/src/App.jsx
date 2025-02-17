@@ -33,6 +33,7 @@ function App() {
 
         <Route element={<Protected />}>
           <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/sds" element={<SDS />} />
         </Route>
       </Routes>
     </Router>

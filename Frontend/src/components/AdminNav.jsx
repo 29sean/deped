@@ -37,7 +37,9 @@ const AdminNav = () => {
         </NavbarBrand>
         {/* Navigation Links */}
         <Nav className="d-flex gap-3 ">
-          <NavLink className="fs-5 text-dark">Home</NavLink>
+          <NavLink href="/admin" className="fs-5 text-dark">
+            Home
+          </NavLink>
           <NavLink
             className="fs-5 text-dark"
             onClick={handleLogout}

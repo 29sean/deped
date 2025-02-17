@@ -34,7 +34,10 @@ function serviceAvail() {
       if (office === "ASDS - Assistant Schools Division Superintendent") {
         setSelectService(ASDS);
       }
-      if (office === "CID - Curriculum Implementation Division (LRMS, Instructional Management, PSDS)") {
+      if (
+        office ===
+        "CID - Curriculum Implementation Division (LRMS, Instructional Management, PSDS)"
+      ) {
         setSelectService(CID);
       }
       if (office === "Finance (Accounting, Budget)") {
@@ -50,15 +53,22 @@ function serviceAvail() {
         setSelectService(SGOD);
       }
 
-
-      if (office === "Admin (Cash, Personnel, Records, Supply, General Services, Procurement)") {
+      if (
+        office ===
+        "Admin (Cash, Personnel, Records, Supply, General Services, Procurement)"
+      ) {
         setOtw(otwAdmin);
-      }
-      else if (office === "CID - Curriculum Implementation Division (LRMS, Instructional Management, PSDS)") {
+      } else if (
+        office ===
+        "CID - Curriculum Implementation Division (LRMS, Instructional Management, PSDS)"
+      ) {
         setOtw(otwCID);
       } else if (office === "Finance (Accounting, Budget)") {
         setOtw(otwFinance);
-      } else if (office === "SGOD - School Governance and Operations Division (M&E, SocMob, Planning & Research, HRD, Facilities, School Health)") {
+      } else if (
+        office ===
+        "SGOD - School Governance and Operations Division (M&E, SocMob, Planning & Research, HRD, Facilities, School Health)"
+      ) {
         setOtw(otwSGOD);
       }
     }
@@ -66,7 +76,6 @@ function serviceAvail() {
     if (office2) {
       setSelectedOfficeTransacted(office2);
     }
-
   }, []);
 
   const updateServiceOptions = (office) => {
@@ -101,13 +110,15 @@ function serviceAvail() {
   };
   const nextPage = () => {
     const service = sessionStorage.getItem("serviceAvailed");
-    if ((service == "Other requests/inquiries" || service == "Feedback/Complaint")) {
-      sessionStorage.removeItem('selectedYesNo');
-      sessionStorage.removeItem('selectedYesNo2');
-      sessionStorage.removeItem('selectedYesNo3');
+    if (
+      service == "Other requests/inquiries" ||
+      service == "Feedback/Complaint"
+    ) {
+      sessionStorage.removeItem("selectedYesNo");
+      sessionStorage.removeItem("selectedYesNo2");
+      sessionStorage.removeItem("selectedYesNo3");
       navigate("/client-satisfaction");
-    }
-    else {
+    } else {
       navigate("/citizen-charter");
     }
   };
@@ -116,7 +127,7 @@ function serviceAvail() {
     "Cash Advance",
     "General Services-related",
     "Procurement-related",
-    "Other requests/inquiries"
+    "Other requests/inquiries",
   ];
 
   const personnel = [
@@ -131,7 +142,7 @@ function serviceAvail() {
     "Retirement",
     "Service Record",
     "Terminal Leave",
-    "Other requests/inquiries"
+    "Other requests/inquiries",
   ];
 
   const records = [
@@ -140,28 +151,28 @@ function serviceAvail() {
     "Non-certified True Copy Documents",
     "Receiving and Releasing of Documents",
     "Other requests/inquiries",
-    "Feedback/Complaint"
+    "Feedback/Complaint",
   ];
 
   const propertyandSupply = [
     "Inspection/Acceptance/Distribution of LRs, Supplies, Equipment",
     "Property and Equipment Clearance",
     "Request/issuance of Supplies",
-    "Other requests/inquiries"
+    "Other requests/inquiries",
   ];
 
   const generalServices = [
     "Cash Advance",
     "General Services-related",
     "Procurement-related",
-    "Other requests/inquiries"
+    "Other requests/inquiries",
   ];
 
   const procurement = [
     "Cash Advance",
     "General Services-related",
     "Procurement-related",
-    "Other requests/inquiries"
+    "Other requests/inquiries",
   ];
 
   const SDS = [
