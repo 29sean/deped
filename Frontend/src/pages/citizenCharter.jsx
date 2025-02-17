@@ -4,6 +4,7 @@ import Header from "../components/header2";
 import { useNavigate } from "react-router-dom";
 import Dropdown from "react-bootstrap/Dropdown";
 import { useState, useEffect } from "react";
+import Swal from "sweetalert2";
 
 function citizenCharter() {
   const navigate = useNavigate();
@@ -22,9 +23,15 @@ function citizenCharter() {
     setSelectedOption(value);
     sessionStorage.setItem("selectedYesNo", value);
   };
-  //
-
   const nextPage = () => {
+    if (!selectedOption) {
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Please select before proceeding!",
+          });
+          return;
+        }
     const yesno = sessionStorage.getItem("selectedYesNo");
     if (yesno == "yes") {
       navigate("/citizen-charter2");
@@ -58,7 +65,6 @@ function citizenCharter() {
             <div
               className="mb-3 rounded p-3"
               style={{ backgroundColor: "#dfe7f5" }}
-              controlId="yesno"
             >
               <p>
                 Are you aware of the Citizen's Charter - document of the SDO

@@ -3,6 +3,7 @@ import Header from "../components/header2";
 import { useNavigate } from "react-router-dom";
 import Dropdown from "react-bootstrap/Dropdown";
 import { useState, useEffect } from "react";
+import Swal from "sweetalert2";
 
 function officeTransact() {
   const navigate = useNavigate();
@@ -21,6 +22,14 @@ function officeTransact() {
   }, []);
   
   const nextPage = () => {
+    if (selectedOffice == "Select your answer") {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Please fill in all fields before proceeding!",
+      });
+      return;
+    }
     const office = sessionStorage.getItem("selectedOffice");
     if (office == selectedOffice) {
       sessionStorage.setItem("selectedOffice", selectedOffice);

@@ -4,53 +4,138 @@ import Header from "../components/header2";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Happy from "../assets/Images/happy.jpg";
+import Swal from "sweetalert2";
 
 function clientSatisfaction() {
   const navigate = useNavigate();
 
-  const [selectedServiceAvailed, setSelectedOption] =
-    useState("Select your answer");
-  const [selectedOfficeTransacted, setSelectedOfficeTransacted] =
-    useState("Select the office");
-  const [selectedOfficeTransacted1, setSelectedOfficeTransacted1] =
-    useState("Select the office");
+  const [SQD1, setSQD1] = useState();
+  const [SQD2, setSQD2] = useState();
+  const [SQD3, setSQD3] = useState();
+  const [SQD4, setSQD4] = useState();
+  const [SQD5, setSQD5] = useState();
+  const [SQD6, setSQD6] = useState();
+  const [SQD7, setSQD7] = useState();
+  const [SQD8, setSQD8] = useState();
 
   useEffect(() => {
-    const savedService = sessionStorage.getItem("serviceAvailed");
-    if (savedService) {
-      setSelectedOption(savedService);
+    const sqd1 = sessionStorage.getItem("SQD1")
+    if (sqd1) {
+      setSQD1(sqd1);
     }
-    const office = sessionStorage.getItem("selectedOffice");
-    if (office) {
-      setSelectedOfficeTransacted1(office);
+    const sqd2 = sessionStorage.getItem("SQD2")
+    if (sqd2) {
+      setSQD2(sqd2);
     }
-    const office2 = sessionStorage.getItem("2ndOffice");
-    if (office2) {
-      setSelectedOfficeTransacted(office2);
+    const sqd3 = sessionStorage.getItem("SQD3")
+    if (sqd3) {
+      setSQD3(sqd3);
+    }
+    const sqd4 = sessionStorage.getItem("SQD4")
+    if (sqd4) {
+      setSQD4(sqd4);
+    }
+    const sqd5 = sessionStorage.getItem("SQD5")
+    if (sqd5) {
+      setSQD5(sqd5);
+    }
+    const sqd6 = sessionStorage.getItem("SQD6")
+    if (sqd6) {
+      setSQD6(sqd6);
+    }
+    const sqd7 = sessionStorage.getItem("SQD7")
+    if (sqd7) {
+      setSQD7(sqd7);
+    }
+    const sqd8 = sessionStorage.getItem("SQD8")
+    if (sqd8) {
+      setSQD8(sqd8);
     }
   }, []);
 
-  const handleSelect = (eventKey) => {
-    setSelectedOption(eventKey);
-    sessionStorage.setItem("serviceAvailed", eventKey);
-  };
-
-  const handleSelectOfficeTransacted = (eventKey) => {
-    setSelectedOfficeTransacted(eventKey);
-    sessionStorage.setItem("2ndOffice", eventKey);
-  };
+  const handleSelectSQD1 = (event) => {
+    const value = event.target.value;
+    setSQD1(value);
+    sessionStorage.setItem("SQD1", value);
+  }
+  const handleSelectSQD2 = (event) => {
+    const value = event.target.value;
+    setSQD2(value);
+    sessionStorage.setItem("SQD2", value);
+  }
+  const handleSelectSQD3 = (event) => {
+    const value = event.target.value;
+    setSQD3(value);
+    sessionStorage.setItem("SQD3", value);
+  }
+  const handleSelectSQD4 = (event) => {
+    const value = event.target.value;
+    setSQD4(value);
+    sessionStorage.setItem("SQD4", value);
+  }
+  const handleSelectSQD5 = (event) => {
+    const value = event.target.value;
+    setSQD5(value);
+    sessionStorage.setItem("SQD5", value);
+  }
+  const handleSelectSQD6 = (event) => {
+    const value = event.target.value;
+    setSQD6(value);
+    sessionStorage.setItem("SQD6", value);
+  }
+  const handleSelectSQD7 = (event) => {
+    const value = event.target.value;
+    setSQD7(value);
+    sessionStorage.setItem("SQD7", value);
+  }
+  const handleSelectSQD8 = (event) => {
+    const value = event.target.value;
+    setSQD8(value);
+    sessionStorage.setItem("SQD8", value);
+  }
 
   const backPage = () => {
     navigate("/office-transact");
   };
   const nextPage = () => {
+    // Array of all the questions and their corresponding IDs
+    const questions = [SQD1, SQD2, SQD3, SQD4, SQD5, SQD6, SQD7, SQD8];
+    const questionIds = ['SQD1', 'SQD2', 'SQD3', 'SQD4', 'SQD5', 'SQD6', 'SQD7', 'SQD8'];
+    
+    // Find the first unchecked question
+    const firstUncheckedIndex = questions.findIndex(q => !q);
+
+    if (firstUncheckedIndex !== -1) {
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: `Please fill in the missing questions before proceeding!`,
+        });
+
+        // Get the corresponding question element by its ID
+        const questionElement = document.getElementById(questionIds[firstUncheckedIndex]);
+
+        // Check if the element is found
+        if (questionElement) {
+            // Scroll to the first unanswered question
+            questionElement.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center', // Center the element in the viewport
+            });
+        }
+
+        return; // Stop further execution (don't navigate yet)
+    }
+
+    // All questions are answered, proceed to the next page
     const service = sessionStorage.getItem("serviceAvailed");
     if (service == "Travel authority") {
-      navigate("/citizen-charter");
+        navigate("/citizen-charter");
     } else {
-      navigate("/");
+        navigate("/thank-you");
     }
-  };
+};
+
 
   return (
     <div
@@ -160,6 +245,9 @@ function clientSatisfaction() {
                               type={type}
                               id={`inline-${type}-1`}
                               className="custom-radio"
+                              value={1}
+                              onChange={handleSelectSQD1}
+                              checked={SQD1 == "1"}
                             />
                           </td>
                           <td>
@@ -170,6 +258,9 @@ function clientSatisfaction() {
                               type={type}
                               id={`inline-${type}-2`}
                               className="custom-radio"
+                              value={2}
+                              onChange={handleSelectSQD1}
+                              checked={SQD1 == "2"}
                             />
                           </td>
                           <td>
@@ -180,6 +271,9 @@ function clientSatisfaction() {
                               type={type}
                               id={`inline-${type}-3`}
                               className="custom-radio"
+                              value={3}
+                              onChange={handleSelectSQD1}
+                              checked={SQD1 == "3"}
                             />
                           </td>
                           <td>
@@ -190,6 +284,9 @@ function clientSatisfaction() {
                               type={type}
                               id={`inline-${type}-4`}
                               className="custom-radio"
+                              value={4}
+                              onChange={handleSelectSQD1}
+                              checked={SQD1 == "4"}
                             />
                           </td>
                           <td>
@@ -200,6 +297,9 @@ function clientSatisfaction() {
                               type={type}
                               id={`inline-${type}-5`}
                               className="custom-radio"
+                              value={5}
+                              onChange={handleSelectSQD1}
+                              checked={SQD1 == "5"}
                             />
                           </td>
                           <td>
@@ -210,6 +310,9 @@ function clientSatisfaction() {
                               type={type}
                               id={`inline-${type}-6`}
                               className="custom-radio"
+                              value={6}
+                              onChange={handleSelectSQD1}
+                              checked={SQD1 == "6"}
                             />
                           </td>
                         </tr>
@@ -233,6 +336,9 @@ function clientSatisfaction() {
                               type={type}
                               id={`inline-${type}-1`}
                               className="custom-radio"
+                              value={1}
+                              onChange={handleSelectSQD2}
+                              checked={SQD2 == "1"}
                             />
                           </td>
                           <td>
@@ -243,6 +349,9 @@ function clientSatisfaction() {
                               type={type}
                               id={`inline-${type}-2`}
                               className="custom-radio"
+                              value={2}
+                              onChange={handleSelectSQD2}
+                              checked={SQD2 == "2"}
                             />
                           </td>
                           <td>
@@ -253,6 +362,9 @@ function clientSatisfaction() {
                               type={type}
                               id={`inline-${type}-3`}
                               className="custom-radio"
+                              value={3}
+                              onChange={handleSelectSQD2}
+                              checked={SQD2 == "3"}
                             />
                           </td>
                           <td>
@@ -263,6 +375,9 @@ function clientSatisfaction() {
                               type={type}
                               id={`inline-${type}-4`}
                               className="custom-radio"
+                              value={4}
+                              onChange={handleSelectSQD2}
+                              checked={SQD2 == "4"}
                             />
                           </td>
                           <td>
@@ -273,6 +388,9 @@ function clientSatisfaction() {
                               type={type}
                               id={`inline-${type}-5`}
                               className="custom-radio"
+                              value={5}
+                              onChange={handleSelectSQD2}
+                              checked={SQD2 == "5"}
                             />
                           </td>
                           <td>
@@ -283,6 +401,9 @@ function clientSatisfaction() {
                               type={type}
                               id={`inline-${type}-6`}
                               className="custom-radio"
+                              value={6}
+                              onChange={handleSelectSQD2}
+                              checked={SQD2 == "6"}
                             />
                           </td>
                         </tr>
@@ -305,6 +426,9 @@ function clientSatisfaction() {
                               type={type}
                               id={`inline-${type}-1`}
                               className="custom-radio"
+                              value={1}
+                              onChange={handleSelectSQD3}
+                              checked={SQD3 == "1"}
                             />
                           </td>
                           <td>
@@ -315,6 +439,9 @@ function clientSatisfaction() {
                               type={type}
                               id={`inline-${type}-2`}
                               className="custom-radio"
+                              value={2}
+                              onChange={handleSelectSQD3}
+                              checked={SQD3 == "2"}
                             />
                           </td>
                           <td>
@@ -325,6 +452,9 @@ function clientSatisfaction() {
                               type={type}
                               id={`inline-${type}-3`}
                               className="custom-radio"
+                              value={3}
+                              onChange={handleSelectSQD3}
+                              checked={SQD3 == "3"}
                             />
                           </td>
                           <td>
@@ -335,6 +465,9 @@ function clientSatisfaction() {
                               type={type}
                               id={`inline-${type}-4`}
                               className="custom-radio"
+                              value={4}
+                              onChange={handleSelectSQD3}
+                              checked={SQD3 == "4"}
                             />
                           </td>
                           <td>
@@ -345,6 +478,9 @@ function clientSatisfaction() {
                               type={type}
                               id={`inline-${type}-5`}
                               className="custom-radio"
+                              value={5}
+                              onChange={handleSelectSQD3}
+                              checked={SQD3 == "5"}
                             />
                           </td>
                           <td>
@@ -355,6 +491,9 @@ function clientSatisfaction() {
                               type={type}
                               id={`inline-${type}-6`}
                               className="custom-radio"
+                              value={6}
+                              onChange={handleSelectSQD3}
+                              checked={SQD3 == "6"}
                             />
                           </td>
                         </tr>
@@ -378,6 +517,9 @@ function clientSatisfaction() {
                               type={type}
                               id={`inline-${type}-1`}
                               className="custom-radio"
+                              value={1}
+                              onChange={handleSelectSQD4}
+                              checked={SQD4 == "1"}
                             />
                           </td>
                           <td>
@@ -388,6 +530,9 @@ function clientSatisfaction() {
                               type={type}
                               id={`inline-${type}-2`}
                               className="custom-radio"
+                              value={2}
+                              onChange={handleSelectSQD4}
+                              checked={SQD4 == "2"}
                             />
                           </td>
                           <td>
@@ -398,6 +543,9 @@ function clientSatisfaction() {
                               type={type}
                               id={`inline-${type}-3`}
                               className="custom-radio"
+                              value={3}
+                              onChange={handleSelectSQD4}
+                              checked={SQD4 == "3"}
                             />
                           </td>
                           <td>
@@ -408,6 +556,9 @@ function clientSatisfaction() {
                               type={type}
                               id={`inline-${type}-4`}
                               className="custom-radio"
+                              value={4}
+                              onChange={handleSelectSQD4}
+                              checked={SQD4 == "4"}
                             />
                           </td>
                           <td>
@@ -418,6 +569,9 @@ function clientSatisfaction() {
                               type={type}
                               id={`inline-${type}-5`}
                               className="custom-radio"
+                              value={5}
+                              onChange={handleSelectSQD4}
+                              checked={SQD4 == "5"}
                             />
                           </td>
                           <td>
@@ -428,6 +582,9 @@ function clientSatisfaction() {
                               type={type}
                               id={`inline-${type}-6`}
                               className="custom-radio"
+                              value={6}
+                              onChange={handleSelectSQD4}
+                              checked={SQD4 == "6"}
                             />
                           </td>
                         </tr>
@@ -450,6 +607,9 @@ function clientSatisfaction() {
                               type={type}
                               id={`inline-${type}-1`}
                               className="custom-radio"
+                              value={1}
+                              onChange={handleSelectSQD5}
+                              checked={SQD5 == "1"}
                             />
                           </td>
                           <td>
@@ -460,6 +620,9 @@ function clientSatisfaction() {
                               type={type}
                               id={`inline-${type}-2`}
                               className="custom-radio"
+                              value={2}
+                              onChange={handleSelectSQD5}
+                              checked={SQD5 == "2"}
                             />
                           </td>
                           <td>
@@ -470,6 +633,9 @@ function clientSatisfaction() {
                               type={type}
                               id={`inline-${type}-3`}
                               className="custom-radio"
+                              value={3}
+                              onChange={handleSelectSQD5}
+                              checked={SQD5 == "3"}
                             />
                           </td>
                           <td>
@@ -480,6 +646,9 @@ function clientSatisfaction() {
                               type={type}
                               id={`inline-${type}-4`}
                               className="custom-radio"
+                              value={4}
+                              onChange={handleSelectSQD5}
+                              checked={SQD5 == "4"}
                             />
                           </td>
                           <td>
@@ -490,6 +659,9 @@ function clientSatisfaction() {
                               type={type}
                               id={`inline-${type}-5`}
                               className="custom-radio"
+                              value={5}
+                              onChange={handleSelectSQD5}
+                              checked={SQD5 == "5"}
                             />
                           </td>
                           <td>
@@ -500,6 +672,9 @@ function clientSatisfaction() {
                               type={type}
                               id={`inline-${type}-6`}
                               className="custom-radio"
+                              value={6}
+                              onChange={handleSelectSQD5}
+                              checked={SQD5 == "6"}
                             />
                           </td>
                         </tr>
@@ -522,6 +697,9 @@ function clientSatisfaction() {
                               type={type}
                               id={`inline-${type}-1`}
                               className="custom-radio"
+                              value={1}
+                              onChange={handleSelectSQD6}
+                              checked={SQD6 == "1"}
                             />
                           </td>
                           <td>
@@ -532,6 +710,9 @@ function clientSatisfaction() {
                               type={type}
                               id={`inline-${type}-2`}
                               className="custom-radio"
+                              value={2}
+                              onChange={handleSelectSQD6}
+                              checked={SQD6 == "2"}
                             />
                           </td>
                           <td>
@@ -542,6 +723,9 @@ function clientSatisfaction() {
                               type={type}
                               id={`inline-${type}-3`}
                               className="custom-radio"
+                              value={3}
+                              onChange={handleSelectSQD6}
+                              checked={SQD6 == "3"}
                             />
                           </td>
                           <td>
@@ -552,6 +736,9 @@ function clientSatisfaction() {
                               type={type}
                               id={`inline-${type}-4`}
                               className="custom-radio"
+                              value={4}
+                              onChange={handleSelectSQD6}
+                              checked={SQD6 == "4"}
                             />
                           </td>
                           <td>
@@ -562,6 +749,9 @@ function clientSatisfaction() {
                               type={type}
                               id={`inline-${type}-5`}
                               className="custom-radio"
+                              value={5}
+                              onChange={handleSelectSQD6}
+                              checked={SQD6 == "5"}
                             />
                           </td>
                           <td>
@@ -572,6 +762,9 @@ function clientSatisfaction() {
                               type={type}
                               id={`inline-${type}-6`}
                               className="custom-radio"
+                              value={6}
+                              onChange={handleSelectSQD6}
+                              checked={SQD6 == "6"}
                             />
                           </td>
                         </tr>
@@ -594,6 +787,9 @@ function clientSatisfaction() {
                               type={type}
                               id={`inline-${type}-1`}
                               className="custom-radio"
+                              value={1}
+                              onChange={handleSelectSQD7}
+                              checked={SQD7 == "1"}
                             />
                           </td>
                           <td>
@@ -604,6 +800,9 @@ function clientSatisfaction() {
                               type={type}
                               id={`inline-${type}-2`}
                               className="custom-radio"
+                              value={2}
+                              onChange={handleSelectSQD7}
+                              checked={SQD7 == "2"}
                             />
                           </td>
                           <td>
@@ -614,6 +813,9 @@ function clientSatisfaction() {
                               type={type}
                               id={`inline-${type}-3`}
                               className="custom-radio"
+                              value={3}
+                              onChange={handleSelectSQD7}
+                              checked={SQD7 == "3"}
                             />
                           </td>
                           <td>
@@ -624,6 +826,9 @@ function clientSatisfaction() {
                               type={type}
                               id={`inline-${type}-4`}
                               className="custom-radio"
+                              value={4}
+                              onChange={handleSelectSQD7}
+                              checked={SQD7 == "4"}
                             />
                           </td>
                           <td>
@@ -634,6 +839,9 @@ function clientSatisfaction() {
                               type={type}
                               id={`inline-${type}-5`}
                               className="custom-radio"
+                              value={5}
+                              onChange={handleSelectSQD7}
+                              checked={SQD7 == "5"}
                             />
                           </td>
                           <td>
@@ -644,6 +852,9 @@ function clientSatisfaction() {
                               type={type}
                               id={`inline-${type}-6`}
                               className="custom-radio"
+                              value={6}
+                              onChange={handleSelectSQD7}
+                              checked={SQD7 == "6"}
                             />
                           </td>
                         </tr>
@@ -666,6 +877,9 @@ function clientSatisfaction() {
                               type={type}
                               id={`inline-${type}-1`}
                               className="custom-radio"
+                              value={1}
+                              onChange={handleSelectSQD8}
+                              checked={SQD8 == "1"}
                             />
                           </td>
                           <td>
@@ -676,6 +890,9 @@ function clientSatisfaction() {
                               type={type}
                               id={`inline-${type}-2`}
                               className="custom-radio"
+                              value={2}
+                              onChange={handleSelectSQD8}
+                              checked={SQD8 == "2"}
                             />
                           </td>
                           <td>
@@ -686,6 +903,9 @@ function clientSatisfaction() {
                               type={type}
                               id={`inline-${type}-3`}
                               className="custom-radio"
+                              value={3}
+                              onChange={handleSelectSQD8}
+                              checked={SQD8 == "3"}
                             />
                           </td>
                           <td>
@@ -696,6 +916,9 @@ function clientSatisfaction() {
                               type={type}
                               id={`inline-${type}-4`}
                               className="custom-radio"
+                              value={4}
+                              onChange={handleSelectSQD8}
+                              checked={SQD8 == "4"}
                             />
                           </td>
                           <td>
@@ -706,6 +929,9 @@ function clientSatisfaction() {
                               type={type}
                               id={`inline-${type}-5`}
                               className="custom-radio"
+                              value={5}
+                              onChange={handleSelectSQD8}
+                              checked={SQD8 == "5"}
                             />
                           </td>
                           <td>
@@ -716,6 +942,9 @@ function clientSatisfaction() {
                               type={type}
                               id={`inline-${type}-6`}
                               className="custom-radio"
+                              value={6}
+                              onChange={handleSelectSQD8}
+                              checked={SQD8 == "6"}
                             />
                           </td>
                         </tr>

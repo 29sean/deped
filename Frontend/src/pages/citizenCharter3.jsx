@@ -4,6 +4,7 @@ import Header from "../components/header2";
 import { useNavigate } from "react-router-dom";
 import Dropdown from "react-bootstrap/Dropdown";
 import { useState, useEffect } from "react";
+import Swal from "sweetalert2";
 
 function citizenCharter3() {
   const navigate = useNavigate();
@@ -25,6 +26,14 @@ function citizenCharter3() {
   //
 
   const nextPage = () => {
+    if (!selectedOption) {
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Please select before proceeding!",
+          });
+          return;
+        }
     navigate("/client-satisfaction");
   };
 

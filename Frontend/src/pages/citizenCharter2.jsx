@@ -4,6 +4,7 @@ import Header from "../components/header2";
 import { useNavigate } from "react-router-dom";
 import Dropdown from "react-bootstrap/Dropdown";
 import { useState, useEffect } from "react";
+import Swal from "sweetalert2";
 
 function citizenCharter2() {
   const navigate = useNavigate();
@@ -22,9 +23,15 @@ function citizenCharter2() {
     setSelectedOption(value);
     sessionStorage.setItem("selectedYesNo2", value);
   };
-  //
-
   const nextPage = () => {
+    if (!selectedOption) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Please select before proceeding!",
+      });
+      return;
+    }
     const yesno = sessionStorage.getItem("selectedYesNo2");
     if (yesno == "yes" || yesno == "yesbut") {
       navigate("/citizen-charter3");
