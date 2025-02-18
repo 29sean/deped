@@ -29,17 +29,21 @@ const AddDivisionModal = ({ show, handleClose, handleSave }) => {
     }
 
     try {
+      const token = localStorage.getItem("token");
       const response = await axios.post(
         `${API_BASE_URL}/divisions/add-division`,
-        divisionData
+        divisionData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       Swal.fire({
         icon: "success",
         title: "Success",
         text: response.data.message,
       });
-
-      console.log("New Division Response:", response.data);
 
       handleSave();
       setDivisionData({ division_name: "", description: "" });

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Card, CardBody, CardTitle } from "react-bootstrap";
+import { Button, Card, CardBody, CardTitle } from "react-bootstrap";
 import axios from "axios";
 import { API_BASE_URL } from "../config.js";
 import { Link } from "react-router-dom";
-import { FaPlus } from "react-icons/fa";
+import { FaPlus, FaRegEdit, FaTrash } from "react-icons/fa";
 import AddDivisionModal from "./modal/AddDivisionModal.jsx";
 
 const CardDivision = () => {
@@ -19,7 +19,6 @@ const CardDivision = () => {
       const response = await axios.get(
         `${API_BASE_URL}/divisions/get-divisions`
       );
-      console.log("Fetched divisions:", response.data);
       setDivisions(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
       console.error("Error fetching divisions:", error);
@@ -31,6 +30,10 @@ const CardDivision = () => {
 
   const handleSave = async () => {
     await fetchDivisions();
+  };
+
+  const handleAlert = (message) => {
+    alert(message);
   };
 
   useEffect(() => {
@@ -46,24 +49,46 @@ const CardDivision = () => {
           <>
             {divisions?.map(
               (division, index) =>
-                division && ( // Ensure division is defined
+                division && (
                   <div
                     key={division.division_id || index}
                     className="col-md-4 col-sm-6 mb-3"
                   >
-                    <Link
-                      to={`/divisions/${division.division_id}`}
-                      style={{ textDecoration: "none" }}
-                    >
-                      <Card className="custom-card h-100 d-flex flex-column justify-content-between text-center p-3 shadow">
-                        <CardTitle className="fw-bold fs-4">
+                    <Card className="custom-card h-100 d-flex flex-column justify-content-between text-center p-3 shadow position-relative">
+                      <Link
+                        to={`/divisions/${division.division_id}`}
+                        style={{ textDecoration: "none" }}
+                      >
+                        <CardTitle className="fw-bold fs-3 text-white text-wrap text-break">
                           {division.division_name}
                         </CardTitle>
-                        <CardBody className="fs-6">
-                          {division.description}
-                        </CardBody>
-                      </Card>
-                    </Link>
+                      </Link>
+                      <CardBody className="fs-6">
+                        {division.division_name}
+                      </CardBody>
+                      <div className="position-absolute top-0 end-0 m-2 d-flex gap-2">
+                        <Button
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            handleAlert("Edit clicked!");
+                          }}
+                          className="btn btn-warning btn-sm opacity-75 hover-opacity-100"
+                        >
+                          <FaRegEdit />
+                        </Button>
+                        <Button
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            handleAlert("Delete clicked!");
+                          }}
+                          className="btn btn-danger btn-sm opacity-75 hover-opacity-100"
+                        >
+                          <FaTrash />
+                        </Button>
+                      </div>
+                    </Card>
                   </div>
                 )
             )}

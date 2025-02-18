@@ -11,7 +11,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import ClientSatisfaction from "./pages/ClientSatisfaction";
 import Protected from "./pages/Protected";
 import Thankyou from "./pages/thankyou";
-
+import SDS from "./pages/SDS";
 // {
 // "username": "admin1",
 // "password": "sdocabuyao"

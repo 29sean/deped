@@ -18,7 +18,7 @@ const AdminNav = () => {
       confirmButtonText: "Yes, logout!",
     }).then((result) => {
       if (result.isConfirmed) {
-        localStorage.removeItem("token"); // Clear token
+        localStorage.removeItem("token");
         navigate("/login"); // Redirect to login page
       }
     });
