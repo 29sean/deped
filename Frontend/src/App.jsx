@@ -11,8 +11,8 @@ import AdminDashboard from "./pages/AdminDashboard";
 import ClientSatisfaction from "./pages/ClientSatisfaction";
 import Protected from "./pages/Protected";
 import Thankyou from "./pages/thankyou";
-import SDS from "./pages/SDS";
-// {
+import DivisionPage from "./pages/DivisionPage";
+
 // "username": "admin1",
 // "password": "sdocabuyao"
 
@@ -33,7 +33,7 @@ function App() {
 
         <Route element={<Protected />}>
           <Route path="/admin" element={<AdminDashboard />} />
-          <Route path="/sds" element={<SDS />} />
+          <Route path="/divisions/:division_id" element={<DivisionPage />} />
         </Route>
       </Routes>
     </Router>

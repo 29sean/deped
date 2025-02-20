@@ -1,18 +1,31 @@
 import React, { useState, useEffect } from "react";
-import { Button, Card, CardBody, CardTitle } from "react-bootstrap";
+import { Button, Card, CardBody } from "react-bootstrap";
 import axios from "axios";
 import { API_BASE_URL } from "../config.js";
 import { Link } from "react-router-dom";
-import { FaPlus, FaRegEdit, FaTrash } from "react-icons/fa";
+import { FaPlus, FaRegEdit, FaTrash, FaSearch } from "react-icons/fa";
 import AddDivisionModal from "./modal/AddDivisionModal.jsx";
+import EditDivisionModal from "./modal/EditDivisionModal.jsx";
 
 const CardDivision = () => {
   const [divisions, setDivisions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [selectedDivision, setSelectedDivision] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const handleShow = () => setShowModal(true);
   const handleClose = () => setShowModal(false);
+
+  const handleShowEdit = (division) => {
+    setSelectedDivision(division);
+    setShowEditModal(true);
+  };
+  const handleCloseEdit = () => {
+    setShowEditModal(false);
+    setSelectedDivision(null);
+  };
 
   const fetchDivisions = async () => {
     try {
@@ -40,38 +53,64 @@ const CardDivision = () => {
     fetchDivisions();
   }, []);
 
+  const filteredDivisions = divisions.filter((division) =>
+    division.division_name
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase().trim())
+  );
+
   return (
     <div className="container">
+      <div className="row mb-4">
+        {/* Search Field */}
+        <div className="col-12 d-flex justify-content-end">
+          <div className="input-group w-auto">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Search Divisions"
+              style={{ width: "250px" }}
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            <button className="btn btn-outline-secondary" type="button">
+              <FaSearch />
+            </button>
+          </div>
+        </div>
+      </div>
+
       <div className="row">
         {loading ? (
           <p>Loading...</p>
         ) : (
           <>
-            {divisions?.map(
+            {filteredDivisions.map(
               (division, index) =>
                 division && (
                   <div
                     key={division.division_id || index}
-                    className="col-md-4 col-sm-6 mb-3"
+                    className="col-md-4 col-sm-6 mb-3 d-flex"
                   >
-                    <Card className="custom-card h-100 d-flex flex-column justify-content-between text-center p-3 shadow position-relative">
+                    <Card
+                      className="custom-card d-flex flex-column justify-content-center text-center shadow-lg"
+                      style={{ height: "200px", width: "100%" }}
+                    >
                       <Link
                         to={`/divisions/${division.division_id}`}
                         style={{ textDecoration: "none" }}
+                        state={{ division_name: division.division_name }}
                       >
-                        <CardTitle className="fw-bold fs-3 text-white text-wrap text-break">
+                        <CardBody className="fw-bold fs-3 text-white text-uppercase d-flex justify-content-center align-items-center h-100">
                           {division.division_name}
-                        </CardTitle>
+                        </CardBody>
                       </Link>
-                      <CardBody className="fs-6">
-                        {division.division_name}
-                      </CardBody>
                       <div className="position-absolute top-0 end-0 m-2 d-flex gap-2">
                         <Button
                           onClick={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
-                            handleAlert("Edit clicked!");
+                            handleShowEdit(division);
                           }}
                           className="btn btn-warning btn-sm opacity-75 hover-opacity-100"
                         >
@@ -94,13 +133,17 @@ const CardDivision = () => {
             )}
 
             {/* Add New Division Card */}
-            <div className="col-md-4 col-sm-6 mb-3">
+            <div className="col-md-4 col-sm-6 mb-3 d-flex">
               <Card
-                className="custom-card h-100 d-flex flex-column justify-content-center align-items-center text-center p-3 shadow bg-light"
-                style={{ cursor: "pointer" }}
+                className="custom-card d-flex flex-column justify-content-center align-items-center text-center shadow bg-light"
+                style={{
+                  cursor: "pointer",
+                  height: "200px", // Fixed height for "Add New" card
+                  width: "100%", // Full width inside the grid column
+                }}
                 onClick={handleShow}
               >
-                <CardBody className="fs-6 d-flex align-items-center">
+                <CardBody className="fs-6 d-flex align-items-center justify-content-center">
                   <FaPlus size={50} className="text-white" />
                 </CardBody>
               </Card>
@@ -114,6 +157,12 @@ const CardDivision = () => {
         show={showModal}
         handleClose={handleClose}
         handleSave={handleSave}
+      />
+      <EditDivisionModal
+        show={showEditModal}
+        handleClose={handleCloseEdit}
+        handleUpdate={fetchDivisions}
+        division={selectedDivision}
       />
     </div>
   );

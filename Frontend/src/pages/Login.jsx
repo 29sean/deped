@@ -19,6 +19,7 @@ import {
   FaSignInAlt,
 } from "react-icons/fa";
 import Swal from "sweetalert2";
+import { API_BASE_URL } from "../config";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -39,7 +40,7 @@ const Login = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/users/login",
+        `${API_BASE_URL}/users/login`,
         credentials
       );
       const { success, token, message } = response.data;

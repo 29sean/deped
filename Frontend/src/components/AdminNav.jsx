@@ -29,21 +29,26 @@ const AdminNav = () => {
       className="py-3 mb-5"
       style={{ backgroundColor: "rgb(186,203,230)" }}
     >
-      <Container className="d-flex justify-content-between align-items-center ">
-        {/* Brand Logo & Name */}
-        <NavbarBrand className="d-flex align-items-center gap-2 ">
+      <Container className="d-flex justify-content-between align-items-center">
+        <NavbarBrand className="d-flex align-items-center gap-2">
           <img src={navLogo} width="120" height="120" alt="SDO CABUYAO Logo" />
-          <span className="fw-bold fs-5 ">SDO CABUYAO</span>
+          <span className="fw-bold fs-5">SDO CABUYAO</span>
         </NavbarBrand>
-        {/* Navigation Links */}
-        <Nav className="d-flex gap-3 ">
-          <NavLink href="/admin" className="fs-5 text-dark">
+        <Nav className="d-flex gap-3">
+          <NavLink
+            href="/admin"
+            className="fs-5 nav-link"
+            style={{ transition: "color 0.3s ease" }}
+          >
             Home
           </NavLink>
           <NavLink
-            className="fs-5 text-dark"
+            className="fs-5 nav-link logout"
             onClick={handleLogout}
-            style={{ cursor: "pointer" }}
+            style={{
+              cursor: "pointer",
+              transition: "color 0.3s ease",
+            }}
           >
             Logout
           </NavLink>

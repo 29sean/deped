@@ -25,7 +25,7 @@ export const addDivision = async (req, res) => {
 };
 
 export const updateDivision = async (req, res) => {
-  const { division_name, description, id } = req.body;
+  const { division_name, description, division_id } = req.body;
 
   try {
     const [existingDivision] = await pool.execute(
@@ -37,8 +37,8 @@ export const updateDivision = async (req, res) => {
     }
 
     await pool.execute(
-      "UPDATE division SET division_name = ?, description = ? WHERE id = ?",
-      [division_name, description, id]
+      "UPDATE division SET division_name = ?, description = ? WHERE division_id = ?",
+      [division_name, description, division_id]
     );
 
     res.status(201).json({ message: "Division updated successfully" });
@@ -52,6 +52,38 @@ export const getDivisions = async (req, res) => {
   try {
     const [divisions] = await pool.execute("SELECT * FROM division");
     res.json(divisions);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+export const getFeedbackByDivision = async (req, res) => {
+  const { division_id } = req.params;
+
+  try {
+    const [feedback] = await pool.execute(
+      `SELECT name, age, gender, type, feedback.*
+       FROM feedback
+       INNER JOIN customer ON customer_id = feedback.fk_customer
+       INNER JOIN division ON division_id = feedback.fk_division
+       WHERE fk_division = ?`,
+      [division_id]
+    );
+
+    const mappedFeedback = feedback.map((item) => ({
+      ...item,
+      customerType:
+        item.type === 1
+          ? "Business"
+          : item.type === 2
+          ? "Citizen"
+          : item.type === 3
+          ? "Government"
+          : "Unknown",
+    }));
+
+    res.json(mappedFeedback);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });
