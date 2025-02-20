@@ -1,25 +1,27 @@
-import React, { useState, useEffect } from "react";
-import { Modal, Button, Form, Alert } from "react-bootstrap";
+import React, { useEffect, useState } from "react";
+import { Button, Form, Modal, Alert } from "react-bootstrap";
 import axios from "axios";
-import { API_BASE_URL } from "../../config";
+import { API_BASE_URL } from "../../config.js";
 
-const AddDivisionModal = ({ show, handleClose, handleSave }) => {
+const EditDivisionModal = ({ show, handleClose, handleUpdate, division }) => {
   const [divisionData, setDivisionData] = useState({
+    division_id: null,
     division_name: "",
     description: "",
   });
+
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
   useEffect(() => {
-    if (error || successMessage) {
-      const timer = setTimeout(() => {
-        setError("");
-        setSuccessMessage("");
-      }, 3000);
-      return () => clearTimeout(timer);
+    if (division) {
+      setDivisionData({
+        division_id: division.division_id || null,
+        division_name: division.division_name || "",
+        description: division.description || "",
+      });
     }
-  }, [error, successMessage]);
+  }, [division]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -40,8 +42,8 @@ const AddDivisionModal = ({ show, handleClose, handleSave }) => {
 
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.post(
-        `${API_BASE_URL}/divisions/add-division`,
+      const response = await axios.put(
+        `${API_BASE_URL}/divisions/updateDivision`,
         divisionData,
         {
           headers: {
@@ -49,10 +51,9 @@ const AddDivisionModal = ({ show, handleClose, handleSave }) => {
           },
         }
       );
-      setSuccessMessage(response.data.message);
 
-      handleSave();
-      setDivisionData({ division_name: "", description: "" });
+      setSuccessMessage(response.data.message);
+      handleUpdate();
       setTimeout(handleClose, 2000);
     } catch (error) {
       setError(error.response?.data?.message || "Something went wrong");
@@ -61,21 +62,20 @@ const AddDivisionModal = ({ show, handleClose, handleSave }) => {
 
   return (
     <Modal show={show} onHide={handleClose} centered>
-      <Modal.Header closeButton className="bg-primary text-white">
-        <Modal.Title className="fw-bold">Add New Division</Modal.Title>
+      <Modal.Header closeButton className="bg-warning text-dark">
+        <Modal.Title className="fw-bold">Edit Division</Modal.Title>
       </Modal.Header>
       <Modal.Body className="p-4">
-        {error && (
-          <Alert variant="danger" className="shadow-sm">
-            {error}
-          </Alert>
-        )}
-        {successMessage && (
-          <Alert variant="success" className="shadow-sm">
-            {successMessage}
-          </Alert>
-        )}
+        {error && <Alert variant="danger">{error}</Alert>}
+        {successMessage && <Alert variant="success">{successMessage}</Alert>}
+
         <Form>
+          <Form.Control
+            type="hidden"
+            name="division_id"
+            value={divisionData.division_id || ""}
+          />
+
           <Form.Group className="mb-3">
             <Form.Label className="fw-semibold">Division Name</Form.Label>
             <Form.Control
@@ -110,15 +110,15 @@ const AddDivisionModal = ({ show, handleClose, handleSave }) => {
           Close
         </Button>
         <Button
-          variant="primary"
+          variant="warning"
           className="rounded-pill px-4"
           onClick={handleSubmit}
         >
-          Save Division
+          Update Division
         </Button>
       </Modal.Footer>
     </Modal>
   );
 };
 
-export default AddDivisionModal;
+export default EditDivisionModal;

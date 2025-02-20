@@ -51,10 +51,9 @@
 
 .custom-card {
   background: linear-gradient(to bottom, #3498db, #2980b9); /* Blue Gradient */
-  color: white;
-  padding: 20px;
+  /* color: white;
   border-radius: 10px;
-  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3); /* Darker Shadow */
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3); Darker Shadow */
   transition: transform 0.2s ease-in-out;
 }
 
@@ -66,4 +65,17 @@ th {
   white-space: nowrap;
   font-size: 15px;
   text-align: center;
+}
+
+.nav-link {
+  color: black;
+  transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+  color: green;
+}
+
+.nav-link.logout:hover {
+  color: red;
 }
