@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import Dropdown from "react-bootstrap/Dropdown";
 import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
+import '../style/PageStyle.css'
 
 function citizenCharter() {
   const navigate = useNavigate();
@@ -12,28 +13,33 @@ function citizenCharter() {
   const [selectedOption, setSelectedOption] = useState();
 
   useEffect(() => {
-    const savedOption = sessionStorage.getItem("selectedYesNo");
-    if (savedOption) {
-      setSelectedOption(savedOption);
+    const userData = JSON.parse(sessionStorage.getItem("userData")) || {};
+    if (userData.charter1) {
+      setSelectedOption(userData.charter1);
     }
   }, []);
 
   const handleSelect = (event) => {
     const value = event.target.value;
     setSelectedOption(value);
-    sessionStorage.setItem("selectedYesNo", value);
+
+    let userData = JSON.parse(sessionStorage.getItem('userData')) || {};
+    userData.charter1 = value;
+
+    sessionStorage.setItem("userData", JSON.stringify(userData));
   };
   const nextPage = () => {
     if (!selectedOption) {
-          Swal.fire({
-            icon: "error",
-            title: "Oops...",
-            text: "Please select before proceeding!",
-          });
-          return;
-        }
-    const yesno = sessionStorage.getItem("selectedYesNo");
-    if (yesno == "yes") {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Please select before proceeding!",
+      });
+      return;
+    }
+
+    const userData = JSON.parse(sessionStorage.getItem("userData")) || {};
+    if (userData.charter1 == "yes") {
       navigate("/citizen-charter2");
     } else {
       sessionStorage.removeItem("selectedYesNo2");
@@ -48,30 +54,31 @@ function citizenCharter() {
 
   return (
     <div
-      className="pt-5 pb-5"
+      className="pt-lg-5 pb-lg-5"
       style={{ backgroundColor: "#edf3fc", height: "100vh" }}
     >
       <div
-        className="w-75 m-auto border rounded shadow-lg"
+        className="w-75 m-auto border rounded shadow-lg content"
         style={{ backgroundColor: "#f5f9ff" }}
       >
         <Header />
-        <div className="m-auto mt-3 mb-3" style={{ width: "85%" }}>
+        <div className="container">
           <div className="m-auto">
             <div className="rounded" style={{ backgroundColor: "#dfe7f5" }}>
-              <p className="fs-4 p-3">Citizen's Charter</p>
+              <p className="title">Citizen's Charter</p>
             </div>
 
             <div
               className="mb-3 rounded p-3"
               style={{ backgroundColor: "#dfe7f5" }}
             >
-              <p>
+              <p className="info">
                 Are you aware of the Citizen's Charter - document of the SDO
                 services and requirements?
               </p>
               <div>
                 <Form.Check
+                  className="info"
                   type="radio"
                   label="Yes"
                   name="yesno"
@@ -81,6 +88,7 @@ function citizenCharter() {
                   onChange={handleSelect}
                 />
                 <Form.Check
+                  className="info"
                   type="radio"
                   label="No"
                   name="yesno"
@@ -93,6 +101,7 @@ function citizenCharter() {
             </div>
             <div className="d-flex" style={{ width: "150px" }}>
               <Button
+                className="info"
                 variant="light"
                 onClick={backPage}
                 style={{ backgroundColor: "#ededed", marginRight: "13px" }}
@@ -100,7 +109,7 @@ function citizenCharter() {
                 Back
               </Button>
 
-              <Button style={{ backgroundColor: "green" }} onClick={nextPage}>
+              <Button className="info" style={{ backgroundColor: "green" }} onClick={nextPage}>
                 Next
               </Button>
             </div>

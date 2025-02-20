@@ -1,0 +1,27 @@
+.text-responsive {
+    font-size: 1.25rem; /* Default size for smaller screens */
+}
+
+@media (min-width: 576px) {
+    .text-responsive {
+        font-size: 1.5rem; /* For medium screens (sm) and up */
+    }
+}
+
+@media (min-width: 768px) {
+    .text-responsive {
+        font-size: 2rem; /* For large screens (md) and up */
+    }
+}
+
+@media (min-width: 992px) {
+    .text-responsive {
+        font-size: 3rem; /* For extra large screens (lg) and up */
+    }
+}
+
+@media (min-width: 1200px) {
+    .text-responsive {
+        font-size: 4rem; /* For extra extra large screens (xl) and up */
+    }
+}

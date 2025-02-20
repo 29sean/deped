@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Dropdown from "react-bootstrap/Dropdown";
 import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
+import '../style/PageStyle.css'
 
 function officeTransact() {
   const navigate = useNavigate();
@@ -15,9 +16,9 @@ function officeTransact() {
   };
 
   useEffect(() => {
-    const savedOffice = sessionStorage.getItem("selectedOffice");
-    if (savedOffice) {
-      setSelectedOption(savedOffice);
+    const savedOffice = JSON.parse(sessionStorage.getItem("userData"));
+    if (savedOffice.office) {
+      setSelectedOption(savedOffice.office);
     }
   }, []);
 
@@ -30,12 +31,21 @@ function officeTransact() {
       });
       return;
     }
-    const office = sessionStorage.getItem("selectedOffice");
-    if (office == selectedOffice) {
-      sessionStorage.setItem("selectedOffice", selectedOffice);
+    let office = JSON.parse(sessionStorage.getItem("userData"));
+    // const office = sessionStorage.getItem("selectedOffice");
+    if (office.office == selectedOffice) {
+      // sessionStorage.setItem("selectedOffice", selectedOffice);
       navigate("/service-avail");
     } else {
-      sessionStorage.setItem("selectedOffice", selectedOffice);
+      // Get existing user data (or use an empty object if null)
+      let userData = JSON.parse(sessionStorage.getItem("userData")) || {};
+
+      // Add new data
+      userData.office = selectedOffice;
+
+      // Store the updated data back in sessionStorage
+      sessionStorage.setItem("userData", JSON.stringify(userData));
+      // sessionStorage.setItem("selectedOffice", selectedOffice);
       sessionStorage.removeItem("serviceAvailed");
       sessionStorage.removeItem("selectedYesNo");
       sessionStorage.removeItem("selectedYesNo2");
@@ -62,36 +72,36 @@ function officeTransact() {
 
   return (
     <div
-      className="pt-5 pb-5"
+      className="pt-lg-5 pb-lg-5"
       style={{ backgroundColor: "#edf3fc", height: "100vh" }}
     >
       <div
-        className="w-75 m-auto border rounded shadow-lg"
+        className="w-75 m-auto border rounded shadow-lg content"
         style={{ backgroundColor: "#f5f9ff" }}
       >
         <Header />
-        <div className="m-auto mt-3 mb-3" style={{ width: "85%" }}>
+        <div className="container">
           <div className="m-auto">
             <div className="rounded" style={{ backgroundColor: "#dfe7f5" }}>
-              <p className="fs-4 p-3">Schools Division Office</p>
+              <p className="title">Schools Division Office</p>
             </div>
 
             <div
               className="mb-3 rounded p-3"
               style={{ backgroundColor: "#dfe7f5" }}
             >
-              <p>Office transacted with</p>
+              <p className="info">Office transacted with</p>
               <Dropdown onSelect={handleSelect}>
                 <Dropdown.Toggle
                   variant="light"
-                  className="text-truncate"
+                  className="text-truncate info"
                   style={{ width: "100%", textAlign: "left" }}
                   id="dropdown-basic"
                 >
                   {selectedOffice}
                 </Dropdown.Toggle>
 
-                <Dropdown.Menu>
+                <Dropdown.Menu className="info">
                   {offices.length > 0 ? (
                     offices.map((office, index) => (
                       <Dropdown.Item key={index} eventKey={office}>
@@ -108,6 +118,7 @@ function officeTransact() {
             </div>
             <div className="d-flex" style={{ width: "150px" }}>
               <Button
+                className="info"
                 variant="light"
                 onClick={backPage}
                 style={{ backgroundColor: "#ededed", marginRight: "13px" }}
@@ -115,7 +126,7 @@ function officeTransact() {
                 Back
               </Button>
 
-              <Button style={{ backgroundColor: "green" }} onClick={nextPage}>
+              <Button className="info" style={{ backgroundColor: "green" }} onClick={nextPage}>
                 Next
               </Button>
             </div>

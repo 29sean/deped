@@ -1,7 +1,15 @@
 import React from 'react';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
+import { useNavigate } from "react-router-dom";
 
 const ThankYou = () => {
+  const navigate = useNavigate();
+
+  const submitAnotherResponse = () =>{
+    sessionStorage.clear();
+    navigate('/')
+  }
+
   return (
     <div>
       {/* Inline styles using <style> tag */}
@@ -89,7 +97,7 @@ const ThankYou = () => {
                     Your submission has been successfully received. We will get back to you as soon as possible.
                   </Card.Text>
                   {/* Centered "Back to Home" Button inside the card */}
-                  <Button variant="primary" href="/" className="thankyou-btn">
+                  <Button variant="primary" onClick={submitAnotherResponse} className="thankyou-btn">
                     Submit another response
                   </Button>
                 </Card.Body>

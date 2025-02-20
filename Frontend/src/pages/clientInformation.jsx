@@ -4,6 +4,7 @@ import Header from "../components/header";
 import { useNavigate, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
+import "../style/PageStyle.css"
 
 function clientInformation() {
   const navigate = useNavigate();
@@ -21,26 +22,31 @@ function clientInformation() {
       });
       return;
     }
-    sessionStorage.setItem("age", age);
-    sessionStorage.setItem("sex", sex);
-    sessionStorage.setItem("customerType", customerType);
+
+    // Get existing user data (or use an empty object if null)
+    let userData = JSON.parse(sessionStorage.getItem("userData")) || {};
+
+    // Add new data
+    userData.age = age;
+    userData.sex = sex;
+    userData.customerType = customerType;
+
+    // Store the updated data back in sessionStorage
+    sessionStorage.setItem("userData", JSON.stringify(userData));
+
     navigate("/office-transact");
   };
 
   useEffect(() => {
-    const savedAge = sessionStorage.getItem("age");
-    if (savedAge) {
-      setAge(savedAge);
+    const info = JSON.parse(sessionStorage.getItem('userData'));
+    if (info) {
+      setAge(info.age);
     }
-
-    const savedSex = sessionStorage.getItem("sex");
-    if (savedSex) {
-      setSex(savedSex);
+    if (info) {
+      setSex(info.sex);
     }
-
-    const savedCustomerType = sessionStorage.getItem("customerType");
-    if (savedCustomerType) {
-      setCustomerType(savedCustomerType);
+    if (info) {
+      setCustomerType(info.customerType);
     }
   }, []);
 
@@ -63,24 +69,25 @@ function clientInformation() {
   };
 
   return (
-    <div className="pt-5 pb-5" style={{ backgroundColor: "#edf3fc" }}>
+    <div className="pt-lg-5 pb-lg-5" style={{ backgroundColor: "#edf3fc" }}>
       <div
-        className="w-75 m-auto border rounded shadow-lg"
+        className="w-75 m-auto border rounded shadow-lg content"
         style={{ backgroundColor: "#f5f9ff", width: "80%" }}
       >
         <Header />
-        <div className="m-auto mt-3 mb-3" style={{ width: "85%" }}>
+        <div className="container">
           <div className="m-auto">
             <div className="rounded" style={{ backgroundColor: "#dfe7f5" }}>
-              <p className="fs-4 p-3">Client Information</p>
+              <p className="title">Client Information</p>
             </div>
             <div
               className="mb-3 rounded p-3"
               style={{ backgroundColor: "#dfe7f5" }}
-              // controlId="age"
+            // controlId="age"
             >
-              <p>Age</p>
+              <p className="info">Age</p>
               <Form.Control
+                className="info"
                 type="number"
                 placeholder="The value must be a number"
                 value={age}
@@ -91,11 +98,12 @@ function clientInformation() {
             <div
               className="mb-3 rounded p-3"
               style={{ backgroundColor: "#dfe7f5" }}
-              // controlId="sex"
+            // controlId="sex"
             >
-              <p>Sex</p>
+              <p className="info">Sex</p>
               <div>
                 <Form.Check
+                  className="info"
                   type="radio"
                   label="Male"
                   name="sex"
@@ -105,6 +113,7 @@ function clientInformation() {
                   onChange={handleSexChange}
                 />
                 <Form.Check
+                  className="info"
                   type="radio"
                   label="Female"
                   name="sex"
@@ -119,11 +128,12 @@ function clientInformation() {
             <div
               className="mb-3 rounded p-3"
               style={{ backgroundColor: "#dfe7f5" }}
-              // controlId="customerType"
+            // controlId="customerType"
             >
-              <p>Customer Type</p>
+              <p className="info">Customer Type</p>
               <div>
                 <Form.Check
+                  className="info"
                   type="radio"
                   label="Business (private school, corporations, etc.)"
                   name="customerType"
@@ -133,6 +143,7 @@ function clientInformation() {
                   onChange={handleCustomerTypeChange}
                 />
                 <Form.Check
+                  className="info"
                   type="radio"
                   label="Citizen (general public, learners, parents, former DepEd employees, researchers, NGOs etc.)"
                   name="customerType"
@@ -142,6 +153,7 @@ function clientInformation() {
                   onChange={handleCustomerTypeChange}
                 />
                 <Form.Check
+                  className="info"
                   type="radio"
                   label="Government (current DepEd employees or employees of other government agencies & LGUs)"
                   name="customerType"
@@ -152,7 +164,7 @@ function clientInformation() {
                 />
               </div>
             </div>
-            <Button style={{ backgroundColor: "green" }} onClick={nextPage}>
+            <Button className="info" style={{ backgroundColor: "green" }} onClick={nextPage}>
               Next
             </Button>
           </div>

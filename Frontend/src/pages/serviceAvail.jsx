@@ -4,6 +4,8 @@ import Header from "../components/header2";
 import { useNavigate, useLocation } from "react-router-dom";
 import Dropdown from "react-bootstrap/Dropdown";
 import { useEffect, useState } from "react";
+import Swal from "sweetalert2";
+import '../style/PageStyle.css'
 
 function serviceAvail() {
   const navigate = useNavigate();
@@ -19,62 +21,64 @@ function serviceAvail() {
   const [selectService, setSelectService] = useState([]);
 
   useEffect(() => {
-    const savedService = sessionStorage.getItem("serviceAvailed");
-    if (savedService) {
-      setSelectedOption(savedService);
-    }
-    const office = sessionStorage.getItem("selectedOffice");
-    if (office) {
-      setSelectedOfficeTransacted1(office);
-      updateServiceOptions(office);
+    let data = JSON.parse(sessionStorage.getItem('userData'));
 
-      if (office === "SDS - Schools Division Superintendent") {
+    // const savedService = sessionStorage.getItem("serviceAvailed");
+    if (data.service) {
+      setSelectedOption(data.service);
+    }
+    // const office = sessionStorage.getItem("selectedOffice");
+    if (data.office) {
+      setSelectedOfficeTransacted1(data.office);
+      updateServiceOptions(data.office);
+
+      if (data.office === "SDS - Schools Division Superintendent") {
         setSelectService(SDS);
       }
-      if (office === "ASDS - Assistant Schools Division Superintendent") {
+      if (data.office === "ASDS - Assistant Schools Division Superintendent") {
         setSelectService(ASDS);
       }
-      if (
-        office ===
-        "CID - Curriculum Implementation Division (LRMS, Instructional Management, PSDS)"
-      ) {
-        setSelectService(CID);
-      }
-      if (office === "Finance (Accounting, Budget)") {
-        setSelectService(Finance);
-      }
-      if (office === "ICT") {
+      // if (
+      //   data.office ===
+      //   "CID - Curriculum Implementation Division (LRMS, Instructional Management, PSDS)"
+      // ) {
+      //   setSelectService(CID);
+      // }
+      // if (data.office === "Finance (Accounting, Budget)") {
+      //   setSelectService(Finance);
+      // }
+      if (data.office === "ICT") {
         setSelectService(ICT);
       }
-      if (office === "Legal") {
+      if (data.office === "Legal") {
         setSelectService(Legal);
       }
-      if (office === "SGOD - School Governance and Operations Division (M&E, SocMob, Planning & Research, HRD, Facilities, School Health)") {
-        setSelectService(SGOD);
-      }
+      // if (data.office === "SGOD - School Governance and Operations Division (M&E, SocMob, Planning & Research, HRD, Facilities, School Health)") {
+      //   setSelectService(SGOD);
+      // }
 
       if (
-        office ===
+        data.office ===
         "Admin (Cash, Personnel, Records, Supply, General Services, Procurement)"
       ) {
         setOtw(otwAdmin);
       } else if (
-        office ===
+        data.office ===
         "CID - Curriculum Implementation Division (LRMS, Instructional Management, PSDS)"
       ) {
         setOtw(otwCID);
-      } else if (office === "Finance (Accounting, Budget)") {
+      } else if (data.office === "Finance (Accounting, Budget)") {
         setOtw(otwFinance);
       } else if (
-        office ===
+        data.office ===
         "SGOD - School Governance and Operations Division (M&E, SocMob, Planning & Research, HRD, Facilities, School Health)"
       ) {
         setOtw(otwSGOD);
       }
     }
-    const office2 = sessionStorage.getItem("2ndOffice");
-    if (office2) {
-      setSelectedOfficeTransacted(office2);
+
+    if (data.insideOffice) {
+      setSelectedOfficeTransacted(data.insideOffice);
     }
   }, []);
 
@@ -91,17 +95,36 @@ function serviceAvail() {
       setSelectService(generalServices);
     } else if (office === "Procurement") {
       setSelectService(procurement);
+    } else if ((office === "LRMS - Learning Resource Management Section" || office === "Instructional Management Section" || office === "PSDS - Public School District Supervisor")) {
+      setSelectService(CID);
+    } else if ((office === "Accounting" || office === "Budget")) {
+      setSelectService(Finance);
+    } if (office === 'Education Facilities' || office === 'HRD - Human Resource Development' || office === 'Planning & Research' || office === 'School Health' || office === 'SMME - School Management Monitoring and Evaluation Section' || office === 'SocMob - Social Mobilization and Networking') {
+      setSelectService(SGOD);
     }
   };
 
   const handleSelect = (eventKey) => {
     setSelectedOption(eventKey);
-    sessionStorage.setItem("serviceAvailed", eventKey);
+    let userData = JSON.parse(sessionStorage.getItem('userData')) || {};
+
+    // Update the relevant field
+    userData.service = eventKey;
+
+    // Store updated data back in sessionStorage
+    sessionStorage.setItem('userData', JSON.stringify(userData));
   };
 
   const handleSelectOfficeTransacted = (eventKey) => {
     setSelectedOfficeTransacted(eventKey);
-    sessionStorage.setItem("2ndOffice", eventKey);
+    let userData = JSON.parse(sessionStorage.getItem('userData')) || {};
+
+    // Update the relevant field
+    userData.insideOffice = eventKey;
+
+    // Store updated data back in sessionStorage
+    sessionStorage.setItem('userData', JSON.stringify(userData));
+    // sessionStorage.setItem("2ndOffice", eventKey);
     updateServiceOptions(eventKey);
   };
 
@@ -109,10 +132,19 @@ function serviceAvail() {
     navigate("/office-transact");
   };
   const nextPage = () => {
-    const service = sessionStorage.getItem("serviceAvailed");
+    // const insideOffice = sessionStorage.getItem('2ndOffice')
+    if ((selectedServiceAvailed == "Select your answer" || !selectedOfficeTransacted)) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Please select before proceeding!",
+      });
+      return;
+    } 
+    const service = JSON.parse(sessionStorage.getItem("userData"));
     if (
-      service == "Other requests/inquiries" ||
-      service == "Feedback/Complaint"
+      service.service == "Other requests/inquiries" ||
+      service.service == "Feedback/Complaint"
     ) {
       sessionStorage.removeItem("selectedYesNo");
       sessionStorage.removeItem("selectedYesNo2");
@@ -257,18 +289,18 @@ function serviceAvail() {
 
   return (
     <div
-      className="pt-5 pb-5"
+      className="pt-lg-5 pb-lg-5"
       style={{ backgroundColor: "#edf3fc", height: "100vh" }}
     >
       <div
-        className="w-75 m-auto border rounded shadow-lg"
+        className="w-75 m-auto border rounded shadow-lg content"
         style={{ backgroundColor: "#f5f9ff" }}
       >
         <Header />
-        <div className="m-auto mt-3 mb-3" style={{ width: "85%" }}>
+        <div className="container">
           <div className="m-auto">
             <div className="rounded" style={{ backgroundColor: "#dfe7f5" }}>
-              <p className="fs-4 p-3">{selectedOfficeTransacted1}</p>
+              <p className="title">{selectedOfficeTransacted1}</p>
             </div>
             {(selectedOfficeTransacted1 === "CID - Curriculum Implementation Division (LRMS, Instructional Management, PSDS)" ||
               selectedOfficeTransacted1 === "Admin (Cash, Personnel, Records, Supply, General Services, Procurement)" || selectedOfficeTransacted1 === "SGOD - School Governance and Operations Division (M&E, SocMob, Planning & Research, HRD, Facilities, School Health)" || selectedOfficeTransacted1 === "Finance (Accounting, Budget)") && (
@@ -277,18 +309,18 @@ function serviceAvail() {
                   style={{ backgroundColor: "#dfe7f5" }}
                 >
                   <div>
-                    <p>Office transacted with</p>
+                    <p className="info">Office transacted with</p>
                     <Dropdown onSelect={handleSelectOfficeTransacted}>
                       <Dropdown.Toggle
                         variant="light"
-                        className="text-truncate"
+                        className="text-truncate info"
                         style={{ width: "100%", textAlign: "left" }}
                         id="dropdown-basic"
                       >
                         {selectedOfficeTransacted}
                       </Dropdown.Toggle>
 
-                      <Dropdown.Menu>
+                      <Dropdown.Menu className="info">
                         {otw.length > 0 ? (
                           otw.map((office, index) => (
                             <Dropdown.Item key={index} eventKey={office}>
@@ -309,18 +341,18 @@ function serviceAvail() {
               className="mb-3 rounded p-3"
               style={{ backgroundColor: "#dfe7f5" }}
             >
-              <p>Service availed</p>
+              <p className="info">Service availed</p>
               <Dropdown onSelect={handleSelect}>
                 <Dropdown.Toggle
                   variant="light"
-                  className="text-truncate"
+                  className="text-truncate info"
                   style={{ width: "100%", textAlign: "left" }}
                   id="dropdown-basic"
                 >
                   {selectedServiceAvailed}
                 </Dropdown.Toggle>
 
-                <Dropdown.Menu>
+                <Dropdown.Menu className="info">
                   {selectService.length > 0 ? (
                     selectService.map((service, index) => (
                       <Dropdown.Item key={index} eventKey={service}>
@@ -338,6 +370,7 @@ function serviceAvail() {
 
             <div className="d-flex" style={{ width: "150px" }}>
               <Button
+                className="info"
                 variant="light"
                 onClick={backPage}
                 style={{ marginRight: "13px", backgroundColor: "#ededed" }}
@@ -345,7 +378,7 @@ function serviceAvail() {
                 Back
               </Button>
 
-              <Button style={{ backgroundColor: "green" }} onClick={nextPage}>
+              <Button className="info" style={{ backgroundColor: "green" }} onClick={nextPage}>
                 Next
               </Button>
             </div>
