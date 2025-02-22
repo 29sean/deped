@@ -9,6 +9,8 @@ import {
   CardTitle,
   FloatingLabel,
   InputGroup,
+  OverlayTrigger,
+  Tooltip,
 } from "react-bootstrap";
 import logo from "../assets/Images/logo.png";
 import {
@@ -20,6 +22,8 @@ import {
 } from "react-icons/fa";
 import Swal from "sweetalert2";
 import { API_BASE_URL } from "../config";
+import { CgLogOut } from "react-icons/cg";
+import { Link } from "react-router-dom";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -78,7 +82,32 @@ const Login = () => {
 
   return (
     <>
-      <div className="login-bg d-flex justify-content-center align-items-center vh-100">
+      <div className="login-bg d-flex justify-content-center align-items-center vh-100 position-relative">
+        {/* Logout Icon in Upper Left Corner */}
+        <OverlayTrigger
+          placement="right"
+          overlay={<Tooltip id="logout-tooltip">SDO CSM</Tooltip>}
+        >
+          <Link
+            to="/"
+            className="d-flex align-items-center position-absolute"
+            style={{
+              top: "20px",
+              left: "20px",
+              zIndex: 10,
+              cursor: "pointer",
+            }}
+            onClick={() => console.log("Logout clicked")}
+          >
+            <CgLogOut
+              style={{
+                fontSize: "2rem",
+                color: "#000",
+              }}
+            />
+          </Link>
+        </OverlayTrigger>
+
         <Card
           className="d-flex flex-column align-items-center p-4 card-color"
           style={{

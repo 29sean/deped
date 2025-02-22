@@ -1,10 +1,9 @@
-import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
+import { Button, Form } from "react-bootstrap";
 import Header from "../components/header";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
-import "../style/PageStyle.css"
+import "../style/PageStyle.css";
 
 function clientInformation() {
   const navigate = useNavigate();
@@ -38,7 +37,7 @@ function clientInformation() {
   };
 
   useEffect(() => {
-    const info = JSON.parse(sessionStorage.getItem('userData'));
+    const info = JSON.parse(sessionStorage.getItem("userData"));
     if (info) {
       setAge(info.age);
     }
@@ -83,7 +82,7 @@ function clientInformation() {
             <div
               className="mb-3 rounded p-3"
               style={{ backgroundColor: "#dfe7f5" }}
-            // controlId="age"
+              // controlId="age"
             >
               <p className="info">Age</p>
               <Form.Control
@@ -98,7 +97,7 @@ function clientInformation() {
             <div
               className="mb-3 rounded p-3"
               style={{ backgroundColor: "#dfe7f5" }}
-            // controlId="sex"
+              // controlId="sex"
             >
               <p className="info">Sex</p>
               <div>
@@ -128,7 +127,7 @@ function clientInformation() {
             <div
               className="mb-3 rounded p-3"
               style={{ backgroundColor: "#dfe7f5" }}
-            // controlId="customerType"
+              // controlId="customerType"
             >
               <p className="info">Customer Type</p>
               <div>
@@ -164,7 +163,11 @@ function clientInformation() {
                 />
               </div>
             </div>
-            <Button className="info" style={{ backgroundColor: "green" }} onClick={nextPage}>
+            <Button
+              className="info"
+              style={{ backgroundColor: "green" }}
+              onClick={nextPage}
+            >
               Next
             </Button>
           </div>

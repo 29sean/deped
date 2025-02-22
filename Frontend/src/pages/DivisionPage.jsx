@@ -50,7 +50,7 @@ const DivisionPage = () => {
   return (
     <div className="admin-bg">
       <AdminNav />
-      <h2 className="text-center p-3">{division_name}</h2>
+      <h2 className="text-center p-3 text-uppercase">{division_name}</h2>
 
       <div className="d-flex justify-content-between align-items-center px-4 mb-4">
         <div className="d-flex gap-3">

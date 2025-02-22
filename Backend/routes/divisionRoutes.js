@@ -7,10 +7,12 @@ import {
   getFeedbackByDivision,
 } from "../controller/divisionController.js";
 
+import { verifyToken } from "../middleware/auth.js";
+
 const router = express.Router();
 
-router.post("/add-division", addDivision);
-router.put("/updateDivision", updateDivision);
+router.post("/add-division", verifyToken, addDivision);
+router.put("/updateDivision", verifyToken, updateDivision);
 router.get("/get-divisions", getDivisions);
 router.get("/get-feedback/:division_id", getFeedbackByDivision);
 

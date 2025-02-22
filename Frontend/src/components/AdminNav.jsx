@@ -1,5 +1,13 @@
 import React from "react";
-import { Container, Nav, Navbar, NavbarBrand, NavLink } from "react-bootstrap";
+import {
+  Container,
+  Nav,
+  Navbar,
+  NavbarBrand,
+  NavLink,
+  NavbarToggle,
+  NavbarCollapse,
+} from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import navLogo from "../assets/Images/logo.png";
@@ -19,40 +27,41 @@ const AdminNav = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         localStorage.removeItem("token");
-        navigate("/login"); // Redirect to login page
+        navigate("/login");
       }
     });
   };
 
   return (
-    <Navbar
-      className="py-3 mb-5"
-      style={{ backgroundColor: "rgb(186,203,230)" }}
-    >
-      <Container className="d-flex justify-content-between align-items-center">
+    <Navbar expand="lg" className="py-3 mb-5 nav-color ">
+      <Container>
         <NavbarBrand className="d-flex align-items-center gap-2">
-          <img src={navLogo} width="120" height="120" alt="SDO CABUYAO Logo" />
-          <span className="fw-bold fs-5">SDO CABUYAO</span>
+          <img
+            src={navLogo}
+            width="100"
+            height="100"
+            alt="SDO CABUYAO Logo"
+            className="img-fluid"
+          />
+          <span className="fw-bold fs-3 text-light">SDO CABUYAO</span>
         </NavbarBrand>
-        <Nav className="d-flex gap-3">
-          <NavLink
-            href="/admin"
-            className="fs-5 nav-link"
-            style={{ transition: "color 0.3s ease" }}
-          >
-            Home
-          </NavLink>
-          <NavLink
-            className="fs-5 nav-link logout"
-            onClick={handleLogout}
-            style={{
-              cursor: "pointer",
-              transition: "color 0.3s ease",
-            }}
-          >
-            Logout
-          </NavLink>
-        </Nav>
+        <NavbarToggle aria-controls="admin-navbar-nav" />
+        <NavbarCollapse id="admin-navbar-nav" className="justify-content-end">
+          <Nav className="gap-3">
+            <NavLink href="/admin" className="fs-3 nav-link link-light">
+              Home
+            </NavLink>
+            <NavLink
+              className="fs-3 nav-link link-light"
+              onClick={handleLogout}
+              style={{
+                cursor: "pointer",
+              }}
+            >
+              Logout
+            </NavLink>
+          </Nav>
+        </NavbarCollapse>
       </Container>
     </Navbar>
   );
