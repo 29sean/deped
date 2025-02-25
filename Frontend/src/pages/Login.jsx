@@ -24,6 +24,7 @@ import Swal from "sweetalert2";
 import { API_BASE_URL } from "../config";
 import { CgLogOut } from "react-icons/cg";
 import { Link } from "react-router-dom";
+import '../style/Login.css'
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -33,7 +34,6 @@ const Login = () => {
   });
   const [loading, setLoading] = useState(false);
 
-  // Handle input change dynamically
   const handleChange = (e) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
   };
@@ -108,18 +108,11 @@ const Login = () => {
         </OverlayTrigger>
 
         <Card
-          className="d-flex flex-column align-items-center p-4 card-color"
-          style={{
-            width: "30rem",
-            height: "30rem",
-            boxShadow: "0 8px 20px rgba(0, 0, 0, 0.3)",
-            borderRadius: "12px",
-          }}
+          className="login-card"
         >
           <CardImg
             src={logo}
-            className="w-25 mb-3"
-            style={{ alignSelf: "center" }}
+            className="card-img"
           />
           <CardTitle className="fw-bold">SDO CABUYAO</CardTitle>
           <CardBody className="d-flex flex-column justify-content-center w-100">
@@ -175,13 +168,7 @@ const Login = () => {
                 }}
                 disabled={loading}
               >
-                {loading ? (
-                  "Logging in..."
-                ) : (
-                  <>
-                    <FaSignInAlt className="me-2" /> Login
-                  </>
-                )}
+                {loading ? "Logging in..." : <><FaSignInAlt className="me-2" /> Login</>}
               </Button>
             </Form>
           </CardBody>

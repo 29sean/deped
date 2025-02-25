@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import {
   Container,
   Nav,
@@ -10,10 +10,20 @@ import {
 } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import { FaBars } from "react-icons/fa"; // Import hamburger icon
 import navLogo from "../assets/Images/logo.png";
+import "../style/adminnav.css"
 
 const AdminNav = () => {
   const navigate = useNavigate();
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  // Listen for screen size changes
+  React.useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const handleLogout = () => {
     Swal.fire({

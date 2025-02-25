@@ -42,8 +42,9 @@ function citizenCharter() {
     if (userData.charter1 == "yes") {
       navigate("/citizen-charter2");
     } else {
-      sessionStorage.removeItem("selectedYesNo2");
-      sessionStorage.removeItem("selectedYesNo3");
+      delete userData.charter2;
+      delete userData.charter3;
+      sessionStorage.setItem('userData', JSON.stringify(userData));
       navigate("/client-satisfaction");
     }
   };

@@ -44,13 +44,24 @@ function officeTransact() {
       userData.office = selectedOffice;
 
       // Store the updated data back in sessionStorage
-      sessionStorage.setItem("userData", JSON.stringify(userData));
+      // sessionStorage.setItem("userData", JSON.stringify(userData));
       // sessionStorage.setItem("selectedOffice", selectedOffice);
-      sessionStorage.removeItem("serviceAvailed");
-      sessionStorage.removeItem("selectedYesNo");
-      sessionStorage.removeItem("selectedYesNo2");
-      sessionStorage.removeItem("selectedYesNo3");
-      sessionStorage.removeItem("2ndOffice");
+      delete userData.service;
+      delete userData.charter1;
+      delete userData.charter2;
+      delete userData.charter3;
+      delete userData.insideOffice;
+      delete userData.SQD1;
+      delete userData.SQD2;
+      delete userData.SQD3;
+      delete userData.SQD4;
+      delete userData.SQD5;
+      delete userData.SQD6;
+      delete userData.SQD7;
+      delete userData.SQD8;
+
+      // Save the updated object back to sessionStorage
+      sessionStorage.setItem("userData", JSON.stringify(userData));
       navigate("/service-avail");
     }
   };
@@ -72,12 +83,10 @@ function officeTransact() {
 
   return (
     <div
-      className="pt-lg-5 pb-lg-5"
-      style={{ backgroundColor: "#edf3fc", height: "100vh" }}
+    className="pt-lg-5 pb-lg-5" style={{ backgroundColor: "#edf3fc" }}
     >
       <div
         className="w-75 m-auto border rounded shadow-lg content"
-        style={{ backgroundColor: "#f5f9ff" }}
       >
         <Header />
         <div className="container">

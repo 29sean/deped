@@ -63,17 +63,29 @@ const CardDivision = () => {
     <div className="container">
       <div className="row mb-4">
         {/* Search Field */}
-        <div className="col-12 d-flex justify-content-end">
-          <div className="input-group w-auto">
+        <div className="col-12 d-flex justify-content-end justify-content-md-center">
+          <div
+            className="input-group"
+            style={{ width: "100%", maxWidth: "350px" }}
+          >
             <input
               type="text"
               className="form-control"
               placeholder="Search Divisions"
-              style={{ width: "325px" }}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
+              style={{ height: "38px" }} // Ensures uniform height
             />
-            <button className="btn btn-outline-secondary" type="button">
+            <button
+              className="btn btn-outline-secondary d-flex align-items-center justify-content-center"
+              type="button"
+              style={{
+                height: "38px",
+                padding: "0 12px",
+                borderTopLeftRadius: 0,
+                borderBottomLeftRadius: 0,
+              }}
+            >
               <FaSearch />
             </button>
           </div>
@@ -138,8 +150,8 @@ const CardDivision = () => {
                 className="custom-card d-flex flex-column justify-content-center align-items-center text-center shadow bg-light"
                 style={{
                   cursor: "pointer",
-                  height: "200px", // Fixed height for "Add New" card
-                  width: "100%", // Full width inside the grid column
+                  height: "200px",
+                  width: "100%",
                 }}
                 onClick={handleShow}
               >

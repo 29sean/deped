@@ -37,12 +37,12 @@ function citizenCharter2() {
       });
       return;
     }
-    const yesno = sessionStorage.getItem("selectedYesNo2");
     let userData = JSON.parse(sessionStorage.getItem('userData'))
     if (userData.charter2 == "yes" || userData.charter2 == "yesbut") {
       navigate("/citizen-charter3");
     } else {
-      sessionStorage.removeItem("selectedYesNo3");
+      delete userData.charter3;
+      sessionStorage.setItem('userData', JSON.stringify(userData));
       navigate("/client-satisfaction");
     }
   };
