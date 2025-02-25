@@ -23,11 +23,9 @@ function serviceAvail() {
   useEffect(() => {
     let data = JSON.parse(sessionStorage.getItem('userData'));
 
-    // const savedService = sessionStorage.getItem("serviceAvailed");
     if (data.service) {
       setSelectedOption(data.service);
     }
-    // const office = sessionStorage.getItem("selectedOffice");
     if (data.office) {
       setSelectedOfficeTransacted1(data.office);
       updateServiceOptions(data.office);
@@ -38,24 +36,12 @@ function serviceAvail() {
       if (data.office === "ASDS - Assistant Schools Division Superintendent") {
         setSelectService(ASDS);
       }
-      // if (
-      //   data.office ===
-      //   "CID - Curriculum Implementation Division (LRMS, Instructional Management, PSDS)"
-      // ) {
-      //   setSelectService(CID);
-      // }
-      // if (data.office === "Finance (Accounting, Budget)") {
-      //   setSelectService(Finance);
-      // }
       if (data.office === "ICT") {
         setSelectService(ICT);
       }
       if (data.office === "Legal") {
         setSelectService(Legal);
       }
-      // if (data.office === "SGOD - School Governance and Operations Division (M&E, SocMob, Planning & Research, HRD, Facilities, School Health)") {
-      //   setSelectService(SGOD);
-      // }
 
       if (
         data.office ===
@@ -79,7 +65,9 @@ function serviceAvail() {
 
     if (data.insideOffice) {
       setSelectedOfficeTransacted(data.insideOffice);
+      updateServiceOptions(data.insideOffice)
     }
+    console.log(data.insideOffice);
   }, []);
 
   const updateServiceOptions = (office) => {
@@ -106,17 +94,18 @@ function serviceAvail() {
 
   const handleSelect = (eventKey) => {
     setSelectedOption(eventKey);
-    let userData = JSON.parse(sessionStorage.getItem('userData')) || {};
+    // let userData = JSON.parse(sessionStorage.getItem('userData')) || {};
 
-    // Update the relevant field
-    userData.service = eventKey;
+    // // Update the relevant field
+    // userData.service = eventKey;
 
-    // Store updated data back in sessionStorage
-    sessionStorage.setItem('userData', JSON.stringify(userData));
+    // // Store updated data back in sessionStorage
+    // sessionStorage.setItem('userData', JSON.stringify(userData));
   };
 
   const handleSelectOfficeTransacted = (eventKey) => {
     setSelectedOfficeTransacted(eventKey);
+    setSelectedOption("Select your answer");
     let userData = JSON.parse(sessionStorage.getItem('userData')) || {};
 
     // Update the relevant field
@@ -140,18 +129,33 @@ function serviceAvail() {
         text: "Please select before proceeding!",
       });
       return;
-    } 
-    const service = JSON.parse(sessionStorage.getItem("userData"));
+    }
+    const userData = JSON.parse(sessionStorage.getItem("userData"));
     if (
-      service.service == "Other requests/inquiries" ||
-      service.service == "Feedback/Complaint"
+      userData.service == "Other requests/inquiries" ||
+      userData.service == "Feedback/Complaint"
     ) {
-      sessionStorage.removeItem("selectedYesNo");
-      sessionStorage.removeItem("selectedYesNo2");
-      sessionStorage.removeItem("selectedYesNo3");
+      delete userData.charter1;
+      delete userData.charter2;
+      delete userData.charter3;
+      sessionStorage.setItem('userData', JSON.stringify(userData));
       navigate("/client-satisfaction");
-    } else {
-      navigate("/citizen-charter");
+    }
+    else {
+      if (userData.service == selectedServiceAvailed) {
+        userData.service = selectedServiceAvailed;
+        sessionStorage.setItem('userData', JSON.stringify(userData));
+        navigate("/citizen-charter");
+      }
+      else {
+        userData.service = selectedServiceAvailed;
+        delete userData.charter1;
+        delete userData.charter2;
+        delete userData.charter3;
+        sessionStorage.setItem('userData', JSON.stringify(userData));
+        navigate("/citizen-charter");
+      }
+
     }
   };
 
@@ -289,7 +293,7 @@ function serviceAvail() {
 
   return (
     <div
-      className="full-h"
+      className="pt-lg-5 pb-lg-5" style={{ backgroundColor: "#edf3fc" }}
     >
       <div
         className="w-75 m-auto border rounded shadow-lg content"

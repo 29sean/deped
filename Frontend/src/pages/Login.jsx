@@ -24,6 +24,7 @@ import Swal from "sweetalert2";
 import { API_BASE_URL } from "../config";
 import { CgLogOut } from "react-icons/cg";
 import { Link } from "react-router-dom";
+import '../style/Login.css'
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -107,18 +108,11 @@ const Login = () => {
         </OverlayTrigger>
 
         <Card
-          className="d-flex flex-column align-items-center p-4 card-color"
-          style={{
-            width: "30rem",
-            height: "30rem",
-            boxShadow: "0 8px 20px rgba(0, 0, 0, 0.3)",
-            borderRadius: "12px",
-          }}
+          className="login-card"
         >
           <CardImg
             src={logo}
-            className="w-25 mb-3"
-            style={{ alignSelf: "center" }}
+            className="card-img"
           />
           <CardTitle className="fw-bold">SDO CABUYAO</CardTitle>
           <CardBody className="d-flex flex-column justify-content-center w-100">
@@ -142,44 +136,45 @@ const Login = () => {
                 </FloatingLabel>
               </InputGroup>
 
-            <InputGroup>
-              <InputGroup.Text>
-                <FaLock />
-              </InputGroup.Text>
-              <FloatingLabel label="Password">
-                <Form.Control
-                  type={showPassword ? "text" : "password"}
-                  placeholder="Password"
-                  name="password"
-                  value={credentials.password}
-                  onChange={handleChange}
-                  required
-                />
-              </FloatingLabel>
-              <InputGroup.Text
-                onClick={() => setShowPassword(!showPassword)}
-                style={{ cursor: "pointer" }}
-              >
-                {showPassword ? <FaEyeSlash /> : <FaEye />}
-              </InputGroup.Text>
-            </InputGroup>
+              <InputGroup>
+                <InputGroup.Text>
+                  <FaLock />
+                </InputGroup.Text>
+                <FloatingLabel label="Password">
+                  <Form.Control
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Password"
+                    name="password"
+                    value={credentials.password}
+                    onChange={handleChange}
+                    required
+                  />
+                </FloatingLabel>
+                <InputGroup.Text
+                  onClick={() => setShowPassword(!showPassword)}
+                  style={{ cursor: "pointer" }}
+                >
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                </InputGroup.Text>
+              </InputGroup>
 
-            <Button
-              type="submit"
-              className="mt-3 w-100"
-              style={{
-                fontSize: "1.15em",
-                backgroundColor: "#28a745",
-                borderColor: "#28a745",
-              }}
-              disabled={loading}
-            >
-              {loading ? "Logging in..." : <><FaSignInAlt className="me-2" /> Login</>}
-            </Button>
-          </Form>
-        </CardBody>
-      </Card>
-    </div>
+              <Button
+                type="submit"
+                className="mt-3 w-100"
+                style={{
+                  fontSize: "1.15em",
+                  backgroundColor: "#28a745",
+                  borderColor: "#28a745",
+                }}
+                disabled={loading}
+              >
+                {loading ? "Logging in..." : <><FaSignInAlt className="me-2" /> Login</>}
+              </Button>
+            </Form>
+          </CardBody>
+        </Card>
+      </div>
+    </>
   );
 };
 

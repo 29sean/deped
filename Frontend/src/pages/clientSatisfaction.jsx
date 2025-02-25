@@ -8,7 +8,9 @@ import Swal from "sweetalert2";
 
 const ClientSatisfaction = () => {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState(() => {
+    return JSON.parse(sessionStorage.getItem("userData")) || {};
+  });
   const [remarks, setRemarks] = useState("");
 
   // Questions array to handle all SQDs
@@ -56,19 +58,28 @@ const ClientSatisfaction = () => {
   ];
 
   useEffect(() => {
-    // Load all saved values from sessionStorage
-    questions.forEach(q => {
-      const value = sessionStorage.getItem(q.id);
-      if (value) {
-        setFormData(prev => ({ ...prev, [q.id]: value }));
-      }
-    });
+    // Load all saved values from sessionStorage on mount
+    const savedData = JSON.parse(sessionStorage.getItem("userData")) || {};
+    setFormData(savedData);
   }, []);
 
   const handleSelect = (questionId, value) => {
     setFormData(prev => ({ ...prev, [questionId]: value }));
-    sessionStorage.setItem(questionId, value);
+    let userData = JSON.parse(sessionStorage.getItem("userData")) || {};
+
+    userData[questionId] = value;
+    sessionStorage.setItem("userData", JSON.stringify(userData));
+    // sessionStorage.setItem(questionId, value);
   };
+
+  const handleRemarks = (event) => {
+    const value = event.target.value;
+    const userData = JSON.parse(sessionStorage.getItem('userData')) || {};
+
+    userData.remarks = value;
+    setRemarks(value);
+    sessionStorage.setItem('userData', JSON.stringify(userData));
+  }
 
   const backPage = () => {
     navigate("/office-transact");
@@ -195,7 +206,7 @@ const ClientSatisfaction = () => {
                 style={{ height: "100px" }}
                 placeholder="Enter your answer..."
                 value={remarks}
-                onChange={(e) => setRemarks(e.target.value)}
+                onChange={handleRemarks}
               />
             </div>
 
