@@ -83,7 +83,6 @@ const Login = () => {
   return (
     <>
       <div className="login-bg d-flex justify-content-center align-items-center vh-100 position-relative">
-        {/* Logout Icon in Upper Left Corner */}
         <OverlayTrigger
           placement="right"
           overlay={<Tooltip id="logout-tooltip">SDO CSM</Tooltip>}
