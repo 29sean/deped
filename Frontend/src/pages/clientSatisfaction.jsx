@@ -120,7 +120,7 @@ const ClientSatisfaction = () => {
             <div className="mb-3 rounded" style={{ backgroundColor: "#dfe7f5" }}>
               <table className="table-striped">
                 <thead>
-                  <tr className="d-none d-md-table-row">
+                  <tr className="d-none d-lg-table-row">
                     <th></th>
                     <th className="text-wrap rate">Strongly Agree (5)</th>
                     <th className="text-wrap rate">Agree (4)</th>

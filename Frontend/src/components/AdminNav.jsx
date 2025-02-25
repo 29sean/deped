@@ -1,11 +1,21 @@
-import React from "react";
-import { Container, Nav, Navbar, NavbarBrand, NavLink } from "react-bootstrap";
+import React, { useState } from "react";
+import { Container, Nav, Navbar, NavbarBrand, NavDropdown } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import { FaBars } from "react-icons/fa"; // Import hamburger icon
 import navLogo from "../assets/Images/logo.png";
+import "../style/adminnav.css"
 
 const AdminNav = () => {
   const navigate = useNavigate();
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  // Listen for screen size changes
+  React.useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const handleLogout = () => {
     Swal.fire({
@@ -25,34 +35,36 @@ const AdminNav = () => {
   };
 
   return (
-    <Navbar
-      className="py-3 mb-5"
-      style={{ backgroundColor: "rgb(186,203,230)" }}
-    >
+    <Navbar expand="lg" className="py-3 mb-5" style={{ backgroundColor: "rgb(186,203,230)" }}>
       <Container className="d-flex justify-content-between align-items-center">
+        {/* Logo */}
         <NavbarBrand className="d-flex align-items-center gap-2">
           <img src={navLogo} width="120" height="120" alt="SDO CABUYAO Logo" />
           <span className="fw-bold fs-5">SDO CABUYAO</span>
         </NavbarBrand>
-        <Nav className="d-flex gap-3">
-          <NavLink
-            href="/admin"
-            className="fs-5 nav-link"
-            style={{ transition: "color 0.3s ease" }}
+
+        {/* Mobile: Show dropdown menu without arrow */}
+        {isMobile ? (
+          <NavDropdown
+            title={<FaBars size={24} />} // Use icon instead of text
+            id="basic-nav-dropdown"
+            align="end"
+            className="custom-dropdown"
           >
-            Home
-          </NavLink>
-          <NavLink
-            className="fs-5 nav-link logout"
-            onClick={handleLogout}
-            style={{
-              cursor: "pointer",
-              transition: "color 0.3s ease",
-            }}
-          >
-            Logout
-          </NavLink>
-        </Nav>
+            <NavDropdown.Item href="/admin">Home</NavDropdown.Item>
+            <NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item>
+          </NavDropdown>
+        ) : (
+          // Desktop: Show regular buttons
+          <Nav className="d-flex gap-3">
+            <Nav.Link href="/admin" className="fs-5">
+              Home
+            </Nav.Link>
+            <Nav.Link className="fs-5 text-danger" onClick={handleLogout} style={{ cursor: "pointer" }}>
+              Logout
+            </Nav.Link>
+          </Nav>
+        )}
       </Container>
     </Navbar>
   );

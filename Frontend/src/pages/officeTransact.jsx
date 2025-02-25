@@ -72,12 +72,10 @@ function officeTransact() {
 
   return (
     <div
-      className="pt-lg-5 pb-lg-5"
-      style={{ backgroundColor: "#edf3fc", height: "100vh" }}
+      className="full-h"
     >
       <div
         className="w-75 m-auto border rounded shadow-lg content"
-        style={{ backgroundColor: "#f5f9ff" }}
       >
         <Header />
         <div className="container">

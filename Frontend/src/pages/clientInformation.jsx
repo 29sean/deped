@@ -164,7 +164,7 @@ function clientInformation() {
                 />
               </div>
             </div>
-            <Button className="info" style={{ backgroundColor: "green" }} onClick={nextPage}>
+            <Button className="btn info" style={{ backgroundColor: "green" }} onClick={nextPage}>
               Next
             </Button>
           </div>
