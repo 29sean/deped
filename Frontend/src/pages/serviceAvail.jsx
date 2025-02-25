@@ -1,156 +1,136 @@
 import Button from "react-bootstrap/Button";
 import Header from "../components/header2";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Dropdown from "react-bootstrap/Dropdown";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Swal from "sweetalert2";
 import "../style/PageStyle.css";
 import { API_BASE_URL } from "../config";
+import axios from "axios";
 
-function serviceAvail() {
+const ServiceDropdown = ({
+  title,
+  selectedValue,
+  onSelect,
+  items,
+  itemKey,
+  itemLabel,
+}) => (
+  <div className="mb-3 rounded p-3" style={{ backgroundColor: "#dfe7f5" }}>
+    <p className="info">{title}</p>
+    <Dropdown onSelect={onSelect}>
+      <Dropdown.Toggle
+        variant="light"
+        className="text-truncate info"
+        style={{ width: "100%", textAlign: "left" }}
+      >
+        {selectedValue}
+      </Dropdown.Toggle>
+      <Dropdown.Menu className="info">
+        {items.map((item) => (
+          <Dropdown.Item key={item[itemKey]} eventKey={item[itemKey]}>
+            {item[itemLabel]}
+          </Dropdown.Item>
+        ))}
+      </Dropdown.Menu>
+    </Dropdown>
+  </div>
+);
+
+const serviceAvail = () => {
   const navigate = useNavigate();
 
-  const [services, setService] = useState([]);
+  const [services, setServices] = useState([]);
+  const [subDivisions, setSubDivisions] = useState([]);
+  const [filteredServices, setFilteredServices] = useState([]);
 
-  const [selectedServiceAvailed, setSelectedOption] =
+  const [selectedServiceAvailed, setSelectedServiceAvailed] =
     useState("Select your answer");
   const [selectedOfficeTransacted, setSelectedOfficeTransacted] =
-    useState("Select the office");
-  const [selectedOfficeTransacted1, setSelectedOfficeTransacted1] =
-    useState("Select the office");
+    useState("Select your answer");
+  const [staticOfficeTitle, setStaticOfficeTitle] =
+    useState("Select your answer");
 
-  const [otw, setOtw] = useState([]);
-  const [selectService, setSelectService] = useState([]);
+  const fetchInitialData = useCallback(async () => {
+    try {
+      const subDivisionsResponse = await axios.get(
+        `${API_BASE_URL}/divisions/get-sub-division`
+      );
+      const data = JSON.parse(sessionStorage.getItem("userData")) || {};
+      const selectedDivisionId = data.officeId || null;
 
-  useEffect(() => {
-    let data = JSON.parse(sessionStorage.getItem("userData"));
+      const filteredSubDivisions = subDivisionsResponse.data.filter(
+        (subDivision) => subDivision.parent_id === selectedDivisionId
+      );
 
-    if (data.service) {
-      setSelectedOption(data.service);
+      setSubDivisions(filteredSubDivisions);
+      setStaticOfficeTitle(data.office || "Select your answer");
+      setSelectedServiceAvailed(data.service || "Select your answer");
+
+      const servicesResponse = await axios.get(
+        `${API_BASE_URL}/divisions/get-services`,
+        {
+          params: { divisionId: selectedDivisionId },
+        }
+      );
+      setServices(servicesResponse.data || []);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setServices([]);
+      setSubDivisions([]);
     }
-    if (data.office) {
-      setSelectedOfficeTransacted1(data.office);
-      updateServiceOptions(data.office);
-
-      if (data.office === "SDS - Schools Division Superintendent") {
-        setSelectService(SDS);
-      }
-      if (data.office === "ASDS - Assistant Schools Division Superintendent") {
-        setSelectService(ASDS);
-      }
-      if (data.office === "ICT") {
-        setSelectService(ICT);
-      }
-      if (data.office === "Legal") {
-        setSelectService(Legal);
-      }
-
-      if (
-        data.office ===
-        "Admin (Cash, Personnel, Records, Supply, General Services, Procurement)"
-      ) {
-        setOtw(otwAdmin);
-      } else if (
-        data.office ===
-        "CID - Curriculum Implementation Division (LRMS, Instructional Management, PSDS)"
-      ) {
-        setOtw(otwCID);
-      } else if (data.office === "Finance (Accounting, Budget)") {
-        setOtw(otwFinance);
-      } else if (
-        data.office ===
-        "SGOD - School Governance and Operations Division (M&E, SocMob, Planning & Research, HRD, Facilities, School Health)"
-      ) {
-        setOtw(otwSGOD);
-      }
-    }
-
-    if (data.insideOffice) {
-      setSelectedOfficeTransacted(data.insideOffice);
-      updateServiceOptions(data.insideOffice);
-    }
-    console.log(data.insideOffice);
   }, []);
 
-  const fetchServices = async () => {
-    try {
-      const response = await axios.get(
-        `${API_BASE_URL}/divisions/get-services`
-      );
-      setService(Array.isArray(response.data) ? response.data : []);
-    } catch (error) {
-      console.error("Error fetching divisions:", error);
-      setService([]);
+  useEffect(() => {
+    fetchInitialData();
+  }, [fetchInitialData]);
+
+  const handleSelectOfficeTransacted = async (subDivisionId) => {
+    const selectedSubDivision = subDivisions.find(
+      (subDivision) => subDivision.sub_division_id.toString() === subDivisionId
+    );
+
+    if (selectedSubDivision) {
+      setSelectedOfficeTransacted(selectedSubDivision.sub_division_name);
+
+      const userData = JSON.parse(sessionStorage.getItem("userData")) || {};
+      userData.insideOffice = selectedSubDivision.sub_division_name;
+      userData.sub_division_id = selectedSubDivision.sub_division_id;
+      sessionStorage.setItem("userData", JSON.stringify(userData));
+
+      try {
+        const servicesResponse = await axios.get(
+          `${API_BASE_URL}/divisions/get-services`,
+          {
+            params: {
+              divisionId: userData.officeId,
+              subDivisionId: selectedSubDivision.sub_division_id,
+            },
+          }
+        );
+
+        setFilteredServices(servicesResponse.data || []);
+        setSelectedServiceAvailed("Select your answer");
+      } catch (error) {
+        console.error("Error fetching filtered services:", error);
+        setFilteredServices([]);
+      }
     }
   };
 
-  const updateServiceOptions = (office) => {
-    if (office === "Cash") {
-      setSelectService(cash);
-    } else if (office === "Personnel") {
-      setSelectService(personnel);
-    } else if (office === "Records") {
-      setSelectService(records);
-    } else if (office === "Property and Supply") {
-      setSelectService(propertyandSupply);
-    } else if (office === "General Services") {
-      setSelectService(generalServices);
-    } else if (office === "Procurement") {
-      setSelectService(procurement);
-    } else if (
-      office === "LRMS - Learning Resource Management Section" ||
-      office === "Instructional Management Section" ||
-      office === "PSDS - Public School District Supervisor"
-    ) {
-      setSelectService(CID);
-    } else if (office === "Accounting" || office === "Budget") {
-      setSelectService(Finance);
-    }
-    if (
-      office === "Education Facilities" ||
-      office === "HRD - Human Resource Development" ||
-      office === "Planning & Research" ||
-      office === "School Health" ||
-      office === "SMME - School Management Monitoring and Evaluation Section" ||
-      office === "SocMob - Social Mobilization and Networking"
-    ) {
-      setSelectService(SGOD);
-    }
-  };
-
-  const handleSelect = (eventKey) => {
-    setSelectedOption(eventKey);
-    // let userData = JSON.parse(sessionStorage.getItem('userData')) || {};
-
-    // // Update the relevant field
-    // userData.service = eventKey;
-
-    // // Store updated data back in sessionStorage
-    // sessionStorage.setItem('userData', JSON.stringify(userData));
-  };
-
-  const handleSelectOfficeTransacted = (eventKey) => {
-    setSelectedOfficeTransacted(eventKey);
-    setSelectedOption("Select your answer");
-    let userData = JSON.parse(sessionStorage.getItem("userData")) || {};
-
-    // Update the relevant field
-    userData.insideOffice = eventKey;
-
-    // Store updated data back in sessionStorage
+  const handleSelectService = (serviceName) => {
+    setSelectedServiceAvailed(serviceName);
+    const userData = JSON.parse(sessionStorage.getItem("userData")) || {};
+    userData.service = serviceName;
     sessionStorage.setItem("userData", JSON.stringify(userData));
-    // sessionStorage.setItem("2ndOffice", eventKey);
-    updateServiceOptions(eventKey);
   };
 
-  const backPage = () => {
-    navigate("/office-transact");
-  };
+  const backPage = () => navigate("/office-transact");
+
   const nextPage = () => {
-    // const insideOffice = sessionStorage.getItem('2ndOffice')
     if (
-      selectedServiceAvailed == "Select your answer" ||
-      !selectedOfficeTransacted
+      selectedServiceAvailed === "Select your answer" ||
+      selectedOfficeTransacted === "Select your answer"
     ) {
       Swal.fire({
         icon: "error",
@@ -159,10 +139,12 @@ function serviceAvail() {
       });
       return;
     }
-    const userData = JSON.parse(sessionStorage.getItem("userData"));
+
+    const userData = JSON.parse(sessionStorage.getItem("userData")) || {};
+
     if (
-      userData.service == "Other requests/inquiries" ||
-      userData.service == "Feedback/Complaint"
+      userData.service === "Other requests/inquiries" ||
+      userData.service === "Feedback/Complaint"
     ) {
       delete userData.charter1;
       delete userData.charter2;
@@ -170,148 +152,16 @@ function serviceAvail() {
       sessionStorage.setItem("userData", JSON.stringify(userData));
       navigate("/client-satisfaction");
     } else {
-      if (userData.service == selectedServiceAvailed) {
-        userData.service = selectedServiceAvailed;
-        sessionStorage.setItem("userData", JSON.stringify(userData));
-        navigate("/citizen-charter");
-      } else {
-        userData.service = selectedServiceAvailed;
+      userData.service = selectedServiceAvailed;
+      if (userData.service !== selectedServiceAvailed) {
         delete userData.charter1;
         delete userData.charter2;
         delete userData.charter3;
-        sessionStorage.setItem("userData", JSON.stringify(userData));
-        navigate("/citizen-charter");
       }
+      sessionStorage.setItem("userData", JSON.stringify(userData));
+      navigate("/citizen-charter");
     }
   };
-
-  const cash = [
-    "Cash Advance",
-    "General Services-related",
-    "Procurement-related",
-    "Other requests/inquiries",
-  ];
-
-  const personnel = [
-    "Application - Teaching Position",
-    "Application - Non-teaching/Teaching-related",
-    "Appointment (new, promotion, transfer, etc.)",
-    "COE- Certificate of Employment",
-    "Correction of Name/Change of Status",
-    "ERF - Equivalent Record Form",
-    "Leave Application",
-    "Loan Approval and Verification",
-    "Retirement",
-    "Service Record",
-    "Terminal Leave",
-    "Other requests/inquiries",
-  ];
-
-  const records = [
-    "CAV - Certification, Authentication, Verification",
-    "Certified True Copy (CTC)/Photocopy of documents",
-    "Non-certified True Copy Documents",
-    "Receiving and Releasing of Documents",
-    "Other requests/inquiries",
-    "Feedback/Complaint",
-  ];
-
-  const propertyandSupply = [
-    "Inspection/Acceptance/Distribution of LRs, Supplies, Equipment",
-    "Property and Equipment Clearance",
-    "Request/issuance of Supplies",
-    "Other requests/inquiries",
-  ];
-
-  const generalServices = [
-    "Cash Advance",
-    "General Services-related",
-    "Procurement-related",
-    "Other requests/inquiries",
-  ];
-
-  const procurement = [
-    "Cash Advance",
-    "General Services-related",
-    "Procurement-related",
-    "Other requests/inquiries",
-  ];
-
-  const SDS = [
-    "Travel authority",
-    "Other requests/inquiries",
-    "Feedback/Complaint",
-  ];
-
-  const ASDS = ["BAC", "Other requests/inquiries", "Feedback/Complaint"];
-
-  const CID = [
-    "ALS Enrollment",
-    "Access to LR Portal",
-    "Borrowing of books/learning materials",
-    "Contextualized Learning Resources",
-    "Quality Assurance of Supplementary Learning Resources",
-    "Instructional Supervision",
-    "Technical assistance",
-    "Other requests/inquiries",
-  ];
-
-  const Finance = [
-    "Accounting Related",
-    "ORS - Obligation Request and Status",
-    "Posting/Updating of Disbursement",
-    "Other request/inquiries",
-  ];
-
-  const ICT = [
-    "Create/delete/rename/reset user accounts",
-    "Troubleshooting of ICT Equipment",
-    "Uploading of publications",
-    "Other requests/inquiries",
-  ];
-
-  const Legal = [
-    "Certificate of No Pending Case",
-    "Correction of Entries in School Record",
-    "Feedback/Complaints",
-    "Legal advice/opinion",
-    "Sites titling",
-  ];
-
-  const SGOD = [
-    "Private school-related",
-    "Basic Education Data",
-    "EBEIS/LIS/NAT Data and Performance Indicators",
-    "Other requests/inquiries",
-  ];
-
-  const otwCID = [
-    "LRMS - Learning Resource Management Section",
-    "Instructional Management Section",
-    "PSDS - Public School District Supervisor",
-  ];
-
-  const otwAdmin = [
-    "Cash",
-    "Personnel",
-    "Records",
-    "Property and Supply",
-    "General Services",
-    "Procurement",
-  ];
-
-  const otwFinance = ["Accounting", "Budget"];
-
-  const otwSGOD = [
-    "Education Facilities",
-    "HRD - Human Resource Development",
-    "Planning & Research",
-    "School Health",
-    "SMME - School Management Monitoring and Evaluation Section",
-    "SocMob - Social Mobilization and Networking",
-  ];
-
-  // const availableServices = services[selectedOfficeTransacted1] || [];
 
   return (
     <div className="pt-lg-5 pb-lg-5" style={{ backgroundColor: "#edf3fc" }}>
@@ -323,76 +173,28 @@ function serviceAvail() {
         <div className="container">
           <div className="m-auto">
             <div className="rounded" style={{ backgroundColor: "#dfe7f5" }}>
-              <p className="title">{selectedOfficeTransacted1}</p>
+              <p className="title">{staticOfficeTitle}</p>
             </div>
-            {(selectedOfficeTransacted1 ===
-              "CID - Curriculum Implementation Division (LRMS, Instructional Management, PSDS)" ||
-              selectedOfficeTransacted1 ===
-                "Admin (Cash, Personnel, Records, Supply, General Services, Procurement)" ||
-              selectedOfficeTransacted1 ===
-                "SGOD - School Governance and Operations Division (M&E, SocMob, Planning & Research, HRD, Facilities, School Health)" ||
-              selectedOfficeTransacted1 === "Finance (Accounting, Budget)") && (
-              <div
-                className="mb-3 rounded p-3"
-                style={{ backgroundColor: "#dfe7f5" }}
-              >
-                <div>
-                  <p className="info">Office transacted with</p>
-                  <Dropdown onSelect={handleSelectOfficeTransacted}>
-                    <Dropdown.Toggle
-                      variant="light"
-                      className="text-truncate info"
-                      style={{ width: "100%", textAlign: "left" }}
-                      id="dropdown-basic"
-                    >
-                      {selectedOfficeTransacted}
-                    </Dropdown.Toggle>
 
-                    <Dropdown.Menu className="info">
-                      {otw.length > 0 ? (
-                        otw.map((office, index) => (
-                          <Dropdown.Item key={index} eventKey={office}>
-                            {office}
-                          </Dropdown.Item>
-                        ))
-                      ) : (
-                        <Dropdown.Item disabled>
-                          No office available
-                        </Dropdown.Item>
-                      )}
-                    </Dropdown.Menu>
-                  </Dropdown>
-                </div>
-              </div>
+            {subDivisions.length > 0 && (
+              <ServiceDropdown
+                title="Office Transacted With"
+                selectedValue={selectedOfficeTransacted}
+                onSelect={handleSelectOfficeTransacted}
+                items={subDivisions}
+                itemKey="sub_division_id"
+                itemLabel="sub_division_name"
+              />
             )}
-            <div
-              className="mb-3 rounded p-3"
-              style={{ backgroundColor: "#dfe7f5" }}
-            >
-              <p className="info">Service availed</p>
-              <Dropdown onSelect={handleSelect}>
-                <Dropdown.Toggle
-                  variant="light"
-                  className="text-truncate info"
-                  style={{ width: "100%", textAlign: "left" }}
-                  id="dropdown-basic"
-                >
-                  {selectedServiceAvailed}
-                </Dropdown.Toggle>
 
-                <Dropdown.Menu className="info">
-                  {selectService.length > 0 ? (
-                    selectService.map((service, index) => (
-                      <Dropdown.Item key={index} eventKey={service}>
-                        {service}
-                      </Dropdown.Item>
-                    ))
-                  ) : (
-                    <Dropdown.Item disabled>No office available</Dropdown.Item>
-                  )}
-                </Dropdown.Menu>
-              </Dropdown>
-            </div>
+            <ServiceDropdown
+              title="Service Availed"
+              selectedValue={selectedServiceAvailed}
+              onSelect={handleSelectService}
+              items={filteredServices.length > 0 ? filteredServices : services}
+              itemKey="service_name" // Use service_name as the key
+              itemLabel="service_name" // Use service_name as the label
+            />
 
             <div className="d-flex" style={{ width: "150px" }}>
               <Button
@@ -403,7 +205,6 @@ function serviceAvail() {
               >
                 Back
               </Button>
-
               <Button
                 className="info"
                 style={{ backgroundColor: "green" }}
@@ -417,6 +218,6 @@ function serviceAvail() {
       </div>
     </div>
   );
-}
+};
 
 export default serviceAvail;

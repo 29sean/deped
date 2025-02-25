@@ -59,9 +59,47 @@ export const getDivisions = async (req, res) => {
 };
 
 export const getServices = async (req, res) => {
+  const divisionId = req.query.divisionId ?? null;
+  const subDivisionId = req.query.subDivisionId ?? null;
+
+  console.log("Received divisionId:", divisionId);
+  console.log("Received subDivisionId:", subDivisionId);
+
+  if (!divisionId && !subDivisionId) {
+    return res
+      .status(400)
+      .json({ message: "Either divisionId or subDivisionId is required" });
+  }
+
   try {
-    const [services] = await pool.execute("SELECT * FROM services");
+    let query = "";
+    let params = [];
+
+    if (subDivisionId) {
+      query =
+        "SELECT service_id, service_name FROM services WHERE fk_sub_division_id = ?";
+      params = [subDivisionId];
+      console.log("Using subDivisionId:", subDivisionId);
+    } else if (divisionId) {
+      query =
+        "SELECT service_id, service_name FROM services WHERE fk_division_id = ?";
+      params = [divisionId];
+      console.log("Using divisionId:", divisionId);
+    }
+
+    const [services] = await pool.execute(query, params);
+    console.log("Query results:", services);
     res.json(services);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+export const getSubDivision = async (req, res) => {
+  try {
+    const [sub_division] = await pool.execute("SELECT * FROM sub_division");
+    res.json(sub_division);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });

@@ -22,15 +22,12 @@ function clientInformation() {
       return;
     }
 
-    // Get existing user data (or use an empty object if null)
     let userData = JSON.parse(sessionStorage.getItem("userData")) || {};
 
-    // Add new data
     userData.age = age;
     userData.sex = sex;
     userData.customerType = customerType;
 
-    // Store the updated data back in sessionStorage
     sessionStorage.setItem("userData", JSON.stringify(userData));
 
     navigate("/office-transact");

@@ -8,7 +8,7 @@ import "../style/PageStyle.css";
 import axios from "axios";
 import { API_BASE_URL } from "../config";
 
-function OfficeTransact() {
+const officeTransact = () => {
   const [divisions, setDivisions] = useState([]);
   const [selectedDivision, setSelectedDivision] = useState({
     id: null,
@@ -162,6 +162,6 @@ function OfficeTransact() {
       </div>
     </div>
   );
-}
+};
 
-export default OfficeTransact;
+export default officeTransact;
