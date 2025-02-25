@@ -1,14 +1,16 @@
 import Button from "react-bootstrap/Button";
-// import Form from 'react-bootstrap/Form';
 import Header from "../components/header2";
 import { useNavigate, useLocation } from "react-router-dom";
 import Dropdown from "react-bootstrap/Dropdown";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import "../style/PageStyle.css";
+import { API_BASE_URL } from "../config";
 
 function serviceAvail() {
   const navigate = useNavigate();
+
+  const [services, setService] = useState([]);
 
   const [selectedServiceAvailed, setSelectedOption] =
     useState("Select your answer");
@@ -65,10 +67,22 @@ function serviceAvail() {
 
     if (data.insideOffice) {
       setSelectedOfficeTransacted(data.insideOffice);
-      updateServiceOptions(data.insideOffice)
+      updateServiceOptions(data.insideOffice);
     }
     console.log(data.insideOffice);
   }, []);
+
+  const fetchServices = async () => {
+    try {
+      const response = await axios.get(
+        `${API_BASE_URL}/divisions/get-services`
+      );
+      setService(Array.isArray(response.data) ? response.data : []);
+    } catch (error) {
+      console.error("Error fetching divisions:", error);
+      setService([]);
+    }
+  };
 
   const updateServiceOptions = (office) => {
     if (office === "Cash") {
@@ -106,13 +120,13 @@ function serviceAvail() {
 
   const handleSelect = (eventKey) => {
     setSelectedOption(eventKey);
-    // let userData = JSON.parse(sessionStorage.getItem("userData")) || {};
+    // let userData = JSON.parse(sessionStorage.getItem('userData')) || {};
 
     // // Update the relevant field
     // userData.service = eventKey;
 
     // // Store updated data back in sessionStorage
-    // sessionStorage.setItem("userData", JSON.stringify(userData));
+    // sessionStorage.setItem('userData', JSON.stringify(userData));
   };
 
   const handleSelectOfficeTransacted = (eventKey) => {
@@ -146,8 +160,6 @@ function serviceAvail() {
       return;
     }
     const userData = JSON.parse(sessionStorage.getItem("userData"));
-    }
-    const service = JSON.parse(sessionStorage.getItem("userData"));
     if (
       userData.service == "Other requests/inquiries" ||
       userData.service == "Feedback/Complaint"
@@ -155,24 +167,21 @@ function serviceAvail() {
       delete userData.charter1;
       delete userData.charter2;
       delete userData.charter3;
-      sessionStorage.setItem('userData', JSON.stringify(userData));
+      sessionStorage.setItem("userData", JSON.stringify(userData));
       navigate("/client-satisfaction");
-    }
-    else {
+    } else {
       if (userData.service == selectedServiceAvailed) {
         userData.service = selectedServiceAvailed;
-        sessionStorage.setItem('userData', JSON.stringify(userData));
+        sessionStorage.setItem("userData", JSON.stringify(userData));
         navigate("/citizen-charter");
-      }
-      else {
+      } else {
         userData.service = selectedServiceAvailed;
         delete userData.charter1;
         delete userData.charter2;
         delete userData.charter3;
-        sessionStorage.setItem('userData', JSON.stringify(userData));
+        sessionStorage.setItem("userData", JSON.stringify(userData));
         navigate("/citizen-charter");
       }
-
     }
   };
 
@@ -305,9 +314,7 @@ function serviceAvail() {
   // const availableServices = services[selectedOfficeTransacted1] || [];
 
   return (
-    <div
-      className="pt-lg-5 pb-lg-5" style={{ backgroundColor: "#edf3fc" }}
-    >
+    <div className="pt-lg-5 pb-lg-5" style={{ backgroundColor: "#edf3fc" }}>
       <div
         className="w-75 m-auto border rounded shadow-lg content"
         style={{ backgroundColor: "#f5f9ff" }}

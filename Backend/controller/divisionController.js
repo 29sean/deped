@@ -58,6 +58,16 @@ export const getDivisions = async (req, res) => {
   }
 };
 
+export const getServices = async (req, res) => {
+  try {
+    const [services] = await pool.execute("SELECT * FROM services");
+    res.json(services);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 export const getFeedbackByDivision = async (req, res) => {
   const { division_id } = req.params;
 

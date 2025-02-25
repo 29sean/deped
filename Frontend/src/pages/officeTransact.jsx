@@ -5,62 +5,87 @@ import Dropdown from "react-bootstrap/Dropdown";
 import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import "../style/PageStyle.css";
+import axios from "axios";
+import { API_BASE_URL } from "../config";
 
-function officeTransact() {
+function OfficeTransact() {
+  const [divisions, setDivisions] = useState([]);
+  const [selectedDivision, setSelectedDivision] = useState({
+    id: null,
+    name: "Select your answer",
+  });
+
   const navigate = useNavigate();
 
-  const [selectedOffice, setSelectedOption] = useState("Select your answer");
-
   const handleSelect = (eventKey) => {
-    setSelectedOption(eventKey);
+    const selected = divisions.find(
+      (division) => division.division_id.toString() === eventKey
+    );
+    if (selected) {
+      setSelectedDivision({
+        id: selected.division_id,
+        name: selected.division_name,
+      });
+    }
   };
 
   useEffect(() => {
     const savedOffice = JSON.parse(sessionStorage.getItem("userData"));
-    if (savedOffice.office) {
-      setSelectedOption(savedOffice.office);
+    if (savedOffice?.office) {
+      setSelectedDivision({
+        id: savedOffice.divisionId,
+        name: savedOffice.office,
+      });
     }
+    fetchDivisions();
   }, []);
 
+  const fetchDivisions = async () => {
+    try {
+      const response = await axios.get(
+        `${API_BASE_URL}/divisions/get-divisions`
+      );
+      setDivisions(Array.isArray(response.data) ? response.data : []);
+    } catch (error) {
+      console.error("Error fetching divisions:", error);
+      setDivisions([]);
+    }
+  };
+
   const nextPage = () => {
-    if (selectedOffice == "Select your answer") {
+    if (selectedDivision.name === "Select your answer") {
       Swal.fire({
         icon: "error",
         title: "Oops...",
-        text: "Please fill in all fields before proceeding!",
+        text: "Please select a division before proceeding!",
       });
       return;
     }
     let office = JSON.parse(sessionStorage.getItem("userData"));
-    // const office = sessionStorage.getItem("selectedOffice");
-    if (office.office == selectedOffice) {
-      // sessionStorage.setItem("selectedOffice", selectedOffice);
+    if (office.office === selectedDivision.name) {
       navigate("/service-avail");
     } else {
-      // Get existing user data (or use an empty object if null)
       let userData = JSON.parse(sessionStorage.getItem("userData")) || {};
+      userData.office = selectedDivision.name;
+      userData.officeId = selectedDivision.id;
 
-      // Add new data
-      userData.office = selectedOffice;
+      // Clear unnecessary fields
+      [
+        "service",
+        "charter1",
+        "charter2",
+        "charter3",
+        "insideOffice",
+        "SQD1",
+        "SQD2",
+        "SQD3",
+        "SQD4",
+        "SQD5",
+        "SQD6",
+        "SQD7",
+        "SQD8",
+      ].forEach((field) => delete userData[field]);
 
-      // Store the updated data back in sessionStorage
-      // sessionStorage.setItem("userData", JSON.stringify(userData));
-      // sessionStorage.setItem("selectedOffice", selectedOffice);
-      delete userData.service;
-      delete userData.charter1;
-      delete userData.charter2;
-      delete userData.charter3;
-      delete userData.insideOffice;
-      delete userData.SQD1;
-      delete userData.SQD2;
-      delete userData.SQD3;
-      delete userData.SQD4;
-      delete userData.SQD5;
-      delete userData.SQD6;
-      delete userData.SQD7;
-      delete userData.SQD8;
-
-      // Save the updated object back to sessionStorage
       sessionStorage.setItem("userData", JSON.stringify(userData));
       navigate("/service-avail");
     }
@@ -70,24 +95,9 @@ function officeTransact() {
     navigate("/");
   };
 
-  const offices = [
-    "SDS - Schools Division Superintendent",
-    "ASDS - Assistant Schools Division Superintendent",
-    "Admin (Cash, Personnel, Records, Supply, General Services, Procurement)",
-    "CID - Curriculum Implementation Division (LRMS, Instructional Management, PSDS)",
-    "Finance (Accounting, Budget)",
-    "ICT",
-    "Legal",
-    "SGOD - School Governance and Operations Division (M&E, SocMob, Planning & Research, HRD, Facilities, School Health)",
-  ];
-
   return (
-    <div
-    className="pt-lg-5 pb-lg-5" style={{ backgroundColor: "#edf3fc" }}
-    >
-      <div
-        className="w-75 m-auto border rounded shadow-lg content"
-      >
+    <div className="pt-lg-5 pb-lg-5" style={{ backgroundColor: "#edf3fc" }}>
+      <div className="w-75 m-auto border rounded shadow-lg content">
         <Header />
         <div className="container">
           <div className="m-auto">
@@ -107,24 +117,28 @@ function officeTransact() {
                   style={{ width: "100%", textAlign: "left" }}
                   id="dropdown-basic"
                 >
-                  {selectedOffice}
+                  {selectedDivision.name}
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu className="info">
-                  {offices.length > 0 ? (
-                    offices.map((office, index) => (
-                      <Dropdown.Item key={index} eventKey={office}>
-                        {office}
+                  {divisions.length > 0 ? (
+                    divisions.map((division) => (
+                      <Dropdown.Item
+                        key={division.division_id}
+                        eventKey={division.division_id.toString()}
+                      >
+                        {division.division_name}
                       </Dropdown.Item>
                     ))
                   ) : (
                     <Dropdown.Item disabled>
-                      No services available
+                      No divisions available
                     </Dropdown.Item>
                   )}
                 </Dropdown.Menu>
               </Dropdown>
             </div>
+
             <div className="d-flex" style={{ width: "150px" }}>
               <Button
                 className="info"
@@ -150,4 +164,4 @@ function officeTransact() {
   );
 }
 
-export default officeTransact;
+export default OfficeTransact;
