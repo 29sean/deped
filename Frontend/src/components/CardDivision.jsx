@@ -69,7 +69,7 @@ const CardDivision = () => {
               type="text"
               className="form-control"
               placeholder="Search Divisions"
-              style={{ width: "250px" }}
+              style={{ width: "325px" }}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />

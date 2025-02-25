@@ -89,3 +89,19 @@ export const getFeedbackByDivision = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+export const insertFeedback = async (req, res) => {
+  const { customer_id, division_id, feedback_text } = req.body;
+
+  try {
+    await pool.execute(
+      "INSERT INTO feedback (fk_customer, fk_division, feedback_text) VALUES (?, ?, ?)",
+      [customer_id, division_id, feedback_text]
+    );
+
+    res.status(201).json({ message: "Feedback added successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};

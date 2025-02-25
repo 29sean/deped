@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Dropdown from "react-bootstrap/Dropdown";
 import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
-import '../style/PageStyle.css'
+import "../style/PageStyle.css";
 
 function officeTransact() {
   const navigate = useNavigate();
@@ -126,7 +126,11 @@ function officeTransact() {
                 Back
               </Button>
 
-              <Button className="info" style={{ backgroundColor: "green" }} onClick={nextPage}>
+              <Button
+                className="info"
+                style={{ backgroundColor: "green" }}
+                onClick={nextPage}
+              >
                 Next
               </Button>
             </div>

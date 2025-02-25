@@ -5,7 +5,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import Dropdown from "react-bootstrap/Dropdown";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
-import '../style/PageStyle.css'
+import "../style/PageStyle.css";
 
 function serviceAvail() {
   const navigate = useNavigate();
@@ -21,7 +21,7 @@ function serviceAvail() {
   const [selectService, setSelectService] = useState([]);
 
   useEffect(() => {
-    let data = JSON.parse(sessionStorage.getItem('userData'));
+    let data = JSON.parse(sessionStorage.getItem("userData"));
 
     // const savedService = sessionStorage.getItem("serviceAvailed");
     if (data.service) {
@@ -95,35 +95,47 @@ function serviceAvail() {
       setSelectService(generalServices);
     } else if (office === "Procurement") {
       setSelectService(procurement);
-    } else if ((office === "LRMS - Learning Resource Management Section" || office === "Instructional Management Section" || office === "PSDS - Public School District Supervisor")) {
+    } else if (
+      office === "LRMS - Learning Resource Management Section" ||
+      office === "Instructional Management Section" ||
+      office === "PSDS - Public School District Supervisor"
+    ) {
       setSelectService(CID);
-    } else if ((office === "Accounting" || office === "Budget")) {
+    } else if (office === "Accounting" || office === "Budget") {
       setSelectService(Finance);
-    } if (office === 'Education Facilities' || office === 'HRD - Human Resource Development' || office === 'Planning & Research' || office === 'School Health' || office === 'SMME - School Management Monitoring and Evaluation Section' || office === 'SocMob - Social Mobilization and Networking') {
+    }
+    if (
+      office === "Education Facilities" ||
+      office === "HRD - Human Resource Development" ||
+      office === "Planning & Research" ||
+      office === "School Health" ||
+      office === "SMME - School Management Monitoring and Evaluation Section" ||
+      office === "SocMob - Social Mobilization and Networking"
+    ) {
       setSelectService(SGOD);
     }
   };
 
   const handleSelect = (eventKey) => {
     setSelectedOption(eventKey);
-    let userData = JSON.parse(sessionStorage.getItem('userData')) || {};
+    let userData = JSON.parse(sessionStorage.getItem("userData")) || {};
 
     // Update the relevant field
     userData.service = eventKey;
 
     // Store updated data back in sessionStorage
-    sessionStorage.setItem('userData', JSON.stringify(userData));
+    sessionStorage.setItem("userData", JSON.stringify(userData));
   };
 
   const handleSelectOfficeTransacted = (eventKey) => {
     setSelectedOfficeTransacted(eventKey);
-    let userData = JSON.parse(sessionStorage.getItem('userData')) || {};
+    let userData = JSON.parse(sessionStorage.getItem("userData")) || {};
 
     // Update the relevant field
     userData.insideOffice = eventKey;
 
     // Store updated data back in sessionStorage
-    sessionStorage.setItem('userData', JSON.stringify(userData));
+    sessionStorage.setItem("userData", JSON.stringify(userData));
     // sessionStorage.setItem("2ndOffice", eventKey);
     updateServiceOptions(eventKey);
   };
@@ -133,14 +145,17 @@ function serviceAvail() {
   };
   const nextPage = () => {
     // const insideOffice = sessionStorage.getItem('2ndOffice')
-    if ((selectedServiceAvailed == "Select your answer" || !selectedOfficeTransacted)) {
+    if (
+      selectedServiceAvailed == "Select your answer" ||
+      !selectedOfficeTransacted
+    ) {
       Swal.fire({
         icon: "error",
         title: "Oops...",
         text: "Please select before proceeding!",
       });
       return;
-    } 
+    }
     const service = JSON.parse(sessionStorage.getItem("userData"));
     if (
       service.service == "Other requests/inquiries" ||
@@ -213,11 +228,7 @@ function serviceAvail() {
     "Feedback/Complaint",
   ];
 
-  const ASDS = [
-    "BAC",
-    "Other requests/inquiries",
-    "Feedback/Complaint",
-  ];
+  const ASDS = ["BAC", "Other requests/inquiries", "Feedback/Complaint"];
 
   const CID = [
     "ALS Enrollment",
@@ -302,41 +313,46 @@ function serviceAvail() {
             <div className="rounded" style={{ backgroundColor: "#dfe7f5" }}>
               <p className="title">{selectedOfficeTransacted1}</p>
             </div>
-            {(selectedOfficeTransacted1 === "CID - Curriculum Implementation Division (LRMS, Instructional Management, PSDS)" ||
-              selectedOfficeTransacted1 === "Admin (Cash, Personnel, Records, Supply, General Services, Procurement)" || selectedOfficeTransacted1 === "SGOD - School Governance and Operations Division (M&E, SocMob, Planning & Research, HRD, Facilities, School Health)" || selectedOfficeTransacted1 === "Finance (Accounting, Budget)") && (
-                <div
-                  className="mb-3 rounded p-3"
-                  style={{ backgroundColor: "#dfe7f5" }}
-                >
-                  <div>
-                    <p className="info">Office transacted with</p>
-                    <Dropdown onSelect={handleSelectOfficeTransacted}>
-                      <Dropdown.Toggle
-                        variant="light"
-                        className="text-truncate info"
-                        style={{ width: "100%", textAlign: "left" }}
-                        id="dropdown-basic"
-                      >
-                        {selectedOfficeTransacted}
-                      </Dropdown.Toggle>
+            {(selectedOfficeTransacted1 ===
+              "CID - Curriculum Implementation Division (LRMS, Instructional Management, PSDS)" ||
+              selectedOfficeTransacted1 ===
+                "Admin (Cash, Personnel, Records, Supply, General Services, Procurement)" ||
+              selectedOfficeTransacted1 ===
+                "SGOD - School Governance and Operations Division (M&E, SocMob, Planning & Research, HRD, Facilities, School Health)" ||
+              selectedOfficeTransacted1 === "Finance (Accounting, Budget)") && (
+              <div
+                className="mb-3 rounded p-3"
+                style={{ backgroundColor: "#dfe7f5" }}
+              >
+                <div>
+                  <p className="info">Office transacted with</p>
+                  <Dropdown onSelect={handleSelectOfficeTransacted}>
+                    <Dropdown.Toggle
+                      variant="light"
+                      className="text-truncate info"
+                      style={{ width: "100%", textAlign: "left" }}
+                      id="dropdown-basic"
+                    >
+                      {selectedOfficeTransacted}
+                    </Dropdown.Toggle>
 
-                      <Dropdown.Menu className="info">
-                        {otw.length > 0 ? (
-                          otw.map((office, index) => (
-                            <Dropdown.Item key={index} eventKey={office}>
-                              {office}
-                            </Dropdown.Item>
-                          ))
-                        ) : (
-                          <Dropdown.Item disabled>
-                            No office available
+                    <Dropdown.Menu className="info">
+                      {otw.length > 0 ? (
+                        otw.map((office, index) => (
+                          <Dropdown.Item key={index} eventKey={office}>
+                            {office}
                           </Dropdown.Item>
-                        )}
-                      </Dropdown.Menu>
-                    </Dropdown>
-                  </div>
+                        ))
+                      ) : (
+                        <Dropdown.Item disabled>
+                          No office available
+                        </Dropdown.Item>
+                      )}
+                    </Dropdown.Menu>
+                  </Dropdown>
                 </div>
-              )}
+              </div>
+            )}
             <div
               className="mb-3 rounded p-3"
               style={{ backgroundColor: "#dfe7f5" }}
@@ -360,9 +376,7 @@ function serviceAvail() {
                       </Dropdown.Item>
                     ))
                   ) : (
-                    <Dropdown.Item disabled>
-                      No office available
-                    </Dropdown.Item>
+                    <Dropdown.Item disabled>No office available</Dropdown.Item>
                   )}
                 </Dropdown.Menu>
               </Dropdown>
@@ -378,7 +392,11 @@ function serviceAvail() {
                 Back
               </Button>
 
-              <Button className="info" style={{ backgroundColor: "green" }} onClick={nextPage}>
+              <Button
+                className="info"
+                style={{ backgroundColor: "green" }}
+                onClick={nextPage}
+              >
                 Next
               </Button>
             </div>
