@@ -42,12 +42,10 @@
   z-index: 2; /* Ensures content stays above the overlay */
 }
 
-/* card color */
-.card-color {
-  background-color: rgba(251, 245, 229, 0.7); /* Fully transparent */
-}
-
 /* CARD DIVISION */
+.nav-color {
+  background: linear-gradient(to left, #3498db, #2980b9); /* Blue Gradient */
+}
 
 .custom-card {
   background: linear-gradient(to bottom, #3498db, #2980b9); /* Blue Gradient */
@@ -65,17 +63,4 @@ th {
   white-space: nowrap;
   font-size: 15px;
   text-align: center;
-}
-
-.nav-link {
-  color: black;
-  transition: color 0.3s ease;
-}
-
-.nav-link:hover {
-  color: green;
-}
-
-.nav-link.logout:hover {
-  color: red;
 }

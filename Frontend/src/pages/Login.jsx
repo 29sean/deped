@@ -9,6 +9,8 @@ import {
   CardTitle,
   FloatingLabel,
   InputGroup,
+  OverlayTrigger,
+  Tooltip,
 } from "react-bootstrap";
 import logo from "../assets/Images/logo.png";
 import {
@@ -20,7 +22,8 @@ import {
 } from "react-icons/fa";
 import Swal from "sweetalert2";
 import { API_BASE_URL } from "../config";
-import "../style/Login.css";
+import { CgLogOut } from "react-icons/cg";
+import { Link } from "react-router-dom";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -77,36 +80,68 @@ const Login = () => {
   };
 
   return (
-    <div className="login-bg d-flex justify-content-center align-items-center vh-100">
-      <Card
-        className="d-flex flex-column align-items-center p-4 card-color w-100 h-100"
-        style={{
-          maxWidth: "30rem",
-          boxShadow: "0 8px 20px rgba(0, 0, 0, 0.3)",
-          borderRadius: "0px",
-        }}
-      >
-        <CardBody className="d-flex flex-column justify-content-center w-100">
-          <div className="d-flex flex-column align-items-center mb-3">
-            <CardImg src={logo} className="w-25 mb-2" style={{ alignSelf: "center" }} />
-            <CardTitle className="fw-bold text-center">SDO CABUYAO</CardTitle>
-          </div>
-          <Form className="d-flex flex-column gap-4 p-3" onSubmit={handleLogin}>
-            <InputGroup>
-              <InputGroup.Text>
-                <FaUserAlt />
-              </InputGroup.Text>
-              <FloatingLabel label="Username">
-                <Form.Control
-                  type="text"
-                  placeholder="Username"
-                  name="username"
-                  value={credentials.username}
-                  onChange={handleChange}
-                  required
-                />
-              </FloatingLabel>
-            </InputGroup>
+    <>
+      <div className="login-bg d-flex justify-content-center align-items-center vh-100 position-relative">
+        {/* Logout Icon in Upper Left Corner */}
+        <OverlayTrigger
+          placement="right"
+          overlay={<Tooltip id="logout-tooltip">SDO CSM</Tooltip>}
+        >
+          <Link
+            to="/"
+            className="d-flex align-items-center position-absolute"
+            style={{
+              top: "20px",
+              left: "20px",
+              zIndex: 10,
+              cursor: "pointer",
+            }}
+            onClick={() => console.log("Logout clicked")}
+          >
+            <CgLogOut
+              style={{
+                fontSize: "2rem",
+                color: "#000",
+              }}
+            />
+          </Link>
+        </OverlayTrigger>
+
+        <Card
+          className="d-flex flex-column align-items-center p-4 card-color"
+          style={{
+            width: "30rem",
+            height: "30rem",
+            boxShadow: "0 8px 20px rgba(0, 0, 0, 0.3)",
+            borderRadius: "12px",
+          }}
+        >
+          <CardImg
+            src={logo}
+            className="w-25 mb-3"
+            style={{ alignSelf: "center" }}
+          />
+          <CardTitle className="fw-bold">SDO CABUYAO</CardTitle>
+          <CardBody className="d-flex flex-column justify-content-center w-100">
+            <Form
+              className="d-flex flex-column gap-4 p-3"
+              onSubmit={handleLogin}
+            >
+              <InputGroup>
+                <InputGroup.Text>
+                  <FaUserAlt />
+                </InputGroup.Text>
+                <FloatingLabel label="Username">
+                  <Form.Control
+                    type="text"
+                    placeholder="Username"
+                    name="username"
+                    value={credentials.username}
+                    onChange={handleChange}
+                    required
+                  />
+                </FloatingLabel>
+              </InputGroup>
 
             <InputGroup>
               <InputGroup.Text>

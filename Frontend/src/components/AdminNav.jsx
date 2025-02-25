@@ -1,5 +1,13 @@
-import React, { useState } from "react";
-import { Container, Nav, Navbar, NavbarBrand, NavDropdown } from "react-bootstrap";
+import React from "react";
+import {
+  Container,
+  Nav,
+  Navbar,
+  NavbarBrand,
+  NavLink,
+  NavbarToggle,
+  NavbarCollapse,
+} from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { FaBars } from "react-icons/fa"; // Import hamburger icon
@@ -29,42 +37,41 @@ const AdminNav = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         localStorage.removeItem("token");
-        navigate("/login"); // Redirect to login page
+        navigate("/login");
       }
     });
   };
 
   return (
-    <Navbar expand="lg" className="py-3 mb-5" style={{ backgroundColor: "rgb(186,203,230)" }}>
-      <Container className="d-flex justify-content-between align-items-center">
-        {/* Logo */}
+    <Navbar expand="lg" className="py-3 mb-5 nav-color ">
+      <Container>
         <NavbarBrand className="d-flex align-items-center gap-2">
-          <img src={navLogo} width="120" height="120" alt="SDO CABUYAO Logo" />
-          <span className="fw-bold fs-5">SDO CABUYAO</span>
+          <img
+            src={navLogo}
+            width="100"
+            height="100"
+            alt="SDO CABUYAO Logo"
+            className="img-fluid"
+          />
+          <span className="fw-bold fs-3 text-light">SDO CABUYAO</span>
         </NavbarBrand>
-
-        {/* Mobile: Show dropdown menu without arrow */}
-        {isMobile ? (
-          <NavDropdown
-            title={<FaBars size={24} />} // Use icon instead of text
-            id="basic-nav-dropdown"
-            align="end"
-            className="custom-dropdown"
-          >
-            <NavDropdown.Item href="/admin">Home</NavDropdown.Item>
-            <NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item>
-          </NavDropdown>
-        ) : (
-          // Desktop: Show regular buttons
-          <Nav className="d-flex gap-3">
-            <Nav.Link href="/admin" className="fs-5">
+        <NavbarToggle aria-controls="admin-navbar-nav" />
+        <NavbarCollapse id="admin-navbar-nav" className="justify-content-end">
+          <Nav className="gap-3">
+            <NavLink href="/admin" className="fs-3 nav-link link-light">
               Home
-            </Nav.Link>
-            <Nav.Link className="fs-5 text-danger" onClick={handleLogout} style={{ cursor: "pointer" }}>
+            </NavLink>
+            <NavLink
+              className="fs-3 nav-link link-light"
+              onClick={handleLogout}
+              style={{
+                cursor: "pointer",
+              }}
+            >
               Logout
-            </Nav.Link>
+            </NavLink>
           </Nav>
-        )}
+        </NavbarCollapse>
       </Container>
     </Navbar>
   );
