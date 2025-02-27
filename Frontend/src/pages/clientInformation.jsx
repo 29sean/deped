@@ -24,9 +24,9 @@ function clientInformation() {
 
     let userData = JSON.parse(sessionStorage.getItem("userData")) || {};
 
-    userData.age = age;
+    userData.age = Number(age);
     userData.sex = sex;
-    userData.customerType = customerType;
+    userData.customerType = Number(customerType);
 
     sessionStorage.setItem("userData", JSON.stringify(userData));
 
@@ -59,7 +59,7 @@ function clientInformation() {
   };
 
   const handleCustomerTypeChange = (event) => {
-    const value = event.target.value;
+    const value = Number(event.target.value);
     setCustomerType(value);
     // sessionStorage.setItem("customerType", value);
   };
@@ -85,6 +85,7 @@ function clientInformation() {
               <Form.Control
                 className="info"
                 type="number"
+                min={0}
                 placeholder="The value must be a number"
                 value={age}
                 onChange={handleAgeChange}
@@ -134,8 +135,8 @@ function clientInformation() {
                   label="Business (private school, corporations, etc.)"
                   name="customerType"
                   id="business"
-                  value="business"
-                  checked={customerType == "business"}
+                  value="1"
+                  checked={customerType === 1}
                   onChange={handleCustomerTypeChange}
                 />
                 <Form.Check
@@ -144,8 +145,8 @@ function clientInformation() {
                   label="Citizen (general public, learners, parents, former DepEd employees, researchers, NGOs etc.)"
                   name="customerType"
                   id="citizen"
-                  value="citizen"
-                  checked={customerType == "citizen"}
+                  value="2"
+                  checked={customerType === 2}
                   onChange={handleCustomerTypeChange}
                 />
                 <Form.Check
@@ -154,8 +155,8 @@ function clientInformation() {
                   label="Government (current DepEd employees or employees of other government agencies & LGUs)"
                   name="customerType"
                   id="government"
-                  value="government"
-                  checked={customerType == "government"}
+                  value="3"
+                  checked={customerType === 3}
                   onChange={handleCustomerTypeChange}
                 />
               </div>

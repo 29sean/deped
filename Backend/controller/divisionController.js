@@ -62,9 +62,6 @@ export const getServices = async (req, res) => {
   const divisionId = req.query.divisionId ?? null;
   const subDivisionId = req.query.subDivisionId ?? null;
 
-  console.log("Received divisionId:", divisionId);
-  console.log("Received subDivisionId:", subDivisionId);
-
   if (!divisionId && !subDivisionId) {
     return res
       .status(400)
@@ -111,10 +108,11 @@ export const getFeedbackByDivision = async (req, res) => {
 
   try {
     const [feedback] = await pool.execute(
-      `SELECT name, age, gender, type, feedback.*
+      `SELECT name, age, gender, type, sub_division_name, feedback.*
        FROM feedback
        INNER JOIN customer ON customer_id = feedback.fk_customer
        INNER JOIN division ON division_id = feedback.fk_division
+       LEFT JOIN sub_division ON sub_division_id = feedback.fk_subdivision
        WHERE fk_division = ?`,
       [division_id]
     );
@@ -139,17 +137,83 @@ export const getFeedbackByDivision = async (req, res) => {
 };
 
 export const insertFeedback = async (req, res) => {
-  const { customer_id, division_id, feedback_text } = req.body;
+  const {
+    age,
+    gender,
+    type,
+    divisionId,
+    subDivisionId,
+    service,
+    chart1,
+    chart2,
+    chart3,
+    sqd1,
+    sqd2,
+    sqd3,
+    sqd4,
+    sqd5,
+    sqd6,
+    sqd7,
+    sqd8,
+    remarks,
+    created_at,
+  } = req.body;
+
+  // Input validation
+  if (!age || !gender || !type || !divisionId || !service || !created_at) {
+    return res.status(400).json({ message: "Missing required fields." });
+  }
 
   try {
-    await pool.execute(
-      "INSERT INTO feedback (fk_customer, fk_division, feedback_text) VALUES (?, ?, ?)",
-      [customer_id, division_id, feedback_text]
+    // Insert into 'customer' table and get the inserted ID
+    const [customerResult] = await pool.execute(
+      `INSERT INTO customer (age, gender, type) 
+       VALUES (?, ?, ?)`,
+      [age, gender, type]
     );
+    const customerId = customerResult.insertId;
+
+    if (!customerId) {
+      return res.status(400).json({ message: "Failed to create customer." });
+    }
+
+    // Insert into 'feedback' table using the retrieved customer ID
+    const [feedbackResult] = await pool.execute(
+      `INSERT INTO feedback (
+        fk_customer, fk_division, fk_subdivision, service, 
+        charter_one, charter_two, charter_three, 
+        sqd1, sqd2, sqd3, sqd4, sqd5, sqd6, sqd7, sqd8, 
+        remarks, created_at
+      ) 
+      VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
+      [
+        customerId,
+        divisionId,
+        subDivisionId,
+        service,
+        chart1,
+        chart2,
+        chart3,
+        sqd1,
+        sqd2,
+        sqd3,
+        sqd4,
+        sqd5,
+        sqd6,
+        sqd7,
+        sqd8,
+        remarks,
+        created_at,
+      ]
+    );
+
+    if (feedbackResult.affectedRows === 0) {
+      return res.status(400).json({ message: "Failed to add feedback." });
+    }
 
     res.status(201).json({ message: "Feedback added successfully" });
   } catch (error) {
-    console.error(error);
+    console.error("Error inserting feedback:", error.message);
     res.status(500).json({ message: "Server error" });
   }
 };

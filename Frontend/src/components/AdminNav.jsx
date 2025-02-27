@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import {
   Container,
   Nav,
@@ -10,20 +10,18 @@ import {
 } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import { FaBars } from "react-icons/fa"; // Import hamburger icon
 import navLogo from "../assets/Images/logo.png";
-import "../style/adminnav.css"
 
 const AdminNav = () => {
   const navigate = useNavigate();
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  // const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
-  // Listen for screen size changes
-  React.useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  // // Listen for screen size changes
+  // React.useEffect(() => {
+  //   const handleResize = () => setIsMobile(window.innerWidth < 768);
+  //   window.addEventListener("resize", handleResize);
+  //   return () => window.removeEventListener("resize", handleResize);
+  // }, []);
 
   const handleLogout = () => {
     Swal.fire({
@@ -43,7 +41,11 @@ const AdminNav = () => {
   };
 
   return (
-    <Navbar expand="lg" className="py-3 mb-5 nav-color ">
+    <Navbar
+      expand="lg"
+      className="py-3 mb-5"
+      style={{ backgroundColor: "#294a70" }}
+    >
       <Container>
         <NavbarBrand className="d-flex align-items-center gap-2">
           <img
@@ -58,11 +60,11 @@ const AdminNav = () => {
         <NavbarToggle aria-controls="admin-navbar-nav" />
         <NavbarCollapse id="admin-navbar-nav" className="justify-content-end">
           <Nav className="gap-3">
-            <NavLink href="/admin" className="fs-3 nav-link link-light">
+            <NavLink href="/admin" className="fs-5 nav-link link-light">
               Home
             </NavLink>
             <NavLink
-              className="fs-3 nav-link link-light"
+              className="fs-5 nav-link link-light"
               onClick={handleLogout}
               style={{
                 cursor: "pointer",

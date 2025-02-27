@@ -1,7 +1,6 @@
-import Button from "react-bootstrap/Button";
+import { Button, Dropdown } from "react-bootstrap";
 import Header from "../components/header2";
 import { useNavigate } from "react-router-dom";
-import Dropdown from "react-bootstrap/Dropdown";
 import { useEffect, useState, useCallback } from "react";
 import Swal from "sweetalert2";
 import "../style/PageStyle.css";
@@ -129,22 +128,29 @@ const serviceAvail = () => {
 
   const nextPage = () => {
     if (
-      selectedServiceAvailed === "Select your answer" ||
-      selectedOfficeTransacted === "Select your answer"
+      (selectedServiceAvailed === "Select your answer" &&
+        selectedOfficeTransacted === "Select your answer") ||
+      (!selectedServiceAvailed && !selectedOfficeTransacted)
     ) {
       Swal.fire({
         icon: "error",
         title: "Oops...",
-        text: "Please select before proceeding!",
+        text: "Please select either a service availed or an office transacted before proceeding!",
       });
       return;
     }
 
     const userData = JSON.parse(sessionStorage.getItem("userData")) || {};
 
+    // Prioritize the selected service availed if available, otherwise use office transacted
+    const selectedOption =
+      selectedServiceAvailed !== "Select your answer"
+        ? selectedServiceAvailed
+        : selectedOfficeTransacted;
+
     if (
-      userData.service === "Other requests/inquiries" ||
-      userData.service === "Feedback/Complaint"
+      selectedOption === "Other requests/inquiries" ||
+      selectedOption === "Feedback/Complaint"
     ) {
       delete userData.charter1;
       delete userData.charter2;
@@ -152,8 +158,8 @@ const serviceAvail = () => {
       sessionStorage.setItem("userData", JSON.stringify(userData));
       navigate("/client-satisfaction");
     } else {
-      userData.service = selectedServiceAvailed;
-      if (userData.service !== selectedServiceAvailed) {
+      userData.service = selectedOption;
+      if (userData.service !== selectedOption) {
         delete userData.charter1;
         delete userData.charter2;
         delete userData.charter3;
@@ -164,7 +170,10 @@ const serviceAvail = () => {
   };
 
   return (
-    <div className="pt-lg-5 pb-lg-5" style={{ backgroundColor: "#edf3fc" }}>
+    <div
+      className="pt-lg-5 pb-lg-5"
+      style={{ backgroundColor: "#edf3fc", height: "100vh" }}
+    >
       <div
         className="w-75 m-auto border rounded shadow-lg content"
         style={{ backgroundColor: "#f5f9ff" }}

@@ -72,8 +72,8 @@ const DivisionPage = () => {
       </div>
 
       <Card className="mx-4 bg-white shadow-sm rounded-3 overflow-hidden border">
-        <div className="card-header bg-primary text-white">
-          <h5 className="mb-0">Customer Data</h5>
+        <div className="card-header" style={{ backgroundColor: "#294a70" }}>
+          <h5 className="mb-0 text-white">Customer Data</h5>
         </div>
         <Table bordered hover responsive="md" className="mb-0">
           <thead className="bg-light">
@@ -109,10 +109,10 @@ const DivisionPage = () => {
               filteredData.map((item, index) => (
                 <tr key={index} className="align-middle">
                   <td className="text-center">{item.age}</td>
-                  <td className="text-center">{item.gender}</td>
+                  <td className="text-center">{item.gender.toUpperCase()}</td>
                   <td className="text-center">{item.customerType}</td>
-                  <td className="text-center">{item.second_div}</td>
-                  <td className="text-center">{item.service_avail}</td>
+                  <td className="text-center">{item.sub_division_name}</td>
+                  <td className="text-center">{item.service}</td>
                   <td className="text-center">{item.charter_one}</td>
                   <td className="text-center">{item.charter_two}</td>
                   <td className="text-center">{item.charter_three}</td>

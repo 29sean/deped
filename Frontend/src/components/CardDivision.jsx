@@ -63,7 +63,7 @@ const CardDivision = () => {
     <div className="container">
       <div className="row mb-4">
         {/* Search Field */}
-        <div className="col-12 d-flex justify-content-end justify-content-md-center">
+        <div className="col-12 d-flex justify-content-end justify-content-xs-center">
           <div
             className="input-group"
             style={{ width: "100%", maxWidth: "350px" }}

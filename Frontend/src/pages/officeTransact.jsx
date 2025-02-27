@@ -96,7 +96,10 @@ const officeTransact = () => {
   };
 
   return (
-    <div className="pt-lg-5 pb-lg-5" style={{ backgroundColor: "#edf3fc" }}>
+    <div
+      className="pt-lg-5 pb-lg-5"
+      style={{ backgroundColor: "#edf3fc", height: "100vh" }}
+    >
       <div className="w-75 m-auto border rounded shadow-lg content">
         <Header />
         <div className="container">
