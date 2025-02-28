@@ -149,8 +149,8 @@ const serviceAvail = () => {
         : selectedOfficeTransacted;
 
     if (
-      selectedOption === "Other requests/inquiries" ||
-      selectedOption === "Feedback/Complaint"
+      selectedOption === "Other Request/Inquiries" ||
+      selectedOption === "Feeback/Complaint"
     ) {
       delete userData.charter1;
       delete userData.charter2;

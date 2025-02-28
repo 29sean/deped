@@ -113,7 +113,7 @@ const ClientSatisfaction = () => {
         divisionId: formData.officeId,
         subDivisionId: formData.sub_division_id || null,
         service: formData.service,
-        chart1: formData.charter1,
+        chart1: formData.charter1 || null,
         chart2: formData.charter2 || null,
         chart3: formData.charter3 || null,
         sqd1: formData.SQD1,
@@ -193,14 +193,14 @@ const ClientSatisfaction = () => {
                 <thead>
                   <tr className="d-none d-lg-table-row">
                     <th></th>
-                    <th className="text-wrap rate">Strongly Agree (1)</th>
-                    <th className="text-wrap rate">Agree (2)</th>
+                    <th className="text-wrap rate">Strongly Agree (5)</th>
+                    <th className="text-wrap rate">Agree (4)</th>
                     <th className="text-wrap rate">
                       Neither Agree nor Disagree (3)
                     </th>
-                    <th className="text-wrap rate">Disagree (4)</th>
-                    <th className="text-wrap rate">Strongly Disagree (5)</th>
-                    <th className="text-wrap rate">Not applicable (6)</th>
+                    <th className="text-wrap rate">Disagree (2)</th>
+                    <th className="text-wrap rate">Strongly Disagree (1)</th>
+                    <th className="text-wrap rate">Not applicable</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -215,15 +215,15 @@ const ClientSatisfaction = () => {
                         <td colSpan="12">
                           <div className="button-container">
                             {[
-                              { value: "1", label: "Strongly Agree (1)" },
-                              { value: "2", label: "Agree (2)" },
+                              { value: "5", label: "Strongly Agree (5)" },
+                              { value: "4", label: "Agree (4)" },
                               {
                                 value: "3",
                                 label: "Neither Agree nor Disagree (3)",
                               },
-                              { value: "4", label: "Disagree (4)" },
-                              { value: "5", label: "Strongly Disagree (5)" },
-                              { value: "6", label: "Not applicable (6)" },
+                              { value: "2", label: "Disagree (2)" },
+                              { value: "1", label: "Strongly Disagree (1)" },
+                              { value: "0", label: "Not applicable" },
                             ].map((option) => (
                               <button
                                 key={option.value}
@@ -246,7 +246,7 @@ const ClientSatisfaction = () => {
                         <td className="SQDQ">
                           {question.id} - {question.text} ({question.dimension})
                         </td>
-                        {[1, 2, 3, 4, 5, 6].map((value) => (
+                        {[5, 4, 3, 2, 1, 0].map((value) => (
                           <td key={value}>
                             <Form.Check
                               inline
