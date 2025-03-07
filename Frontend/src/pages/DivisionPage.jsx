@@ -5,10 +5,8 @@ import AdminNav from "../components/AdminNav";
 import { API_BASE_URL } from "../config";
 import axios from "axios";
 import moment from "moment";
-// import logo from "../assets/Images/logo.png";
 import DatePicker from "react-datepicker";
-import knelogo from "../assets/Images/knelogo.png";
-import image from "../assets/Images/image.png";
+import { handlePrint } from "../utils/printUtils";
 
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -25,280 +23,62 @@ const DivisionPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
 
+  const [info, setInfo] = useState([]);
+  const [subdivisions, setSubdivisions] = useState([]);
+  const [services, setServices] = useState([]);
+  const [selectedSubdivision, setSelectedSubdivision] = useState("");
+  const [selectedService, setSelectedService] = useState("");
+
   useEffect(() => {
     if (division_id) {
       fetchFeedbackByDivision(division_id);
     }
   }, [division_id]);
 
-  const handlePrint = () => {
-    // Get data from your component state/props or use default values
-    const divisionName = "_________________";
-    const periodStart = "_________________";
-    const periodEnd = "_________________";
-    const purposeTransaction = "Create/delete/rename/reset user accounts";
-    const maleCount = "23";
-    const femaleCount = "25";
-    const ageCountsLower = "23";
-    const ageCounts2034 = "24";
-    const ageCounts3549 = "7";
-    const ageCounts5064 = "2";
-    const ageCountsHigher = "1";
-    const clientType = "Government";
-    const preparedByName = "Chem";
-    const notedByName = "christopher";
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          `${API_BASE_URL}/divisions/services-and-subdivisions/${division_id}`
+        );
+        setInfo(response.data);
 
-    const printContent = `
-      <html>
-        <head>
-          <title>Customer Feedback Report</title>
-          <style>
-  @page {
-    size: portrait;
-    margin: 15mm;
-  }
+        const uniqueSubdivisions = [
+          ...new Set(response.data.map((item) => item.sub_division_name)),
+        ].filter(Boolean); // Remove null/undefined values
 
-  body { 
-    font-family: Arial, sans-serif; 
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-  }
+        const uniqueServices = [
+          ...new Set(response.data.map((item) => item.service_name)),
+        ].filter(Boolean); // Remove null/undefined values
 
-  table { 
-    width: 100%; 
-    border-collapse: collapse; 
-    margin-top: 15px;
-  }
-
-  th, td { 
-    border: 1px solid black; 
-    padding: 8px; 
-    text-align: center; 
-  }
-
-  th { 
-    font-weight: bold; 
-    background-color: #f2f2f2;
-  }
-
-  .report-header {
-    text-align: center;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    background-color: white;
-    padding: 10px;
-    z-index: 999;
-    page-break-before: always;
-  }
-
-  .section-header, .demographics, .signature-section {
-    margin-top: 20px;
-  }
-
-  .section-header {
-    margin-top: 210px;
-  }
-
-  .signature-block {
-    text-align: center;
-    width: 200px;
-  }
-
-  .signature-line {
-    border-top: 1px solid black;
-    margin-top: 30px;
-  }
-
-  .page-content {
-    margin-top: 120px; /* Add space for the header */
-  }
-
-  .table-wrapper {
-    page-break-before: always;
-  }
-</style>
-
-        </head>
-        <body>
-          <div class="page-content">
-            <div class="report-header">
-              <img src=${image} style="width: 300px">
-              <br>
-               <hr style="border: 1px solid black; width: 100%; margin: 10px 0;">
-              
-            </div>
-            
-            <div class="section-header">
-              <div style="text-align: center;"><b>CUSTOMER FEEDBACK REPORT</b></div>
-              <div><b>Functional Division/Section/Unit:</b> ${divisionName}</div>
-              <div><b>PERIOD:</b> ${periodStart}</div>
-            </div>
-  
-            <div style="margin-top: 10px;">
-              <div><b>Purpose of Transaction:</b> ${purposeTransaction}</div>
-            </div>
-  
-            <div class="demographics">
-              <div>
-                <div><b>Sex: </b>Male: ${maleCount} Female: ${femaleCount}</div>
-              </div>
-              <div><b>Age: </b>19-Lower: ${ageCountsLower} 20-34: ${ageCounts2034} 35-49: ${ageCounts3549} 50-64: ${ageCounts5064} 65-Higher: ${ageCountsHigher}</div>
-            </div>
-  
-            <div style="margin-top: 15px;">
-              <div><b>Client Type:</b> ${clientType}</div>
-            </div>
-  
-            <table>
-              <thead>
-                <tr>
-                  <th>Survey</th>
-                  <th>5</th>
-                  <th>4</th>
-                  <th>3</th>
-                  <th>2</th>
-                  <th>1</th>
-                  <th>Total Number of Respondents</th>
-                  <th>Total Rated Score</th>
-                  <th>Ave. Rated Score</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td style="text-align: left;">SQD1 - I spent an acceptable amount of time to complete my transaction (Responsiveness)</td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                </tr>
-                <tr>
-                  <td style="text-align: left;">SQD2 - The office accurately informed and followed the transaction's requirements and steps (Reliability)</td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                </tr>
-                <tr>
-                  <td style="text-align: left;">SQD3 - My transaction (including steps and payment) was simple and convenient (Access and Facilities)</td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                </tr>
-                <tr>
-                  <td style="text-align: left;">SDQ4 - I easily found information about my transaction from the office or its website (Communication)</td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                </tr>
-                <tr>
-                  <td style="text-align: left;">SQD5 - I paid an acceptable amount of fees for my transaction (Costs)</td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                </tr>
-                <tr>
-                  <td style="text-align: left;">SQD6 - I am confident my transaction was secure (Integrity)</td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                </tr>
-                <tr>
-                  <td style="text-align: left;">SQD7 - The office's support was quick to respond (Assurance)</td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                </tr>
-                <tr>
-                  <td style="text-align: left;">SQD8 - I got what I needed from the government office (Outcome)</td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                </tr>
-              </tbody>
-            </table>
-            
-            <div style="margin-top: 20px;">
-              <div>Graph</div>
-              <div id="chart-container" style="height: 300px; width: 100%;">
-                <!-- Chart will go here -->
-              </div>
-            </div>
-  
-            <div class="signature-section">
-              <div class="signature-block">
-                <div class="signature-line"></div>
-                <div>Prepared by:</div>
-                <div>${preparedByName}</div>
-              </div>
-              
-              <div class="signature-block">
-                <div class="signature-line"></div>
-                <div>Noted:</div>
-                <div>${notedByName}</div>
-              </div>
-            </div>
-          </div>
-        </body>
-      </html>
-    `;
-
-    const iframe = document.createElement("iframe");
-    iframe.style.position = "absolute";
-    iframe.style.width = "0px";
-    iframe.style.height = "0px";
-    iframe.style.border = "none";
-    document.body.appendChild(iframe);
-
-    iframe.contentWindow.document.open();
-    iframe.contentWindow.document.write(printContent);
-    iframe.contentWindow.document.close();
-
-    iframe.contentWindow.onload = () => {
-      iframe.contentWindow.print();
-      document.body.removeChild(iframe);
+        setSubdivisions(uniqueSubdivisions);
+        setServices(uniqueServices);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
     };
+
+    fetchData();
+  }, [division_id]);
+
+  const reportData = {
+    divisionName: "_________________",
+    periodStart: "_________________",
+    periodEnd: "_________________",
+    purposeTransaction: "Create/delete/rename/reset user accounts",
+    maleCount: "23",
+    femaleCount: "25",
+    ageCountsLower: "23",
+    ageCounts2034: "24",
+    ageCounts3549: "7",
+    ageCounts5064: "2",
+    ageCountsHigher: "1",
+    clientType: "Government",
+    totalRespondents: "50",
+    totalRatedScore: "200",
+    avgRatedScore: "4.0",
+    preparedByName: "Chem",
+    notedByName: "Christopher",
   };
 
   const fetchFeedbackByDivision = async (division_id) => {
@@ -310,11 +90,11 @@ const DivisionPage = () => {
       const mappedData = response.data.map((item) => ({
         ...item,
         customerType:
-          item.type === 1
+          item.customer_type === 1
             ? "Business"
-            : item.type === 2
+            : item.customer_type === 2
             ? "Government"
-            : item.type === 3
+            : item.customer_type === 3
             ? "Citizen"
             : "Unknown",
       }));
@@ -325,16 +105,33 @@ const DivisionPage = () => {
     }
   };
 
-  const filteredData = data.filter(
-    (item) => filterCustomer === "" || item.customerType === filterCustomer
-  );
+  const filteredData = data.filter((item) => {
+    // Filter by customer type
+    const matchesCustomerType =
+      filterCustomer === "" || item.customerType === filterCustomer;
 
-  const filteredByDate = filteredData.filter((item) => {
+    // Filter by sub-division
+    const matchesSubdivision =
+      selectedSubdivision === "" ||
+      item.sub_division_name === selectedSubdivision;
+
+    // Filter by service
+    const matchesService =
+      selectedService === "" || item.service === selectedService;
+
+    // Filter by date range
     const itemDate = new Date(item.created_at);
+    const matchesDate =
+      (!startDate || itemDate >= startDate) &&
+      (!endDate || itemDate <= endDate);
+
+    // Combine all filters
     return (
-      (!startDate || itemDate >= startDate) && (!endDate || itemDate <= endDate)
+      matchesCustomerType && matchesSubdivision && matchesService && matchesDate
     );
   });
+
+  const filteredByDate = filteredData;
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -346,16 +143,18 @@ const DivisionPage = () => {
 
   const handleClearFilters = () => {
     setFilterCustomer("");
+    setSelectedSubdivision("");
+    setSelectedService("");
     setStartDate(null);
     setEndDate(null);
-    setCurrentPage(1); // Reset to the first page when clearing filters
+    setCurrentPage(1);
   };
-  // Determine if any data has subdivision
+
   const hasSubDivision = filteredData.some((item) => item.sub_division_name);
 
   const renderPagination = () => {
     const pageNumbers = [];
-    const maxPagesToShow = 5; // Number of page numbers to show at a time
+    const maxPagesToShow = 5;
     let startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
     let endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
 
@@ -426,6 +225,33 @@ const DivisionPage = () => {
             <option value="Government">Government</option>
           </Form.Select>
 
+          <Form.Select
+            className="w-auto"
+            value={selectedSubdivision}
+            onChange={(e) => setSelectedSubdivision(e.target.value)}
+          >
+            <option value="">Office Transacted</option>
+            {subdivisions.map((subdivision, index) => (
+              <option key={index} value={subdivision}>
+                {subdivision}
+              </option>
+            ))}
+          </Form.Select>
+
+          {/* Services Dropdown */}
+          <Form.Select
+            className="w-auto"
+            value={selectedService}
+            onChange={(e) => setSelectedService(e.target.value)}
+          >
+            <option value="">Service Availed</option>
+            {services.map((service, index) => (
+              <option key={index} value={service}>
+                {service}
+              </option>
+            ))}
+          </Form.Select>
+
           <div className="d-flex align-items-center gap-2">
             <DatePicker
               selected={startDate}
@@ -450,7 +276,7 @@ const DivisionPage = () => {
           </Button>
         </div>
 
-        <Button variant="success" onClick={handlePrint}>
+        <Button variant="success" onClick={() => handlePrint(reportData)}>
           Print
         </Button>
       </div>

@@ -14,7 +14,6 @@ const ClientSatisfaction = () => {
   });
   const [remarks, setRemarks] = useState("");
 
-  // Questions array to handle all SQDs
   const questions = [
     {
       id: "SQD1",
@@ -59,7 +58,6 @@ const ClientSatisfaction = () => {
   ];
 
   useEffect(() => {
-    // Load all saved values from sessionStorage on mount
     const savedData = JSON.parse(sessionStorage.getItem("userData")) || {};
     setFormData(savedData);
   }, []);
@@ -73,10 +71,8 @@ const ClientSatisfaction = () => {
 
   const handleRemarks = (event) => {
     const value = event.target.value;
-    // const userData = JSON.parse(sessionStorage.getItem("userData")) || {};
-    // userData.remarks = value;
+
     setRemarks(value);
-    // sessionStorage.setItem("userData", JSON.stringify(userData));
   };
 
   const backPage = () => {
@@ -105,13 +101,13 @@ const ClientSatisfaction = () => {
     }
 
     try {
-      // Prepare the data to send to the backend
       const payload = {
         age: formData.age,
         gender: formData.sex,
         type: formData.customerType,
         divisionId: formData.officeId,
         subDivisionId: formData.sub_division_id || null,
+        serviceId: formData.service_id,
         service: formData.service,
         chart1: formData.charter1 || null,
         chart2: formData.charter2 || null,
@@ -125,11 +121,9 @@ const ClientSatisfaction = () => {
         sqd7: formData.SQD7,
         sqd8: formData.SQD8,
         remarks: remarks || null,
-        created_at: new Date().toISOString().split("T")[0], // Current date in YYYY-MM-DD format
+        created_at: new Date().toISOString().split("T")[0],
       };
-      console.log("Remarks:", formData.remarks); // Log payload to verify the data
-      console.log("Payload:", payload); // Log payload to verify the data
-      // Send the data to the backend
+
       const response = await axios.post(
         `${API_BASE_URL}/divisions/insert-feedback`,
         payload
@@ -141,7 +135,7 @@ const ClientSatisfaction = () => {
           title: "Success!",
           text: "Feedback submitted successfully!",
         });
-        sessionStorage.removeItem("userData"); // Clear session storage
+        sessionStorage.removeItem("userData");
         navigate("/thank-you");
       }
     } catch (error) {

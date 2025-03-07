@@ -108,7 +108,7 @@ export const getFeedbackByDivision = async (req, res) => {
 
   try {
     const [feedback] = await pool.execute(
-      `SELECT name, age, gender, type, sub_division_name, feedback.*
+      `SELECT name, age, gender, customer_type, sub_division_name, feedback.*
        FROM feedback
        INNER JOIN customer ON customer_id = feedback.fk_customer
        INNER JOIN division ON division_id = feedback.fk_division
@@ -120,11 +120,11 @@ export const getFeedbackByDivision = async (req, res) => {
     const mappedFeedback = feedback.map((item) => ({
       ...item,
       customerType:
-        item.type === 1
+        item.customer_type === 1
           ? "Business"
-          : item.type === 2
+          : item.customer_type === 2
           ? "Citizen"
-          : item.type === 3
+          : item.customer_type === 3
           ? "Government"
           : "Unknown",
     }));
@@ -143,6 +143,7 @@ export const insertFeedback = async (req, res) => {
     type,
     divisionId,
     subDivisionId,
+    serviceId,
     service,
     chart1,
     chart2,
@@ -159,15 +160,13 @@ export const insertFeedback = async (req, res) => {
     created_at,
   } = req.body;
 
-  // Input validation
   if (!age || !gender || !type || !divisionId || !service || !created_at) {
     return res.status(400).json({ message: "Missing required fields." });
   }
 
   try {
-    // Insert into 'customer' table and get the inserted ID
     const [customerResult] = await pool.execute(
-      `INSERT INTO customer (age, gender, type) 
+      `INSERT INTO customer (age, gender, customer_type) 
        VALUES (?, ?, ?)`,
       [age, gender, type]
     );
@@ -177,19 +176,19 @@ export const insertFeedback = async (req, res) => {
       return res.status(400).json({ message: "Failed to create customer." });
     }
 
-    // Insert into 'feedback' table using the retrieved customer ID
     const [feedbackResult] = await pool.execute(
       `INSERT INTO feedback (
-        fk_customer, fk_division, fk_subdivision, service, 
+        fk_customer, fk_division, fk_subdivision, fk_service, service, 
         charter_one, charter_two, charter_three, 
         sqd1, sqd2, sqd3, sqd4, sqd5, sqd6, sqd7, sqd8, 
         remarks, created_at
       ) 
-      VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
+      VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
       [
         customerId,
         divisionId,
         subDivisionId,
+        serviceId,
         service,
         chart1,
         chart2,
@@ -215,5 +214,117 @@ export const insertFeedback = async (req, res) => {
   } catch (error) {
     console.error("Error inserting feedback:", error.message);
     res.status(500).json({ message: "Server error" });
+  }
+};
+
+export const getServicesAndSubdivisions = async (req, res) => {
+  const division_id = req.params.division_id;
+
+  if (!division_id) {
+    return res.status(400).json({ message: "division_id is required" });
+  }
+
+  try {
+    const query = `
+     SELECT 
+    d.division_id,
+    sd.sub_division_id,
+    d.division_name,
+    sd.sub_division_name,
+    s.service_id,
+    s.service_name
+      FROM 
+          division d
+      LEFT JOIN 
+          sub_division sd ON d.division_id = sd.parent_id
+      LEFT JOIN 
+          services s ON sd.sub_division_id = s.fk_sub_division_id OR d.division_id = s.fk_division_id
+      WHERE 
+          d.division_id = ?
+      GROUP BY 
+          d.division_id, sd.sub_division_id, 
+          d.division_name, 
+          sd.sub_division_name, s.service_id, s.service_name;
+    `;
+
+    const [results] = await pool.execute(query, [division_id]);
+
+    if (results.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "No data found for the given division_id" });
+    }
+
+    return res.status(200).json(results);
+  } catch (error) {
+    console.error("Error fetching services and subdivisions:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const getFeedBackData = async (req, res) => {
+  const { fk_division, fk_subdivision, customer_type, fk_service } = req.query;
+
+  if (!fk_division || !customer_type || !fk_service) {
+    return res.status(400).json({
+      message: "fk_division, customer_type, and fk_service are required",
+    });
+  }
+
+  try {
+    const query = `
+      SELECT 
+          cf.age_bracket,
+          c.customer_type, 
+          s.service_name AS service_availed,
+          COUNT(*) AS total_respondents,
+          SUM(CASE WHEN c.gender = 'male' THEN 1 ELSE 0 END) AS total_males,
+          SUM(CASE WHEN c.gender = 'female' THEN 1 ELSE 0 END) AS total_females,
+          AVG(f.sqd1) AS avg_sqd1,
+          AVG(f.sqd2) AS avg_sqd2,
+          AVG(f.sqd3) AS avg_sqd3,
+          AVG(f.sqd4) AS avg_sqd4,
+          AVG(f.sqd5) AS avg_sqd5,
+          AVG(f.sqd6) AS avg_sqd6,
+          AVG(f.sqd7) AS avg_sqd7,
+          AVG(f.sqd8) AS avg_sqd8
+      FROM (
+          SELECT 
+              c.customer_id,
+              c.gender, 
+              c.age, 
+              c.customer_type,
+              f.fk_service,
+              CASE 
+                  WHEN c.age BETWEEN 19 AND 25 THEN '19-25'
+                  WHEN c.age BETWEEN 26 AND 35 THEN '26-35'
+                  WHEN c.age BETWEEN 36 AND 45 THEN '36-45'
+                  ELSE '46+' 
+              END AS age_bracket
+          FROM feedback f
+          INNER JOIN customer c ON c.customer_id = f.fk_customer
+          WHERE f.fk_division = ?
+            AND (f.fk_subdivision = ? OR f.fk_subdivision IS NULL)
+            AND c.customer_type = ? 
+            AND f.fk_service = ?
+      ) AS cf
+      INNER JOIN customer c ON cf.customer_id = c.customer_id
+      LEFT JOIN services s ON cf.fk_service = s.service_id
+      LEFT JOIN feedback f ON cf.customer_id = f.fk_customer
+      GROUP BY cf.age_bracket, c.customer_type, s.service_name
+      ORDER BY cf.age_bracket, c.customer_type, s.service_name;
+    `;
+
+    const [results] = await pool.query(query, [
+      fk_division,
+      fk_subdivision || null, // Use null if fk_subdivision is not provided
+      customer_type,
+      fk_service,
+    ]);
+
+    res.status(200).json(results);
+  } catch (error) {
+    console.error("Error fetching feedback data:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 };

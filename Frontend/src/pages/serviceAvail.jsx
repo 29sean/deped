@@ -117,11 +117,24 @@ const serviceAvail = () => {
     }
   };
 
-  const handleSelectService = (serviceName) => {
-    setSelectedServiceAvailed(serviceName);
-    const userData = JSON.parse(sessionStorage.getItem("userData")) || {};
-    userData.service = serviceName;
-    sessionStorage.setItem("userData", JSON.stringify(userData));
+  const handleSelectService = (serviceId) => {
+    // Find the selected service from the combined list of services and filteredServices
+    const allServices =
+      filteredServices.length > 0 ? filteredServices : services;
+    const selectedService = allServices.find(
+      (service) => service.service_id.toString() === serviceId
+    );
+
+    if (selectedService) {
+      // Update the state with the selected service name
+      setSelectedServiceAvailed(selectedService.service_name);
+
+      // Update localStorage with both service_name and service_id
+      const userData = JSON.parse(sessionStorage.getItem("userData")) || {};
+      userData.service = selectedService.service_name;
+      userData.service_id = selectedService.service_id;
+      sessionStorage.setItem("userData", JSON.stringify(userData));
+    }
   };
 
   const backPage = () => navigate("/office-transact");
@@ -195,14 +208,13 @@ const serviceAvail = () => {
                 itemLabel="sub_division_name"
               />
             )}
-
             <ServiceDropdown
               title="Service Availed"
               selectedValue={selectedServiceAvailed}
               onSelect={handleSelectService}
               items={filteredServices.length > 0 ? filteredServices : services}
-              itemKey="service_name" // Use service_name as the key
-              itemLabel="service_name" // Use service_name as the label
+              itemKey="service_id"
+              itemLabel="service_name"
             />
 
             <div className="d-flex" style={{ width: "150px" }}>
