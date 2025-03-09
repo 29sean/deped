@@ -263,13 +263,15 @@ export const getServicesAndSubdivisions = async (req, res) => {
 };
 
 export const getFeedBackData = async (req, res) => {
-  const { fk_division, fk_subdivision, customer_type, fk_service } = req.query;
+  const { fk_division, fk_subdivision, fk_service } = req.query;
 
-  if (!fk_division || !customer_type || !fk_service) {
+  if (!fk_division || !fk_service) {
     return res.status(400).json({
       message: "fk_division, customer_type, and fk_service are required",
     });
   }
+
+  console.log(fk_division, fk_subdivision, fk_service);
 
   try {
     const query = `
@@ -305,8 +307,7 @@ export const getFeedBackData = async (req, res) => {
           INNER JOIN customer c ON c.customer_id = f.fk_customer
           WHERE f.fk_division = ?
             AND (f.fk_subdivision = ? OR f.fk_subdivision IS NULL)
-            AND c.customer_type = ? 
-            AND f.fk_service = ?
+            AND (f.fk_service = ? OR f.fk_service IS NULL)
       ) AS cf
       INNER JOIN customer c ON cf.customer_id = c.customer_id
       LEFT JOIN services s ON cf.fk_service = s.service_id
@@ -317,8 +318,7 @@ export const getFeedBackData = async (req, res) => {
 
     const [results] = await pool.query(query, [
       fk_division,
-      fk_subdivision || null, // Use null if fk_subdivision is not provided
-      customer_type,
+      fk_subdivision || null,
       fk_service,
     ]);
 

@@ -8,18 +8,20 @@ export const handlePrint = (data) => {
     purposeTransaction,
     maleCount,
     femaleCount,
-    ageCountsLower,
-    ageCounts2034,
-    ageCounts3549,
-    ageCounts5064,
-    ageCountsHigher,
+    ageBracket,
     clientType,
     totalRespondents,
-    totalRatedScore,
-    avgRatedScore,
+    avgSqd1,
+    avgSqd2,
+    avgSqd3,
+    avgSqd4,
+    avgSqd5,
+    avgSqd6,
+    avgSqd7,
+    avgSqd8,
     preparedByName,
     notedByName,
-    image = headerLogo, // Default image URL
+    image = headerLogo,
   } = data;
 
   const printContent = `
@@ -122,6 +124,16 @@ export const handlePrint = (data) => {
             margin: 20px auto;
             width: 80%;
           }
+
+          .divisionName {
+            text-decoration: underline;
+            font-weight: bold;
+          }
+
+          .serviceName {
+            text-decoration: underline;
+            font-weight: bold;
+          }
         </style>
       </head>
       <body>
@@ -133,19 +145,17 @@ export const handlePrint = (data) => {
 
           <div class="section-header">
             <div><b>CUSTOMER FEEDBACK REPORT</b></div>
-            <div><b>Functional Division/Section/Unit:</b> ${divisionName}</div>
-            <div><b>PERIOD:</b> ${periodStart} to ${periodEnd}</div>
+            <div><b>Functional Division/Section/Unit:</b> <span class="divisionName">${divisionName}</span></div>
+            <div><b>PERIOD:</b> ${periodStart} TO ${periodEnd}</div>
           </div>
 
           <div style="margin-top: 20px;">
-            <div><b>Purpose of Transaction:</b> ${purposeTransaction}</div>
+            <div><b>Purpose of Transaction:</b> <span class="serviceName">${purposeTransaction}</span></div>
           </div>
 
           <div class="demographics">
             <div><b>Sex:</b> Male: ${maleCount} | Female: ${femaleCount}</div>
-            <div>
-              <b>Age:</b> 19-Lower: ${ageCountsLower} | 20-34: ${ageCounts2034} | 35-49: ${ageCounts3549} | 50-64: ${ageCounts5064} | 65-Higher: ${ageCountsHigher}
-            </div>
+            <div><b>Age Bracket:</b> ${ageBracket}</div>
           </div>
 
           <div class="client-type">
@@ -155,26 +165,47 @@ export const handlePrint = (data) => {
           <table>
             <thead>
               <tr>
-                <th>Survey</th>
-                <th>5</th>
-                <th>4</th>
-                <th>3</th>
-                <th>2</th>
-                <th>1</th>
-                <th>Total Respondents</th>
-                <th>Total Rated Score</th>
-                <th>Avg. Rated Score</th>
+                <th>Service Quality Dimension</th>
+                <th>Average Score</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td>Responsiveness</td>
-                <td></td><td></td><td></td><td></td><td></td>
-                <td>${totalRespondents}</td>
-                <td>${totalRatedScore}</td>
-                <td>${avgRatedScore}</td>
+                <td>SQD1</td>
+                <td>${avgSqd1}</td>
               </tr>
-              <!-- Add more rows as needed -->
+              <tr>
+                <td>SQD2</td>
+                <td>${avgSqd2}</td>
+              </tr>
+              <tr>
+                <td>SQD3</td>
+                <td>${avgSqd3}</td>
+              </tr>
+              <tr>
+                <td>SQD4</td>
+                <td>${avgSqd4}</td>
+              </tr>
+              <tr>
+                <td>SQD5</td>
+                <td>${avgSqd5}</td>
+              </tr>
+              <tr>
+                <td>SQD6</td>
+                <td>${avgSqd6}</td>
+              </tr>
+              <tr>
+                <td>SQD7</td>
+                <td>${avgSqd7}</td>
+              </tr>
+              <tr>
+                <td>SQD8</td>
+                <td>${avgSqd8}</td>
+              </tr>
+              <tr>
+                <td><b>Total Respondents</b></td>
+                <td><b>${totalRespondents}</b></td>
+              </tr>
             </tbody>
           </table>
 

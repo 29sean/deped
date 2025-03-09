@@ -61,24 +61,66 @@ const DivisionPage = () => {
     fetchData();
   }, [division_id]);
 
-  const reportData = {
-    divisionName: "_________________",
-    periodStart: "_________________",
-    periodEnd: "_________________",
-    purposeTransaction: "Create/delete/rename/reset user accounts",
-    maleCount: "23",
-    femaleCount: "25",
-    ageCountsLower: "23",
-    ageCounts2034: "24",
-    ageCounts3549: "7",
-    ageCounts5064: "2",
-    ageCountsHigher: "1",
-    clientType: "Government",
-    totalRespondents: "50",
-    totalRatedScore: "200",
-    avgRatedScore: "4.0",
-    preparedByName: "Chem",
-    notedByName: "Christopher",
+  const fetchFeedbackData = async (division, subdivision, service) => {
+    try {
+      const response = await axios.get(
+        `${API_BASE_URL}/divisions/feedback-data`,
+        {
+          params: {
+            fk_division: division,
+            fk_subdivision: subdivision,
+            fk_service: service,
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching feedback data:", error);
+      return [];
+    }
+  };
+
+  const selectedServiceId = selectedService?.service_id || null;
+  const selectedSubdivisionId = selectedSubdivision?.sub_division_id || null;
+
+  const formatNumber = (value) => {
+    const num = Number(value || 0);
+    return Number.isInteger(num) ? num.toString() : Math.trunc(num * 100) / 100;
+  };
+
+  const handlePrintReport = async () => {
+    const printContentArray = await fetchFeedbackData(
+      division_id,
+      selectedSubdivisionId,
+      selectedServiceId
+    );
+
+    const printContent =
+      printContentArray.length > 0 ? printContentArray[0] : {};
+
+    const reportData = {
+      divisionName: division_name.toUpperCase(),
+      periodStart: startDate ? moment(startDate).format("MM/D/YYYY") : "",
+      periodEnd: endDate ? moment(endDate).format("MM/D/YYYY") : "",
+      purposeTransaction: selectedService?.service_name || "Not Specified",
+      maleCount: printContent?.total_males || "0",
+      femaleCount: printContent?.total_females || "0",
+      ageBracket: printContent?.age_bracket || "Not Specified",
+      clientType: filterCustomer || "Not Specified",
+      totalRespondents: printContent?.total_respondents || "0",
+      avgSqd1: formatNumber(printContent?.avg_sqd1),
+      avgSqd2: formatNumber(printContent?.avg_sqd2),
+      avgSqd3: formatNumber(printContent?.avg_sqd3),
+      avgSqd4: formatNumber(printContent?.avg_sqd4),
+      avgSqd5: formatNumber(printContent?.avg_sqd5),
+      avgSqd6: formatNumber(printContent?.avg_sqd6),
+      avgSqd7: formatNumber(printContent?.avg_sqd7),
+      avgSqd8: formatNumber(printContent?.avg_sqd8),
+      preparedByName: "Chem",
+      notedByName: "Christopher",
+    };
+
+    handlePrint(reportData);
   };
 
   const fetchFeedbackByDivision = async (division_id) => {
@@ -106,26 +148,23 @@ const DivisionPage = () => {
   };
 
   const filteredData = data.filter((item) => {
-    // Filter by customer type
     const matchesCustomerType =
       filterCustomer === "" || item.customerType === filterCustomer;
 
-    // Filter by sub-division
     const matchesSubdivision =
-      selectedSubdivision === "" ||
-      item.sub_division_name === selectedSubdivision;
+      !selectedSubdivision ||
+      item.fk_subdivision === selectedSubdivision?.sub_division_id;
 
-    // Filter by service
     const matchesService =
-      selectedService === "" || item.service === selectedService;
+      !selectedService ||
+      item.fk_service === selectedService?.service_id ||
+      item.service === selectedService?.service_name;
 
-    // Filter by date range
     const itemDate = new Date(item.created_at);
     const matchesDate =
       (!startDate || itemDate >= startDate) &&
       (!endDate || itemDate <= endDate);
 
-    // Combine all filters
     return (
       matchesCustomerType && matchesSubdivision && matchesService && matchesDate
     );
@@ -173,6 +212,21 @@ const DivisionPage = () => {
         </Pagination.Item>
       );
     }
+
+    // console.log("Full Data:", data);
+    // console.log("Selected Subdivision:", selectedSubdivision);
+    // console.log("Selected Service:", selectedService);
+
+    // console.log("Selected Service ID:", selectedServiceId);
+    // console.log("Selected Subdivision ID:", selectedSubdivisionId);
+
+    // console.log(
+    //   "Selected Subdivision ID:",
+    //   selectedSubdivision?.sub_division_id
+    // );
+    // console.log("Selected Service ID:", selectedService?.service_id);
+
+    // console.log("Filtered Data:", filteredData);
 
     return (
       <Pagination>
@@ -227,8 +281,13 @@ const DivisionPage = () => {
 
           <Form.Select
             className="w-auto"
-            value={selectedSubdivision}
-            onChange={(e) => setSelectedSubdivision(e.target.value)}
+            value={selectedSubdivision?.sub_division_name || ""}
+            onChange={(e) => {
+              const selectedSub = info.find(
+                (item) => item.sub_division_name === e.target.value
+              );
+              setSelectedSubdivision(selectedSub || null);
+            }}
           >
             <option value="">Office Transacted</option>
             {subdivisions.map((subdivision, index) => (
@@ -238,11 +297,15 @@ const DivisionPage = () => {
             ))}
           </Form.Select>
 
-          {/* Services Dropdown */}
           <Form.Select
             className="w-auto"
-            value={selectedService}
-            onChange={(e) => setSelectedService(e.target.value)}
+            value={selectedService?.service_name || ""}
+            onChange={(e) => {
+              const selectedServ = info.find(
+                (item) => item.service_name === e.target.value
+              );
+              setSelectedService(selectedServ || null);
+            }}
           >
             <option value="">Service Availed</option>
             {services.map((service, index) => (
@@ -276,7 +339,7 @@ const DivisionPage = () => {
           </Button>
         </div>
 
-        <Button variant="success" onClick={() => handlePrint(reportData)}>
+        <Button variant="success" onClick={handlePrintReport}>
           Print
         </Button>
       </div>
