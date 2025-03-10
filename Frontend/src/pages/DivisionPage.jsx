@@ -95,16 +95,14 @@ const DivisionPage = () => {
       selectedServiceId
     );
 
-    const printContent =
-      printContentArray.length > 0 ? printContentArray[0] : {};
-
-    const reportData = {
+    // Generate report data for all rows
+    const reportDataArray = printContentArray.map((printContent) => ({
       divisionName: division_name.toUpperCase(),
       periodStart: startDate ? moment(startDate).format("MM/D/YYYY") : "",
       periodEnd: endDate ? moment(endDate).format("MM/D/YYYY") : "",
       purposeTransaction: selectedService?.service_name || "Not Specified",
-      maleCount: printContent?.total_males || "0",
-      femaleCount: printContent?.total_females || "0",
+      maleCount: printContent.total_males || "0",
+      femaleCount: printContent.total_females || "0",
       ageBracket: printContent?.age_bracket || "Not Specified",
       clientType: filterCustomer || "Not Specified",
       totalRespondents: printContent?.total_respondents || "0",
@@ -116,11 +114,15 @@ const DivisionPage = () => {
       avgSqd6: formatNumber(printContent?.avg_sqd6),
       avgSqd7: formatNumber(printContent?.avg_sqd7),
       avgSqd8: formatNumber(printContent?.avg_sqd8),
-      preparedByName: "Chem",
-      notedByName: "Christopher",
-    };
+    }));
 
-    handlePrint(reportData);
+    // Generate the print content for all rows
+    const printContent = reportDataArray
+      .map((data) => handlePrint(data))
+      .join("<hr/>"); // Add a separator between reports
+
+    handlePrint(printContent);
+    console.log("Report Data Array:", reportDataArray);
   };
 
   const fetchFeedbackByDivision = async (division_id) => {

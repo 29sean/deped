@@ -275,45 +275,45 @@ export const getFeedBackData = async (req, res) => {
 
   try {
     const query = `
-      SELECT 
-          cf.age_bracket,
-          c.customer_type, 
-          s.service_name AS service_availed,
-          COUNT(*) AS total_respondents,
-          SUM(CASE WHEN c.gender = 'male' THEN 1 ELSE 0 END) AS total_males,
-          SUM(CASE WHEN c.gender = 'female' THEN 1 ELSE 0 END) AS total_females,
-          AVG(f.sqd1) AS avg_sqd1,
-          AVG(f.sqd2) AS avg_sqd2,
-          AVG(f.sqd3) AS avg_sqd3,
-          AVG(f.sqd4) AS avg_sqd4,
-          AVG(f.sqd5) AS avg_sqd5,
-          AVG(f.sqd6) AS avg_sqd6,
-          AVG(f.sqd7) AS avg_sqd7,
-          AVG(f.sqd8) AS avg_sqd8
-      FROM (
-          SELECT 
-              c.customer_id,
-              c.gender, 
-              c.age, 
-              c.customer_type,
-              f.fk_service,
-              CASE 
-                  WHEN c.age BETWEEN 19 AND 25 THEN '19-25'
-                  WHEN c.age BETWEEN 26 AND 35 THEN '26-35'
-                  WHEN c.age BETWEEN 36 AND 45 THEN '36-45'
-                  ELSE '46+' 
-              END AS age_bracket
-          FROM feedback f
-          INNER JOIN customer c ON c.customer_id = f.fk_customer
-          WHERE f.fk_division = ?
-            AND (f.fk_subdivision = ? OR f.fk_subdivision IS NULL)
-            AND (f.fk_service = ? OR f.fk_service IS NULL)
-      ) AS cf
-      INNER JOIN customer c ON cf.customer_id = c.customer_id
-      LEFT JOIN services s ON cf.fk_service = s.service_id
-      LEFT JOIN feedback f ON cf.customer_id = f.fk_customer
-      GROUP BY cf.age_bracket, c.customer_type, s.service_name
-      ORDER BY cf.age_bracket, c.customer_type, s.service_name;
+     SELECT 
+        CASE 
+            WHEN c.age BETWEEN 19 AND 25 THEN '19-25'
+            WHEN c.age BETWEEN 26 AND 35 THEN '26-35'
+            WHEN c.age BETWEEN 36 AND 45 THEN '36-45'
+            ELSE '46+' 
+        END AS age_bracket,
+        c.customer_type, 
+        s.service_name AS service_availed,
+        COUNT(*) AS total_respondents,
+        SUM(CASE WHEN c.gender = 'male' THEN 1 ELSE 0 END) AS total_males,
+        SUM(CASE WHEN c.gender = 'female' THEN 1 ELSE 0 END) AS total_females,
+        ROUND(AVG(f.sqd1), 2) AS avg_sqd1,
+        ROUND(AVG(f.sqd2), 2) AS avg_sqd2,
+        ROUND(AVG(f.sqd3), 2) AS avg_sqd3,
+        ROUND(AVG(f.sqd4), 2) AS avg_sqd4,
+        ROUND(AVG(f.sqd5), 2) AS avg_sqd5,
+        ROUND(AVG(f.sqd6), 2) AS avg_sqd6,
+        ROUND(AVG(f.sqd7), 2) AS avg_sqd7,
+        ROUND(AVG(f.sqd8), 2) AS avg_sqd8
+    FROM feedback f
+    LEFT JOIN customer c ON c.customer_id = f.fk_customer
+    LEFT JOIN services s ON f.fk_service = s.service_id
+    WHERE f.fk_division = ?
+    AND (f.fk_subdivision = ? OR f.fk_subdivision IS NULL)
+    AND f.fk_service = ?  
+    GROUP BY 
+        CASE 
+            WHEN c.age BETWEEN 19 AND 25 THEN '19-25'
+            WHEN c.age BETWEEN 26 AND 35 THEN '26-35'
+            WHEN c.age BETWEEN 36 AND 45 THEN '36-45'
+            ELSE '46+' 
+        END,
+        c.customer_type, 
+        s.service_name
+    ORDER BY 
+        age_bracket, 
+        c.customer_type, 
+        s.service_name;
     `;
 
     const [results] = await pool.query(query, [
