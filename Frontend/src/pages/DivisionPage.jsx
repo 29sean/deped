@@ -43,16 +43,34 @@ const DivisionPage = () => {
         );
         setInfo(response.data);
 
+        // Extract unique subdivisions
         const uniqueSubdivisions = [
-          ...new Set(response.data.map((item) => item.sub_division_name)),
-        ].filter(Boolean); // Remove null/undefined values
+          ...new Map(
+            response.data
+              .filter((item) => item.sub_division_name) // Exclude null subdivisions
+              .map((item) => [item.sub_division_id, item.sub_division_name])
+          ).values(),
+        ];
 
-        const uniqueServices = [
-          ...new Set(response.data.map((item) => item.service_name)),
-        ].filter(Boolean); // Remove null/undefined values
+        // Group services by subdivision or assign to division if no subdivision
+        const groupedServices = response.data.reduce((acc, item) => {
+          const key = item.sub_division_name || "Division Services";
+
+          if (!acc[key]) {
+            acc[key] = [];
+          }
+
+          if (item.service_name) {
+            acc[key].push(item.service_name);
+          }
+
+          return acc;
+        }, {});
 
         setSubdivisions(uniqueSubdivisions);
-        setServices(uniqueServices);
+        setServices(groupedServices);
+        setSelectedSubdivision(null);
+        setSelectedService(null);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -89,40 +107,50 @@ const DivisionPage = () => {
   };
 
   const handlePrintReport = async () => {
-    const printContentArray = await fetchFeedbackData(
-      division_id,
-      selectedSubdivisionId,
-      selectedServiceId
-    );
+    try {
+      const printContentArray = await fetchFeedbackData(
+        division_id,
+        selectedSubdivisionId,
+        selectedServiceId
+      );
+      console.log("Fetched Data:", printContentArray);
 
-    // Generate report data for all rows
-    const reportDataArray = printContentArray.map((printContent) => ({
-      divisionName: division_name.toUpperCase(),
-      periodStart: startDate ? moment(startDate).format("MM/D/YYYY") : "",
-      periodEnd: endDate ? moment(endDate).format("MM/D/YYYY") : "",
-      purposeTransaction: selectedService?.service_name || "Not Specified",
-      maleCount: printContent.total_males || "0",
-      femaleCount: printContent.total_females || "0",
-      ageBracket: printContent?.age_bracket || "Not Specified",
-      clientType: filterCustomer || "Not Specified",
-      totalRespondents: printContent?.total_respondents || "0",
-      avgSqd1: formatNumber(printContent?.avg_sqd1),
-      avgSqd2: formatNumber(printContent?.avg_sqd2),
-      avgSqd3: formatNumber(printContent?.avg_sqd3),
-      avgSqd4: formatNumber(printContent?.avg_sqd4),
-      avgSqd5: formatNumber(printContent?.avg_sqd5),
-      avgSqd6: formatNumber(printContent?.avg_sqd6),
-      avgSqd7: formatNumber(printContent?.avg_sqd7),
-      avgSqd8: formatNumber(printContent?.avg_sqd8),
-    }));
+      if (!printContentArray || printContentArray.length === 0) {
+        console.error("Error: No data available for printing.");
+        return;
+      }
 
-    // Generate the print content for all rows
-    const printContent = reportDataArray
-      .map((data) => handlePrint(data))
-      .join("<hr/>"); // Add a separator between reports
+      const reportDataArray = printContentArray.map((printContent) => ({
+        divisionName: division_name?.toUpperCase() || "Not Specified",
+        periodStart: startDate ? moment(startDate).format("MM/D/YYYY") : "",
+        periodEnd: endDate ? moment(endDate).format("MM/D/YYYY") : "",
+        purposeTransaction: selectedService?.service_name || "Not Specified",
+        maleCount: printContent.total_males || "0",
+        femaleCount: printContent.total_females || "0",
+        ageBracket: printContent.age_bracket || "Not Specified",
+        clientType: filterCustomer || "Not Specified",
+        totalRespondents: printContent.total_respondents || "0",
+        avgSqd1: { averageScore: printContent.avg_sqd1 || 0 },
+        avgSqd2: { averageScore: printContent.avg_sqd2 || 0 },
+        avgSqd3: { averageScore: printContent.avg_sqd3 || 0 },
+        avgSqd4: { averageScore: printContent.avg_sqd4 || 0 },
+        avgSqd5: { averageScore: printContent.avg_sqd5 || 0 },
+        avgSqd6: { averageScore: printContent.avg_sqd6 || 0 },
+        avgSqd7: { averageScore: printContent.avg_sqd7 || 0 },
+        avgSqd8: { averageScore: printContent.avg_sqd8 || 0 },
+      }));
 
-    handlePrint(printContent);
-    console.log("Report Data Array:", reportDataArray);
+      console.log("Report Data Array:", reportDataArray);
+
+      if (reportDataArray.length === 0) {
+        console.error("Error: No valid report data.");
+        return;
+      }
+
+      handlePrint(reportDataArray);
+    } catch (error) {
+      console.error("Error generating feedback report:", error);
+    }
   };
 
   const fetchFeedbackByDivision = async (division_id) => {
@@ -215,10 +243,6 @@ const DivisionPage = () => {
       );
     }
 
-    // console.log("Full Data:", data);
-    // console.log("Selected Subdivision:", selectedSubdivision);
-    // console.log("Selected Service:", selectedService);
-
     // console.log("Selected Service ID:", selectedServiceId);
     // console.log("Selected Subdivision ID:", selectedSubdivisionId);
 
@@ -281,40 +305,48 @@ const DivisionPage = () => {
             <option value="Government">Government</option>
           </Form.Select>
 
-          <Form.Select
-            className="w-auto"
-            value={selectedSubdivision?.sub_division_name || ""}
-            onChange={(e) => {
-              const selectedSub = info.find(
-                (item) => item.sub_division_name === e.target.value
-              );
-              setSelectedSubdivision(selectedSub || null);
-            }}
-          >
-            <option value="">Office Transacted</option>
-            {subdivisions.map((subdivision, index) => (
-              <option key={index} value={subdivision}>
-                {subdivision}
-              </option>
-            ))}
-          </Form.Select>
+          {subdivisions.length > 0 && (
+            <Form.Select
+              className="w-auto"
+              value={selectedSubdivision?.sub_division_name || ""}
+              onChange={(e) => {
+                const selectedSub = info.find(
+                  (item) => item.sub_division_name === e.target.value
+                );
+                setSelectedSubdivision(selectedSub || null);
+              }}
+            >
+              <option value="">Office Transacted</option>
+              {subdivisions.map((subdivision, index) => (
+                <option key={index} value={subdivision}>
+                  {subdivision}
+                </option>
+              ))}
+            </Form.Select>
+          )}
 
           <Form.Select
             className="w-auto"
             value={selectedService?.service_name || ""}
             onChange={(e) => {
               const selectedServ = info.find(
-                (item) => item.service_name === e.target.value
+                ({ service_name }) => service_name === e.target.value
               );
               setSelectedService(selectedServ || null);
             }}
           >
             <option value="">Service Availed</option>
-            {services.map((service, index) => (
-              <option key={index} value={service}>
-                {service}
-              </option>
-            ))}
+            {info
+              .filter(({ sub_division_name, sub_division_id }) =>
+                selectedSubdivision
+                  ? sub_division_name === selectedSubdivision.sub_division_name
+                  : sub_division_id === null
+              )
+              .map(({ service_id, service_name }) => (
+                <option key={service_id} value={service_name}>
+                  {service_name}
+                </option>
+              ))}
           </Form.Select>
 
           <div className="d-flex align-items-center gap-2">
