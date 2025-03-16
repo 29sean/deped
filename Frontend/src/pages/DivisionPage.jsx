@@ -113,34 +113,35 @@ const DivisionPage = () => {
         selectedSubdivisionId,
         selectedServiceId
       );
-      console.log("Fetched Data:", printContentArray);
 
-      if (!printContentArray || printContentArray.length === 0) {
+      if (!Array.isArray(printContentArray) || printContentArray.length === 0) {
         console.error("Error: No data available for printing.");
         return;
       }
 
       const reportDataArray = printContentArray.map((printContent) => ({
         divisionName: division_name?.toUpperCase() || "Not Specified",
-        periodStart: startDate ? moment(startDate).format("MM/D/YYYY") : "",
-        periodEnd: endDate ? moment(endDate).format("MM/D/YYYY") : "",
+        periodStart: startDate
+          ? moment(startDate).format("MMMM")
+          : "Not Specified",
+        periodEnd: endDate
+          ? moment(endDate).format("MMMM YYYY")
+          : "Not Specified",
         purposeTransaction: selectedService?.service_name || "Not Specified",
-        maleCount: printContent.total_males || "0",
-        femaleCount: printContent.total_females || "0",
-        ageBracket: printContent.age_bracket || "Not Specified",
+        maleCount: printContent?.total_males ?? "0",
+        femaleCount: printContent?.total_females ?? "0",
+        ageBracket: printContent?.age_bracket || "Not Specified",
         clientType: filterCustomer || "Not Specified",
-        totalRespondents: printContent.total_respondents || "0",
-        avgSqd1: { averageScore: printContent.avg_sqd1 || 0 },
-        avgSqd2: { averageScore: printContent.avg_sqd2 || 0 },
-        avgSqd3: { averageScore: printContent.avg_sqd3 || 0 },
-        avgSqd4: { averageScore: printContent.avg_sqd4 || 0 },
-        avgSqd5: { averageScore: printContent.avg_sqd5 || 0 },
-        avgSqd6: { averageScore: printContent.avg_sqd6 || 0 },
-        avgSqd7: { averageScore: printContent.avg_sqd7 || 0 },
-        avgSqd8: { averageScore: printContent.avg_sqd8 || 0 },
+        totalRespondents: printContent?.total_respondents ?? "0",
+        sqd1_5: printContent?.sqd1 ?? 0,
+        sqd2_5: printContent?.sqd2 ?? 0,
+        sqd3_5: printContent?.sqd3 ?? 0,
+        sqd4_5: printContent?.sqd4 ?? 0,
+        sqd5_5: printContent?.sqd5 ?? 0,
+        sqd6_5: printContent?.sqd6 ?? 0,
+        sqd7_5: printContent?.sqd7 ?? 0,
+        sqd8_5: printContent?.sqd8 ?? 0,
       }));
-
-      console.log("Report Data Array:", reportDataArray);
 
       if (reportDataArray.length === 0) {
         console.error("Error: No valid report data.");
@@ -355,7 +356,9 @@ const DivisionPage = () => {
               onChange={(date) => setStartDate(date)}
               placeholderText="Start Date"
               className="form-control"
-              dateFormat="yyyy-MM-dd"
+              dateFormat="MM/yyyy"
+              showMonthYearPicker
+              showFullMonthYearPicker
             />
             <span className="text-muted">to</span>
             <DatePicker
@@ -363,8 +366,10 @@ const DivisionPage = () => {
               onChange={(date) => setEndDate(date)}
               placeholderText="End Date"
               className="form-control"
-              dateFormat="yyyy-MM-dd"
+              dateFormat="MM/yyyy"
               minDate={startDate}
+              showMonthYearPicker
+              showFullMonthYearPicker
             />
           </div>
 
