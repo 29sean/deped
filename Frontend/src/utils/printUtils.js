@@ -1,9 +1,9 @@
 import headerLogo from "../assets/Images/image.png";
 
 export const handlePrint = (dataArray) => {
-  const generateTableRows = (item) => {
-    if (!item) return "";
+  const { summary, details } = dataArray;
 
+  const generateTableRows = () => {
     const sqdLabels = [
       "SQD1 - Responsive",
       "SQD2 - Reliability",
@@ -15,88 +15,23 @@ export const handlePrint = (dataArray) => {
       "SQD8 - Outcome",
     ];
 
-    const totalCounts = [
-      (Number(item.sqd1_5) || 0) +
-        (Number(item.sqd1_4) || 0) +
-        (Number(item.sqd1_3) || 0) +
-        (Number(item.sqd1_2) || 0) +
-        (Number(item.sqd1_1) || 0) +
-        (Number(item.sqd1_0) || 0),
-      (Number(item.sqd2_5) || 0) +
-        (Number(item.sqd2_4) || 0) +
-        (Number(item.sqd2_3) || 0) +
-        (Number(item.sqd2_2) || 0) +
-        (Number(item.sqd2_1) || 0) +
-        (Number(item.sqd2_0) || 0),
-      (Number(item.sqd3_5) || 0) +
-        (Number(item.sqd3_4) || 0) +
-        (Number(item.sqd3_3) || 0) +
-        (Number(item.sqd3_2) || 0) +
-        (Number(item.sqd3_1) || 0) +
-        (Number(item.sqd3_0) || 0),
-      (Number(item.sqd4_5) || 0) +
-        (Number(item.sqd4_4) || 0) +
-        (Number(item.sqd4_3) || 0) +
-        (Number(item.sqd4_2) || 0) +
-        (Number(item.sqd4_1) || 0) +
-        (Number(item.sqd4_0) || 0),
-      (Number(item.sqd5_5) || 0) +
-        (Number(item.sqd5_4) || 0) +
-        (Number(item.sqd5_3) || 0) +
-        (Number(item.sqd5_2) || 0) +
-        (Number(item.sqd5_1) || 0) +
-        (Number(item.sqd5_0) || 0),
-      (Number(item.sqd6_5) || 0) +
-        (Number(item.sqd6_4) || 0) +
-        (Number(item.sqd6_3) || 0) +
-        (Number(item.sqd6_2) || 0) +
-        (Number(item.sqd6_1) || 0) +
-        (Number(item.sqd6_0) || 0),
-      (Number(item.sqd7_5) || 0) +
-        (Number(item.sqd7_4) || 0) +
-        (Number(item.sqd7_3) || 0) +
-        (Number(item.sqd7_2) || 0) +
-        (Number(item.sqd7_1) || 0) +
-        (Number(item.sqd7_0) || 0),
-      (Number(item.sqd8_5) || 0) +
-        (Number(item.sqd8_4) || 0) +
-        (Number(item.sqd8_3) || 0) +
-        (Number(item.sqd8_2) || 0) +
-        (Number(item.sqd8_1) || 0) +
-        (Number(item.sqd8_0) || 0),
-    ];
-
-    const totalStronglyAgree = [
-      Number(item.sqd1_5) || 0,
-      Number(item.sqd2_5) || 0,
-      Number(item.sqd3_5) || 0,
-      Number(item.sqd4_5) || 0,
-      Number(item.sqd5_5) || 0,
-      Number(item.sqd6_5) || 0,
-      Number(item.sqd7_5) || 0,
-      Number(item.sqd8_5) || 0,
-    ];
-
     return sqdLabels
       .map((label, index) => {
+        const sqdNum = index + 1;
+        const totalSqdValue = Number(summary[`total_sqd${sqdNum}`]) || 0;
+
         return `
         <tr>
           <td>${label}</td>
-          <td>${item[`sqd${index + 1}_5`] || 0}</td>
-          <td>${item[`sqd${index + 1}_4`] || 0}</td>
-          <td>${item[`sqd${index + 1}_3`] || 0}</td>
-          <td>${item[`sqd${index + 1}_2`] || 0}</td>
-          <td>${item[`sqd${index + 1}_1`] || 0}</td>
-          <td>${item[`sqd${index + 1}_0`] || 0}</td>
-          <td><b>${totalCounts[index]}</b></td>
-          <td><b>${totalStronglyAgree[index]}</b></td>
+          <td><b>${totalSqdValue}</b></td>
+          <td><b>${totalSqdValue}</b></td>
         </tr>
       `;
       })
       .join("");
   };
 
-  const firstItem = dataArray[0];
+  const firstItem = details[0] || {};
   const {
     divisionName,
     periodStart,
@@ -112,9 +47,9 @@ export const handlePrint = (dataArray) => {
     const ageBrackets = new Set();
 
     data.forEach((item) => {
-      maleTotal += Number(item.maleCount) || 0;
-      femaleTotal += Number(item.femaleCount) || 0;
-      ageBrackets.add(item.ageBracket);
+      maleTotal += Number(item.maleCount || item.total_males) || 0;
+      femaleTotal += Number(item.femaleCount || item.total_females) || 0;
+      ageBrackets.add(item.ageBracket || item.age_bracket);
     });
 
     return `
@@ -168,41 +103,36 @@ export const handlePrint = (dataArray) => {
           font-size: 1.2em;
         }
 
-        table {
-          width: 100%;
-          border-collapse: collapse;
-          margin-top: 1em;
-          font-size: 0.9em;
-          table-layout: fixed;
-        }
+       table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1em;
+  font-size: 1em; /* Slightly larger font for better readability */
+  table-layout: fixed; /* Ensures equal column distribution */
+}
 
-        th,
-        td {
-          border: 1px solid black;
-          padding: 0.75em;
-          text-align: center;
-          word-wrap: break-word;
-        }
+th, td {
+  border: 1px solid black;
+  padding: 1em; /* Increased padding for better spacing */
+  text-align: center;
+  word-wrap: break-word;
+  height: 3em; /* Ensures consistent row height */
+}
 
-        th {
-          background-color: #f2f2f2;
-        }
+th {
+  background-color: #f2f2f2;
+}
 
-        th:first-child,
-        td:first-child {
-          text-align: left;
-          width: 25%;
-        }
+th, td {
+  width: 33.33%; /* Distributes columns evenly */
+}
 
-        th:nth-child(n+2),
-        td:nth-child(n+2) {
-          width: 10%;
-        }
+th:first-child, td:first-child {
+  text-align: left;
+}
 
-        th:last-child,
-        td:last-child {
-          width: 15%;
-        }
+
+
 
         .signature-section {
           margin-top: 2em;
@@ -258,32 +188,26 @@ export const handlePrint = (dataArray) => {
         </div>
 
         <div>
-          ${generateDemographics(dataArray)}
+          ${generateDemographics(details)}
         </div>
 
         <table>
           <thead>
             <tr>
               <th>Survey</th>
-              <th>5</th>
-              <th>4</th>
-              <th>3</th>
-              <th>2</th>
-              <th>1</th>
-              <th>0</th>
               <th>Total Rated Score</th>
-              <th>Total Strongly Agree (5)</th>
+              <th>Total Ave. Score</th>
             </tr>
           </thead>
           <tbody>
-             ${dataArray.map((item) => generateTableRows(item)).join("")}
+             ${generateTableRows()}
              <tr>
-               <td colspan="7"><b>Total Number of Respondents</b></td>
-               <td colspan="2"><b>${dataArray.reduce(
+               <td colspan="2"><b>Total Number of Respondents</b></td>
+               <td colspan="1"><b>${details.reduce(
                  (acc, item) =>
                    acc +
-                   (Number(item.maleCount) || 0) +
-                   (Number(item.femaleCount) || 0),
+                   (Number(item.maleCount || item.total_males) || 0) +
+                   (Number(item.femaleCount || item.total_females) || 0),
                  0
                )}</b></td>
              </tr>

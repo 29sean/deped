@@ -94,7 +94,7 @@ const DivisionPage = () => {
       return response.data;
     } catch (error) {
       console.error("Error fetching feedback data:", error);
-      return [];
+      return { summary: {}, details: [] };
     }
   };
 
@@ -108,47 +108,55 @@ const DivisionPage = () => {
 
   const handlePrintReport = async () => {
     try {
-      const printContentArray = await fetchFeedbackData(
+      const feedbackData = await fetchFeedbackData(
         division_id,
         selectedSubdivisionId,
         selectedServiceId
       );
 
-      if (!Array.isArray(printContentArray) || printContentArray.length === 0) {
+      if (
+        !feedbackData ||
+        !feedbackData.details ||
+        feedbackData.details.length === 0
+      ) {
         console.error("Error: No data available for printing.");
         return;
       }
 
-      const reportDataArray = printContentArray.map((printContent) => ({
-        divisionName: division_name?.toUpperCase() || "Not Specified",
-        periodStart: startDate
-          ? moment(startDate).format("MMMM")
-          : "Not Specified",
-        periodEnd: endDate
-          ? moment(endDate).format("MMMM YYYY")
-          : "Not Specified",
-        purposeTransaction: selectedService?.service_name || "Not Specified",
-        maleCount: printContent?.total_males ?? "0",
-        femaleCount: printContent?.total_females ?? "0",
-        ageBracket: printContent?.age_bracket || "Not Specified",
-        clientType: filterCustomer || "Not Specified",
-        totalRespondents: printContent?.total_respondents ?? "0",
-        sqd1_5: printContent?.sqd1 ?? 0,
-        sqd2_5: printContent?.sqd2 ?? 0,
-        sqd3_5: printContent?.sqd3 ?? 0,
-        sqd4_5: printContent?.sqd4 ?? 0,
-        sqd5_5: printContent?.sqd5 ?? 0,
-        sqd6_5: printContent?.sqd6 ?? 0,
-        sqd7_5: printContent?.sqd7 ?? 0,
-        sqd8_5: printContent?.sqd8 ?? 0,
-      }));
+      // Prepare data for printing with both summary and details
+      const reportData = {
+        summary: feedbackData.summary || {},
+        details: feedbackData.details.map((item) => ({
+          divisionName: division_name?.toUpperCase() || "Not Specified",
+          periodStart: startDate
+            ? moment(startDate).format("MMMM")
+            : "Not Specified",
+          periodEnd: endDate
+            ? moment(endDate).format("MMMM YYYY")
+            : "Not Specified",
+          purposeTransaction: selectedService?.service_name || "Not Specified",
+          maleCount: item.total_males ?? "0",
+          femaleCount: item.total_females ?? "0",
+          ageBracket: item.age_bracket || "Not Specified",
+          clientType: filterCustomer || "Not Specified",
+          totalRespondents: item.total_respondents ?? "0",
+          sqd1: item.sqd1 ?? 0,
+          sqd2: item.sqd2 ?? 0,
+          sqd3: item.sqd3 ?? 0,
+          sqd4: item.sqd4 ?? 0,
+          sqd5: item.sqd5 ?? 0,
+          sqd6: item.sqd6 ?? 0,
+          sqd7: item.sqd7 ?? 0,
+          sqd8: item.sqd8 ?? 0,
+        })),
+      };
 
-      if (reportDataArray.length === 0) {
+      if (reportData.details.length === 0) {
         console.error("Error: No valid report data.");
         return;
       }
 
-      handlePrint(reportDataArray);
+      handlePrint(reportData);
     } catch (error) {
       console.error("Error generating feedback report:", error);
     }

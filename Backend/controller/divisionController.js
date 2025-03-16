@@ -267,69 +267,94 @@ export const getFeedBackData = async (req, res) => {
 
   if (!fk_division || !fk_service) {
     return res.status(400).json({
-      message: "fk_division, customer_type, and fk_service are required",
+      message: "fk_division and fk_service are required",
     });
   }
-
-  console.log(fk_division, fk_subdivision, fk_service);
 
   try {
     const query = `
      SELECT 
-    CASE 
-        WHEN c.age BETWEEN 19 AND 25 THEN '19-25'
-        WHEN c.age BETWEEN 26 AND 35 THEN '26-35'
-        WHEN c.age BETWEEN 36 AND 45 THEN '36-45'
-        ELSE '46+' 
-    END AS age_bracket,
-    c.customer_type, 
-    s.service_name AS service_availed,
-    COUNT(*) AS total_respondents,
-    SUM(CASE WHEN c.gender = 'male' THEN 1 ELSE 0 END) AS total_males,
-    SUM(CASE WHEN c.gender = 'female' THEN 1 ELSE 0 END) AS total_females,
-    f.sqd1,
-    f.sqd2,
-    f.sqd3,
-    f.sqd4,
-    f.sqd5,
-    f.sqd6,
-    f.sqd7,
-    f.sqd8
-FROM feedback f
-LEFT JOIN customer c ON c.customer_id = f.fk_customer
-LEFT JOIN services s ON f.fk_service = s.service_id
-WHERE f.fk_division = 4 
-AND (f.fk_subdivision = 3 OR f.fk_subdivision IS NULL)
-AND f.fk_service = 25  
-GROUP BY 
-    CASE 
-        WHEN c.age BETWEEN 19 AND 25 THEN '19-25'
-        WHEN c.age BETWEEN 26 AND 35 THEN '26-35'
-        WHEN c.age BETWEEN 36 AND 45 THEN '36-45'
-        ELSE '46+' 
-    END,
-    c.customer_type, 
-    s.service_name,
-    f.sqd1,
-    f.sqd2,
-    f.sqd3,
-    f.sqd4,
-    f.sqd5,
-    f.sqd6,
-    f.sqd7,
-    f.sqd8
-ORDER BY 
-    age_bracket, 
-    c.customer_type, 
-    s.service_name;`;
+        CASE 
+            WHEN c.age BETWEEN 19 AND 25 THEN '19-25'
+            WHEN c.age BETWEEN 26 AND 35 THEN '26-35'
+            WHEN c.age BETWEEN 36 AND 45 THEN '36-45'
+            ELSE '46+' 
+        END AS age_bracket,
+        c.customer_type, 
+        s.service_name AS service_availed,
+        COUNT(*) AS total_respondents,
+        SUM(CASE WHEN c.gender = 'male' THEN 1 ELSE 0 END) AS total_males,
+        SUM(CASE WHEN c.gender = 'female' THEN 1 ELSE 0 END) AS total_females,
+        f.sqd1,
+        f.sqd2,
+        f.sqd3,
+        f.sqd4,
+        f.sqd5,
+        f.sqd6,
+        f.sqd7,
+        f.sqd8
+    FROM feedback f
+    LEFT JOIN customer c ON c.customer_id = f.fk_customer
+    LEFT JOIN services s ON f.fk_service = s.service_id
+    WHERE f.fk_division = ? 
+    AND (f.fk_subdivision = ? OR ? IS NULL)
+    AND f.fk_service = ? 
+    GROUP BY 
+        CASE 
+            WHEN c.age BETWEEN 19 AND 25 THEN '19-25'
+            WHEN c.age BETWEEN 26 AND 35 THEN '26-35'
+            WHEN c.age BETWEEN 36 AND 45 THEN '36-45'
+            ELSE '46+' 
+        END,
+        c.customer_type, 
+        s.service_name,
+        f.sqd1,
+        f.sqd2,
+        f.sqd3,
+        f.sqd4,
+        f.sqd5,
+        f.sqd6,
+        f.sqd7,
+        f.sqd8
+    ORDER BY 
+        age_bracket, 
+        customer_type, 
+        service_availed;
+    `;
 
     const [results] = await pool.query(query, [
       fk_division,
-      fk_subdivision || null,
+      fk_subdivision,
+      fk_subdivision,
       fk_service,
     ]);
 
-    res.status(200).json(results);
+    let totalSqd = {
+      total_sqd1: 0,
+      total_sqd2: 0,
+      total_sqd3: 0,
+      total_sqd4: 0,
+      total_sqd5: 0,
+      total_sqd6: 0,
+      total_sqd7: 0,
+      total_sqd8: 0,
+    };
+
+    results.forEach((row) => {
+      totalSqd.total_sqd1 += Number(row.sqd1) || 0;
+      totalSqd.total_sqd2 += Number(row.sqd2) || 0;
+      totalSqd.total_sqd3 += Number(row.sqd3) || 0;
+      totalSqd.total_sqd4 += Number(row.sqd4) || 0;
+      totalSqd.total_sqd5 += Number(row.sqd5) || 0;
+      totalSqd.total_sqd6 += Number(row.sqd6) || 0;
+      totalSqd.total_sqd7 += Number(row.sqd7) || 0;
+      totalSqd.total_sqd8 += Number(row.sqd8) || 0;
+    });
+
+    res.status(200).json({
+      summary: totalSqd,
+      details: results,
+    });
   } catch (error) {
     console.error("Error fetching feedback data:", error);
     res.status(500).json({ message: "Internal server error" });
